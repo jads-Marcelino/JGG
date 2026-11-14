@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Meridiano Studio · prototype</title>
+<style>
+/*FONTS*/
+:root{--g:#0F2420;--g2:#1F5A4C;--teal:#2E8070;--brass:#C9A94E;--brass2:#A8832C;--ink:#14211D;--mut:#5E716A;--sub:#8FA79F;--line:#E2E6E1;--paper:#F8F6F1;--card:#FFFFFF;--tint:#E2EEE8;--red:#B4532F}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:Karla,Arial,sans-serif;color:var(--ink);background:var(--paper);font-size:14px;-webkit-text-size-adjust:100%}
+button,input,textarea,select{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+a{color:var(--g2)}
+.serif{font-family:Newsreader,Georgia,serif}
+/* top bar */
+#nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:18px;height:58px;padding:0 22px;background:rgba(248,246,241,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+#nav .logo{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--g)}
+#nav .logo b{font:400 20px Newsreader;letter-spacing:-.3px}#nav .logo i{font:700 9px Karla;letter-spacing:2.5px;color:var(--brass2);font-style:normal;text-transform:uppercase;border:1px solid var(--brass);border-radius:100px;padding:2px 7px}
+#nav .links{display:flex;gap:4px;margin-left:10px}
+#nav .links a{text-decoration:none;color:var(--mut);font-weight:600;padding:8px 12px;border-radius:8px}
+#nav .links a.on{color:var(--g);background:var(--tint)}
+#nav .sp{flex:1}
+.persona{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:#fff;border-radius:100px;padding:4px 12px 4px 4px;font-weight:600}
+.persona select{border:0;background:transparent;font-weight:600;outline:none}
+.av{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;color:#fff;font:700 11px Karla;flex:none;position:relative}
+.av.sm{width:22px;height:22px;font-size:9px}
+.av.on::after{content:'';position:absolute;right:-1px;bottom:-1px;width:8px;height:8px;border-radius:50%;background:#3BB273;border:2px solid #fff}
+.btn{display:inline-flex;align-items:center;gap:8px;border-radius:9px;padding:9px 15px;font-weight:700;border:1px solid var(--line);background:#fff;color:var(--g);white-space:nowrap}
+.btn:hover{border-color:#C9D3CE}
+.btn.pri{background:var(--g);border-color:var(--g);color:#fff}
+.btn.br{background:var(--brass);border-color:var(--brass);color:var(--g)}
+.btn.ghost{background:transparent}
+.btn.sm{padding:6px 11px;font-size:13px}
+.btn[disabled]{opacity:.45;cursor:default}
+.chip{display:inline-flex;align-items:center;gap:6px;background:var(--tint);color:var(--g2);font:700 10px Karla;letter-spacing:2px;text-transform:uppercase;padding:5px 11px 4px;border-radius:100px}
+.chip::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--brass)}
+.pill{display:inline-block;font:700 11px Karla;padding:3px 9px;border-radius:100px;background:#F1F3EF;color:var(--mut)}
+.pill.ok{background:#E2F3E9;color:#22784A}.pill.warn{background:#F7EDD5;color:#8A6A1F}.pill.blue{background:#DEECF1;color:#2F6F86}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 14px 30px -24px rgba(15,36,32,.45)}
+.wrap{max-width:1180px;margin:0 auto;padding:40px 28px 80px}
+h1.big{font:400 52px/1.05 Newsreader;letter-spacing:-1.2px;color:var(--g)}
+h2.t{font:400 30px/1.15 Newsreader;color:var(--g)}
+h3.t{font:400 21px/1.2 Newsreader;color:var(--g)}
+.lead{font-size:17px;line-height:1.55;color:var(--mut);max-width:720px}
+.muted{color:var(--mut)}.small{font-size:12.5px;color:var(--mut)}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:900px){.grid3,.grid2{grid-template-columns:1fr}}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.field label{font:700 11px Karla;letter-spacing:1.5px;text-transform:uppercase;color:var(--mut)}
+.field input,.field select,.field textarea{border:1px solid #D6DCD7;background:#fff;border-radius:9px;padding:10px 12px;outline:none}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--g2);box-shadow:0 0 0 3px var(--tint)}
+.field input[readonly]{background:#F4F5F2;color:var(--mut)}
+.step{display:flex;gap:14px;align-items:flex-start;padding:10px 0}
+.step .dot{width:24px;height:24px;border-radius:50%;border:2px solid #CCD4CF;flex:none;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff}
+.step.done .dot{background:var(--g2);border-color:var(--g2)}.step.run .dot{border-color:var(--brass);border-top-color:transparent;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.toast-wrap{position:fixed;right:18px;bottom:18px;display:flex;flex-direction:column;gap:8px;z-index:200}
+.toast{background:var(--g);color:#EDEDE7;border-radius:11px;padding:11px 15px;max-width:360px;box-shadow:0 18px 30px -18px rgba(0,0,0,.6);display:flex;gap:10px;align-items:center;animation:tin .3s ease}
+@keyframes tin{from{opacity:0;transform:translateY(10px)}}
+.modal-bg{position:fixed;inset:0;background:rgba(15,36,32,.35);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal{width:520px;max-width:100%;background:#fff;border-radius:16px;padding:26px;box-shadow:0 30px 60px -30px rgba(0,0,0,.5)}
+/* tour */
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center}
+@media(max-width:900px){.hero{grid-template-columns:1fr}}
+.stepcard{padding:24px;display:flex;flex-direction:column;gap:10px}
+.stepcard .n{font:400 44px/1 Newsreader;color:var(--brass2)}
+.stepcard .btns{margin-top:auto;display:flex;gap:8px;flex-wrap:wrap;padding-top:8px}
+/* dashboard */
+.proj{display:flex;gap:16px;align-items:center;padding:16px 18px;border-bottom:1px solid var(--line)}
+.proj:last-child{border-bottom:0}
+.thumbS{width:132px;height:74px;border-radius:7px;overflow:hidden;flex:none;position:relative;background:var(--g)}
+/* studio */
+#studio{display:flex;gap:10px;padding:10px;height:calc(100vh - 58px)}
+.pane{flex:1;min-width:0;display:flex;flex-direction:column;background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.ptop{display:flex;align-items:center;gap:10px;padding:9px 12px;border-bottom:1px solid var(--line);background:#FCFBF8}
+.ptop .ttl{font:400 17px Newsreader;color:var(--g);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ptop .brn{white-space:nowrap;font:600 12px ui-monospace,Menlo,monospace;color:var(--mut);background:#F1F3EF;border-radius:6px;padding:3px 7px}
+.ptop .faces{display:flex;margin-left:6px}.ptop .faces .av{margin-left:-6px;border:2px solid #fff}
+.pbody{flex:1;min-height:0;display:grid;grid-template-columns:150px 1fr 320px}
+.pleft{border-right:1px solid var(--line);overflow:auto;padding:10px;display:flex;flex-direction:column;gap:9px;background:#FCFBF8}
+.th{position:relative;border-radius:7px;overflow:hidden;border:2px solid transparent;cursor:pointer;background:var(--g);aspect-ratio:16/9}
+.th.sel{border-color:var(--brass)}
+.th .num{position:absolute;left:4px;top:3px;font:700 9px Karla;color:#fff;background:rgba(15,36,32,.6);border-radius:4px;padding:1px 4px;z-index:2}
+.th .cm{position:absolute;right:4px;top:3px;font:700 9px Karla;color:var(--g);background:var(--brass);border-radius:8px;padding:1px 5px;z-index:2}
+.th .who{position:absolute;right:3px;bottom:3px;z-index:2;display:flex}
+.th .dirty{position:absolute;left:4px;bottom:4px;width:7px;height:7px;border-radius:50%;background:var(--brass);z-index:2}
+.mini{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;pointer-events:none}
+.pcenter{display:flex;flex-direction:column;min-width:0;background:#EEF0EB}
+.ctool{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--line);background:#F7F7F3}
+.seg{display:inline-flex;background:#E6E9E4;border-radius:8px;padding:2px}
+.seg button{padding:5px 11px;border-radius:6px;font-weight:700;font-size:12.5px;color:var(--mut)}
+.seg button.on{background:#fff;color:var(--g);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.path{font:12px ui-monospace,Menlo,monospace;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cwrap{flex:1;min-height:0;overflow:auto;padding:16px;display:flex;align-items:flex-start;justify-content:center}
+.stage{position:relative;width:100%;max-width:1100px;aspect-ratio:16/9;border-radius:8px;overflow:hidden;box-shadow:0 18px 40px -22px rgba(15,36,32,.6);background:var(--g)}
+.slide{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0}
+.slide [data-edit]{outline:none;border-radius:6px;transition:box-shadow .15s}
+.editing .slide [data-edit]:hover{box-shadow:0 0 0 4px rgba(201,169,78,.55)}
+.editing .slide [data-edit]:focus{box-shadow:0 0 0 5px #C9A94E}
+.pres{position:absolute;pointer-events:none;border:3px solid;border-radius:6px;z-index:5;transition:all .2s}
+.pres span{position:absolute;left:-3px;top:-24px;font:700 11px Karla;color:#fff;padding:3px 8px;border-radius:6px 6px 6px 0;white-space:nowrap}
+.code{flex:1;min-height:0;width:100%;border:0;outline:none;resize:none;padding:16px;font:12.5px/1.55 ui-monospace,Menlo,monospace;background:#0F2420;color:#D8E3DE}
+.pright{border-left:1px solid var(--line);display:flex;flex-direction:column;min-height:0}
+.tabs{display:flex;border-bottom:1px solid var(--line);padding:0 8px;background:#FCFBF8}
+.tabs button{padding:11px 9px;font-weight:700;font-size:12.5px;color:var(--mut);border-bottom:2px solid transparent}
+.tabs button.on{color:var(--g);border-bottom-color:var(--brass)}
+.tabs .bd{display:inline-block;min-width:17px;padding:0 5px;margin-left:4px;border-radius:9px;background:var(--brass);color:var(--g);font-size:10.5px}
+.rbody{flex:1;min-height:0;overflow:auto;padding:14px}
+.cmt{border:1px solid var(--line);border-radius:11px;padding:11px;margin-bottom:10px;background:#fff}
+.cmt.res{opacity:.55}
+.cmt .h{display:flex;gap:8px;align-items:center;margin-bottom:6px}.cmt .h b{font-size:13px}.cmt .h .small{margin-left:auto}
+.cmt p{line-height:1.45}
+.cmt .anc{font:600 11px Karla;color:var(--brass2);margin-bottom:5px}
+.cmt .rep{border-left:2px solid var(--tint);margin:8px 0 0 6px;padding-left:9px}
+.ment{color:var(--g2);font-weight:700;background:var(--tint);border-radius:4px;padding:0 3px}
+textarea.in,input.in{width:100%;border:1px solid #D6DCD7;border-radius:9px;padding:9px 11px;outline:none;background:#fff;resize:vertical}
+textarea.in:focus,input.in:focus{border-color:var(--g2)}
+.diff{font:11.5px/1.5 ui-monospace,Menlo,monospace;border:1px solid var(--line);border-radius:9px;overflow:hidden;margin:6px 0 12px}
+.diff div{padding:1px 8px;white-space:pre-wrap;word-break:break-all}
+.diff .a{background:#E6F4EA;color:#1E6B3A}.diff .d{background:#FBE9E4;color:#9A3B1B;text-decoration:line-through;text-decoration-color:rgba(154,59,27,.4)}
+.diff .fh{background:#F4F5F2;color:var(--mut);font-weight:700}
+.commit{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.sha{font:600 11.5px ui-monospace,Menlo,monospace;color:var(--g2);background:var(--tint);border-radius:5px;padding:1px 6px}
+.log div{display:flex;gap:9px;align-items:center;padding:6px 0;font-size:13px}
+.compact .pbody{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr) 230px}
+.compact .pleft{flex-direction:row;overflow-x:auto;border-right:0;border-bottom:1px solid var(--line);padding:8px}
+.compact .pleft .th{width:96px;flex:none}
+.compact .pright{border-left:0;border-top:1px solid var(--line)}
+.compact .cwrap{padding:10px}
+/* site */
+.browser{max-width:1180px;margin:22px auto;border-radius:14px;overflow:hidden;border:1px solid #CFD6D1;background:#fff;box-shadow:0 30px 60px -40px rgba(0,0,0,.6)}
+.bbar{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#ECEEEA;border-bottom:1px solid #D9DED9}
+.bbar .dots i{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:5px;background:#D3D8D4}
+.url{flex:1;background:#fff;border-radius:8px;padding:7px 12px;font:13px ui-monospace,Menlo,monospace;color:var(--mut);display:flex;gap:6px;align-items:center}
+.url b{color:var(--ink);font-weight:500}
+.sitebody{background:#0B1C19;position:relative}
+.sitebody .stage{max-width:none;border-radius:0;box-shadow:none}
+.newver{position:absolute;left:50%;top:14px;transform:translateX(-50%);z-index:5;background:var(--brass);color:var(--g);font-weight:700;padding:8px 14px;border-radius:100px;box-shadow:0 10px 20px -10px rgba(0,0,0,.6);cursor:pointer}
+/* mail + github mock */
+.mailbox{display:grid;grid-template-columns:300px 1fr;min-height:520px}
+.mailbox .list{border-right:1px solid var(--line)}
+.mail{padding:14px 16px;border-bottom:1px solid var(--line);cursor:pointer}
+.mail.sel{background:var(--tint)}
+.gh{max-width:460px;margin:30px auto;background:#fff;border:1px solid #D0D7DE;border-radius:12px;padding:28px;font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;color:#1F2328}
+.gh .btngh{width:100%;background:#1F883D;color:#fff;border-radius:7px;padding:10px;font-weight:600}
+.gh li{list-style:none;display:flex;gap:10px;padding:9px 0;border-bottom:1px solid #EAEEF2;font-size:14px}
+/* how */
+.arch{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;align-items:stretch}
+@media(max-width:900px){.arch{grid-template-columns:1fr 1fr}}
+.node{padding:16px;border-radius:12px;background:#fff;border:1px solid var(--line);box-shadow:inset 0 3px 0 var(--g2)}
+.node h4{font:400 18px Newsreader;color:var(--g);margin-bottom:6px}
+.node ul{padding-left:16px;color:var(--mut);line-height:1.5;font-size:13px}
+.flowrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:18px 0}
+.flowrow .f{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-weight:700;color:var(--g)}
+.flowrow .ar{color:var(--brass2);font-weight:700}
+table.t{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;border:1px solid var(--line)}
+table.t th{background:var(--tint);color:var(--g2);font:700 11px Karla;letter-spacing:1.5px;text-transform:uppercase;text-align:left;padding:10px 12px}
+table.t td{padding:10px 12px;border-top:1px solid var(--line);vertical-align:top;line-height:1.45}
+.hidden{display:none!important}
+@media(max-width:1100px){.pbody{grid-template-columns:120px 1fr 280px}}
+</style></head><body>
+<div id="nav"></div>
+<div id="view"></div>
+<div class="toast-wrap" id="toasts"></div>
+<script>
+/* ============================================================
+   Meridiano Studio · navigable prototype
+   Shared state is kept in memory, mirrored to localStorage and
+   broadcast to other tabs (BroadcastChannel), so two panes or two
+   tabs see the same document live. GitHub, e-mail and Pages are
+   simulated; see "How it works" for the real architecture.
+   ============================================================ */
+var KEY = 'meridiano-studio-v1', TAB = Math.random().toString(36).slice(2);
+var USERS = {
+  jadson: {id:'jadson', name:'Jadson Marcelino', short:'Jadson', ini:'JM', color:'#A8832C', email:'jadson@meridiano-consulting.com', gh:'jads-Marcelino'},
+  gustavo:{id:'gustavo', name:'Gustavo Sabillón', short:'Gustavo', ini:'GS', color:'#2E8070', email:'gustavo@meridiano-consulting.com', gh:'gsabillon'}
+};
+var LOGO = function(s, dark){ return '<svg viewBox="0 0 64 64" width="'+s+'" height="'+s+'"><circle cx="32" cy="32" r="18.5" fill="none" stroke="#C9A94E" stroke-width="1.8"/><path d="M 7.5 47.2 C 15.5 47.2 21.5 41.5 27.4 29.8 C 33.3 18.1 46.5 15.4 57 15.4" fill="none" stroke="'+(dark?'#EDEDE7':'#0F2420')+'" stroke-width="3.9" stroke-linecap="round"/><circle cx="32" cy="32" r="2.8" fill="#C9A94E"/></svg>'; };
+
+/* ---------- slide templates (Meridiano course style, 1920x1080) ---------- */
+var BG = 'position:absolute;inset:0;background:#0F2420;font-family:Karla,Arial,sans-serif;color:#EDEDE7';
+var EY = 'font-size:24px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#C9A94E';
+var TI = 'font-family:Newsreader,Georgia,serif;font-size:72px;line-height:1.08;letter-spacing:-1.5px;color:#EDEDE7';
+var FT = '<p style="position:absolute;left:128px;bottom:64px;font-size:22px;color:#8FA79F">Data Strategy for Leaders</p>';
+var SLIDES = {
+'slides/01-cover.html': [
+'<section style="'+BG+'">',
+'<svg style="position:absolute;right:0;top:0" width="980" height="1080" viewBox="0 0 980 1080"><path d="M0 900 C 380 900 520 700 620 480 C 720 260 820 160 980 150" fill="none" stroke="#C9A94E" stroke-width="4"/><path d="M0 960 C 400 960 540 760 650 540 C 760 320 850 220 980 210" fill="none" stroke="#365C53" stroke-width="2"/><circle cx="620" cy="480" r="14" fill="#C9A94E"/></svg>',
+'<p data-edit="eyebrow" style="position:absolute;left:128px;top:150px;'+EY+'">Executive Education · Data &amp; Analytics</p>',
+'<h1 data-edit="title" style="position:absolute;left:128px;top:300px;width:1000px;font-family:Newsreader,Georgia,serif;font-size:132px;line-height:1.02;letter-spacing:-4px;color:#EDEDE7">Data Strategy for Leaders</h1>',
+'<p data-edit="sub" style="position:absolute;left:132px;top:640px;width:820px;font-family:Newsreader,Georgia,serif;font-size:40px;line-height:1.3;color:#AFC1BA">Turning data from a cost line into better decisions.</p>',
+'<p data-edit="meta" style="position:absolute;left:132px;bottom:64px;font-size:22px;color:#8FA79F">Meridiano · São Paulo · Panama City · Tegucigalpa</p>',
+'</section>'].join('\n'),
+'slides/02-ai-paradox.html': [
+'<section style="'+BG+'">',
+'<p data-edit="eyebrow" style="position:absolute;left:128px;top:128px;'+EY+'">Evidence · The AI paradox</p>',
+'<h2 data-edit="title" style="position:absolute;left:128px;top:180px;width:1500px;'+TI+'">Most AI pilots never reach the P&amp;L</h2>',
+'<p data-edit="big" style="position:absolute;left:120px;top:360px;font-family:Newsreader,Georgia,serif;font-size:300px;line-height:1;letter-spacing:-10px;color:#C9A94E">95%</p>',
+'<p data-edit="caption" style="position:absolute;left:132px;top:700px;width:760px;font-family:Newsreader,Georgia,serif;font-size:40px;line-height:1.25;color:#EDEDE7">of enterprise GenAI pilots show no measurable P&amp;L impact</p>',
+'<p data-edit="note" style="position:absolute;left:1080px;top:430px;width:700px;font-size:30px;line-height:1.45;color:#AFC1BA">The gap is rarely the model. It is the distance between a prediction and a decision someone owns.</p>',
+'<p data-edit="source" style="position:absolute;left:128px;bottom:64px;font-size:22px;color:#8FA79F">Source: MIT NANDA, The GenAI Divide: State of AI in Business 2025</p>',
+'</section>'].join('\n'),
+'slides/03-symptoms.html': [
+'<section style="'+BG+'">',
+'<p data-edit="eyebrow" style="position:absolute;left:128px;top:128px;'+EY+'">As is · Three symptoms</p>',
+'<h2 data-edit="title" style="position:absolute;left:128px;top:180px;width:1600px;'+TI+'">If you recognise these, the problem is not technical</h2>',
+'<div style="position:absolute;left:128px;top:420px;width:530px;height:420px;background:#1D3A34;border-top:4px solid #C9A94E;padding:44px"><p data-edit="c1t" style="font-family:Newsreader,Georgia,serif;font-size:48px;color:#EDEDE7">Silos</p><p data-edit="c1b" style="margin-top:20px;font-size:28px;line-height:1.45;color:#AFC1BA">Each area keeps its own data, with overlaps, gaps and inconsistencies.</p></div>',
+'<div style="position:absolute;left:695px;top:420px;width:530px;height:420px;background:#1D3A34;border-top:4px solid #C9A94E;padding:44px"><p data-edit="c2t" style="font-family:Newsreader,Georgia,serif;font-size:48px;color:#EDEDE7">Many versions of the truth</p><p data-edit="c2b" style="margin-top:20px;font-size:28px;line-height:1.45;color:#AFC1BA">The same KPI arrives with a different number in every meeting.</p></div>',
+'<div style="position:absolute;left:1262px;top:420px;width:530px;height:420px;background:#1D3A34;border-top:4px solid #C9A94E;padding:44px"><p data-edit="c3t" style="font-family:Newsreader,Georgia,serif;font-size:48px;color:#EDEDE7">HiPPO decisions</p><p data-edit="c3b" style="margin-top:20px;font-size:28px;line-height:1.45;color:#AFC1BA">The Highest Paid Person’s Opinion wins over the evidence in the room.</p></div>',
+FT,'</section>'].join('\n'),
+'slides/04-decision-chain.html': [
+'<section style="'+BG+'">',
+'<p data-edit="eyebrow" style="position:absolute;left:128px;top:128px;'+EY+'">Flow · The decision chain</p>',
+'<h2 data-edit="title" style="position:absolute;left:128px;top:180px;width:1600px;'+TI+'">Value appears only when data changes a decision</h2>',
+'<div style="position:absolute;left:128px;top:470px;width:1664px;height:4px;background:linear-gradient(90deg,#365C53 0%,#365C53 55%,#C9A94E 100%)"></div>',
+'<div style="position:absolute;left:128px;top:400px;width:300px;height:150px;background:#1D3A34;border:2px solid #365C53;padding:26px"><p data-edit="n1" style="font-family:Newsreader,Georgia,serif;font-size:40px">Data</p><p data-edit="n1s" style="font-size:22px;color:#8FA79F;margin-top:6px">raw records</p></div>',
+'<div style="position:absolute;left:469px;top:400px;width:300px;height:150px;background:#1D3A34;border:2px solid #365C53;padding:26px"><p data-edit="n2" style="font-family:Newsreader,Georgia,serif;font-size:40px">Information</p><p data-edit="n2s" style="font-size:22px;color:#8FA79F;margin-top:6px">organised, in context</p></div>',
+'<div style="position:absolute;left:810px;top:400px;width:300px;height:150px;background:#1D3A34;border:2px solid #365C53;padding:26px"><p data-edit="n3" style="font-family:Newsreader,Georgia,serif;font-size:40px">Insight</p><p data-edit="n3s" style="font-size:22px;color:#8FA79F;margin-top:6px">a pattern, explained</p></div>',
+'<div style="position:absolute;left:1151px;top:400px;width:300px;height:150px;background:#C9A94E;padding:26px;color:#0F2420"><p data-edit="n4" style="font-family:Newsreader,Georgia,serif;font-size:40px">Decision</p><p data-edit="n4s" style="font-size:22px;margin-top:6px">a choice is made</p></div>',
+'<div style="position:absolute;left:1492px;top:400px;width:300px;height:150px;background:#C9A94E;padding:26px;color:#0F2420"><p data-edit="n5" style="font-family:Newsreader,Georgia,serif;font-size:40px">Action</p><p data-edit="n5s" style="font-size:22px;margin-top:6px">behaviour changes</p></div>',
+'<p data-edit="note" style="position:absolute;left:128px;top:640px;width:1300px;font-size:30px;line-height:1.45;color:#AFC1BA">Most budgets stop at the dashboard. The return is realised two steps later, when a limit, a price or a process actually changes.</p>',
+'<p data-edit="source" style="position:absolute;left:128px;bottom:64px;font-size:22px;color:#8FA79F">Based on Ackoff’s data–information–knowledge hierarchy (1989), extended to decision and action</p>',
+'</section>'].join('\n'),
+'slides/05-icebreaker.html': [
+'<section style="'+BG+'">',
+'<p data-edit="eyebrow" style="position:absolute;left:128px;top:128px;'+EY+'">Icebreaker · 2 minutes</p>',
+'<h2 data-edit="title" style="position:absolute;left:128px;top:180px;width:1600px;'+TI+'">If your company’s data were a vehicle, which one?</h2>',
+'<div style="position:absolute;left:128px;top:440px;width:816px;height:130px;background:#1D3A34;border:2px solid #365C53;padding:0 32px;display:flex;align-items:center;gap:28px"><p style="font-family:Newsreader,Georgia,serif;font-size:56px;color:#C9A94E">A</p><p data-edit="o1" style="font-size:30px">A bicycle: it moves, but only with effort</p></div>',
+'<div style="position:absolute;left:976px;top:440px;width:816px;height:130px;background:#1D3A34;border:2px solid #365C53;padding:0 32px;display:flex;align-items:center;gap:28px"><p style="font-family:Newsreader,Georgia,serif;font-size:56px;color:#C9A94E">B</p><p data-edit="o2" style="font-size:30px">A taxi: someone else drives, you pay per ride</p></div>',
+'<div style="position:absolute;left:128px;top:600px;width:816px;height:130px;background:#1D3A34;border:2px solid #365C53;padding:0 32px;display:flex;align-items:center;gap:28px"><p style="font-family:Newsreader,Georgia,serif;font-size:56px;color:#C9A94E">C</p><p data-edit="o3" style="font-size:30px">A car with no dashboard: fast, but blind</p></div>',
+'<div style="position:absolute;left:976px;top:600px;width:816px;height:130px;background:#1D3A34;border:2px solid #365C53;padding:0 32px;display:flex;align-items:center;gap:28px"><p style="font-family:Newsreader,Georgia,serif;font-size:56px;color:#C9A94E">D</p><p data-edit="o4" style="font-size:30px">A plane on autopilot: data drives routine decisions</p></div>',
+FT,'</section>'].join('\n'),
+'slides/06-next-step.html': [
+'<section style="'+BG+'">',
+'<svg style="position:absolute;left:880px;top:200px" width="160" height="160" viewBox="0 0 64 64"><circle cx="32" cy="32" r="18.5" fill="none" stroke="#C9A94E" stroke-width="1.6"/><path d="M 7.5 47.2 C 15.5 47.2 21.5 41.5 27.4 29.8 C 33.3 18.1 46.5 15.4 57 15.4" fill="none" stroke="#EDEDE7" stroke-width="3.9" stroke-linecap="round"/><circle cx="32" cy="32" r="2.8" fill="#C9A94E"/></svg>',
+'<p data-edit="eyebrow" style="position:absolute;left:0;right:0;top:420px;text-align:center;'+EY+'">Your next step</p>',
+'<h2 data-edit="title" style="position:absolute;left:260px;width:1400px;top:480px;text-align:center;font-family:Newsreader,Georgia,serif;font-size:80px;line-height:1.12;letter-spacing:-2px;color:#EDEDE7">Pick one decision. Measure it before and after.</h2>',
+'<p data-edit="contact" style="position:absolute;left:0;right:0;top:800px;text-align:center;font-size:30px;letter-spacing:4px;color:#C9A94E">meridiano-consulting.com</p>',
+'</section>'].join('\n')
+};
+
+/* ---------- state ---------- */
+function clone(o){return JSON.parse(JSON.stringify(o));}
+function sha(){var c='0123456789abcdef',s='';for(var i=0;i<7;i++)s+=c[Math.floor(Math.random()*16)];return s;}
+function now(){return Date.now();}
+function seed(){
+  var files=clone(SLIDES), t=now()-1000*60*60*26;
+  return {
+    v:1, signedIn:false,
+    project:null,
+    files:files, base:clone(files), live:clone(files),
+    commits:[], comments:[], invites:[], members:[], presence:{}, activity:[],
+    deploy:{state:'idle', sha:null, at:null, steps:[]}, liveSha:null
+  };
+}
+var S;
+try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){S=null}
+if(!S||S.v!==1)S=seed();
+var bc=null; try{bc=new BroadcastChannel('meridiano-studio')}catch(e){}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){} if(bc){try{bc.postMessage({t:'state',from:TAB,s:S})}catch(e){}}}
+if(bc)bc.onmessage=function(e){if(!e.data||e.data.from===TAB)return; if(e.data.t==='state'){var prev=S;S=e.data.s;onShared(null,{remote:true,prev:prev});} if(e.data.t==='toast')toast(e.data.msg,e.data.who);};
+
+var SES={user:'jadson'}; // per-tab session
+try{var u=sessionStorage.getItem('ms-user'); if(u&&USERS[u])SES.user=u;}catch(e){}
+function setUser(u){SES.user=u; try{sessionStorage.setItem('ms-user',u)}catch(e){} }
+
+function ago(t){if(!t)return'';var s=Math.round((now()-t)/1000);if(s<10)return'just now';if(s<60)return s+'s ago';var m=Math.round(s/60);if(m<60)return m+' min ago';var h=Math.round(m/60);if(h<24)return h+' h ago';return Math.round(h/24)+' d ago';}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function av(id,cls){var u=USERS[id];return '<span class="av '+(cls||'')+'" style="background:'+u.color+'" title="'+esc(u.name)+'">'+u.ini+'</span>';}
+function log(who,txt){S.activity.unshift({who:who,txt:txt,t:now()}); S.activity=S.activity.slice(0,40);}
+function toast(msg,who,local){var w=document.getElementById('toasts');var d=document.createElement('div');d.className='toast';d.innerHTML=(who?av(who,'sm'):'')+'<span>'+msg+'</span>';w.appendChild(d);setTimeout(function(){d.style.opacity='0';d.style.transition='opacity .4s'},3800);setTimeout(function(){d.remove()},4300);
+  if(!local&&bc){try{bc.postMessage({t:'toast',from:TAB,msg:msg,who:who})}catch(e){}}}
+
+/* ---------- project creation (shared helpers) ---------- */
+function slug(s){return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');}
+function createProject(o){
+  S.project={name:o.name, repo:o.repo, owner:'jads-Marcelino', visibility:o.visibility, template:o.template, created:now()};
+  S.files=clone(SLIDES); S.base=clone(SLIDES); S.live=clone(SLIDES);
+  var c={sha:sha(), msg:'Create project from template “'+o.templateName+'”', author:'jadson', t:now(), files:Object.keys(SLIDES).length, snap:clone(SLIDES), changed:Object.keys(SLIDES)};
+  S.commits=[c]; S.liveSha=c.sha; S.deploy={state:'live',sha:c.sha,at:now(),steps:[]};
+  S.members=[{id:'jadson',role:'Owner',joined:now()}];
+  S.comments=[]; S.invites=[];
+  log('jadson','created '+o.name+' and published '+siteUrl());
+}
+function siteUrl(){return S.project?('https://jads-marcelino.github.io/'+S.project.repo+'/'):'';}
+function ensureProject(){ if(!S.project){createProject({name:'Data Strategy for Leaders',repo:'data-strategy-for-leaders',visibility:'Public',template:'course',templateName:'Executive course deck'}); S.signedIn=true;} }
+function isMember(id){return S.members.some(function(m){return m.id===id});}
+function ensureGuest(){ ensureProject(); if(!S.invites.length){S.invites.push({email:USERS.gustavo.email,role:'Editor',status:'pending',t:now(),by:'jadson'});}
+  if(!isMember('gustavo')){S.invites.forEach(function(i){if(i.email===USERS.gustavo.email)i.status='accepted'}); S.members.push({id:'gustavo',role:'Editor',joined:now()}); log('gustavo','joined and connected GitHub @'+USERS.gustavo.gh);} }
+
+/* ---------- routing ---------- */
+var routes={};
+function go(h){ if(location.hash===h)render(); else location.hash=h; }
+window.addEventListener('hashchange',render);
+function route(){return (location.hash||'#/').replace(/\?.*/,'');}
+function render(){
+  stopSiteWatch(); panes=[];
+  var r=route(); var fn=routes[r]||routes['#/'];
+  renderNav(r); document.getElementById('view').innerHTML=''; fn(document.getElementById('view'));
+  window.scrollTo(0,0);
+}
+function renderNav(r){
+  var links=[['#/','Tour'],['#/dashboard','Dashboard'],['#/studio','Studio'],['#/together','Two-person demo'],['#/site','Live site'],['#/how','How it works']];
+  var opts=Object.keys(USERS).map(function(k){return '<option value="'+k+'" '+(SES.user===k?'selected':'')+'>'+USERS[k].short+(k==='jadson'?' · owner':' · guest')+'</option>'}).join('');
+  document.getElementById('nav').innerHTML='<a class="logo" href="#/">'+LOGO(30)+'<b>Meridiano Studio</b><i>prototype</i></a><div class="links">'+links.map(function(l){return '<a href="'+l[0]+'" class="'+(r===l[0]?'on':'')+'">'+l[1]+'</a>'}).join('')+'</div><div class="sp"></div>'+
+   '<div class="persona" title="Who you are in this tab">'+av(SES.user)+'<select id="who">'+opts+'</select></div>';
+  document.getElementById('who').onchange=function(e){
+    var u=e.target.value;
+    if(u==='gustavo'&&!isMember('gustavo')){ if(!confirm('Gustavo has not joined yet. Skip the invite flow and join him now?')){e.target.value=SES.user;return;} ensureGuest(); persist(); }
+    setUser(u); render();
+  };
+}
+
+/* ---------- TOUR ---------- */
+routes['#/']=function(v){
+  v.innerHTML='<div class="wrap">'+
+  '<div class="hero"><div><span class="chip">Prototype · navigable</span><h1 class="big" style="margin-top:16px">Build, review and publish Meridiano decks <i style="color:var(--brass2)">together</i>.</h1>'+
+  '<p class="lead" style="margin-top:16px">Everything we did by hand in these sessions, as one product. The owner creates a project, which becomes a GitHub repository and a <b>.io</b> site. They invite a partner by e-mail. The partner signs up, connects GitHub and both edit the same deck: live in the studio, versioned with commits and comments, published to the <b>.io</b> on every commit.</p>'+
+  '<div style="display:flex;gap:10px;margin-top:22px;flex-wrap:wrap"><button class="btn pri" data-go="#/signin">Start the story as owner</button><button class="btn br" data-act="demoTogether">See two people editing live</button><button class="btn ghost" data-act="reset">Reset demo</button></div></div>'+
+  '<div class="card" style="padding:14px"><div class="stage" id="heroStage"></div><div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px"><span class="small">'+(S.project?esc(siteUrl()):'jads-marcelino.github.io/data-strategy-for-leaders/')+'</span><span class="pill ok">Live</span></div></div></div>'+
+  '<div class="grid3" style="margin-top:44px">'+
+   stepCard('1','Owner creates and shares','Sign in with GitHub, pick a Meridiano template and create the project. The repository and the GitHub Pages site are created for you. Then invite a partner by e-mail, as Editor, Commenter or Viewer.',[['Sign in as owner','#/signin'],['Invite screen','act:openShare']])+
+   stepCard('2','Guest joins and connects GitHub','The partner gets an e-mail, accepts, creates an account and authorises GitHub. They become a collaborator on the repository, so their commits carry their own name.',[['Open the invite e-mail','#/inbox']])+
+   stepCard('3','Both work on the same file','Edits appear live for everyone in the studio, with presence and comments. A commit records the version on GitHub and republishes the .io: whoever refreshes the site sees it.',[['Open the studio','#/studio'],['Two-person demo','act:demoTogether']])+
+  '</div>'+
+  '<div class="card" style="padding:22px;margin-top:22px;display:flex;gap:20px;align-items:center;flex-wrap:wrap"><div style="flex:1;min-width:260px"><h3 class="t">Try it in two tabs</h3><p class="muted" style="margin-top:6px;line-height:1.5">Open this page in a second tab, choose <b>Gustavo</b> at the top right and open the Studio in both. What you type in one appears in the other. On an iPad, use the <b>Two-person demo</b>, which shows both people side by side.</p></div><button class="btn" data-go="#/how">How it would work for real →</button></div>'+
+  '</div>';
+  mountStage(document.getElementById('heroStage'),S.live['slides/01-cover.html']);
+};
+function stepCard(n,t,b,btns){return '<div class="card stepcard"><p class="n">'+n+'</p><h3 class="t">'+t+'</h3><p class="muted" style="line-height:1.5">'+b+'</p><div class="btns">'+btns.map(function(x,i){return x[1].indexOf('act:')===0?'<button class="btn sm '+(i?'':'pri')+'" data-act="'+x[1].slice(4)+'">'+x[0]+'</button>':'<button class="btn sm '+(i?'':'pri')+'" data-go="'+x[1]+'">'+x[0]+'</button>'}).join('')+'</div></div>';}
+
+/* ---------- SIGN IN (owner) ---------- */
+routes['#/signin']=function(v){
+  setUser('jadson'); renderNav(route());
+  v.innerHTML='<div class="wrap" style="max-width:480px;text-align:center"><div style="display:flex;justify-content:center">'+LOGO(64)+'</div><h1 class="big" style="font-size:40px;margin-top:14px">Welcome to Meridiano Studio</h1><p class="lead" style="margin:12px auto 26px">Sign in with the GitHub account that will own the projects.</p>'+
+  '<button class="btn pri" style="width:100%;justify-content:center;padding:13px" data-act="ghOwner">'+GHICON+' Continue with GitHub</button><p class="small" style="margin-top:14px">We ask for access to create repositories and publish GitHub Pages on your account.</p></div>';
+};
+var GHICON='<svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>';
+routes['#/gh-owner']=function(v){
+  v.innerHTML='<div class="gh"><div style="text-align:center">'+GHICON.replace('18','40').replace('18','40')+'<h2 style="font-weight:400;font-size:22px;margin:12px 0 4px">Authorize Meridiano Studio</h2><p style="color:#59636E">by Meridiano Consulting</p></div>'+
+  '<ul style="margin:18px 0"><li>✓ <span><b>Repositories</b>: create repositories and push commits</span></li><li>✓ <span><b>Pages</b>: publish and update GitHub Pages sites</span></li><li>✓ <span><b>Administration</b>: invite collaborators to repositories you own</span></li><li>✓ <span><b>E-mail address</b> (read-only)</span></li></ul>'+
+  '<p style="font-size:13px;color:#59636E;margin-bottom:14px">Signed in as <b>@jads-Marcelino</b></p><button class="btngh" data-act="ghOwnerOk">Authorize</button><p style="font-size:12px;color:#59636E;margin-top:10px;text-align:center">Simulated GitHub screen · nothing is sent</p></div>';
+};
+
+/* ---------- DASHBOARD ---------- */
+routes['#/dashboard']=function(v){
+  if(!S.signedIn){go('#/signin');return;}
+  var mine=S.project?'<div class="proj"><div class="thumbS" id="dashThumb"></div><div style="flex:1;min-width:0"><h3 class="t">'+esc(S.project.name)+'</h3><p class="small" style="margin-top:3px">'+S.project.owner+'/'+S.project.repo+' · '+S.project.visibility+' · '+S.members.length+' member'+(S.members.length>1?'s':'')+'</p><p class="small"><a href="#/site">'+esc(siteUrl())+'</a></p></div><div style="display:flex;gap:6px">'+S.members.map(function(m){return av(m.id)}).join('')+'</div><button class="btn sm" data-go="#/project">Open</button><button class="btn sm pri" data-go="#/studio">Studio</button></div>':'';
+  v.innerHTML='<div class="wrap"><div style="display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap"><div style="flex:1"><span class="chip">'+(SES.user==='jadson'?'@jads-Marcelino':'@'+USERS[SES.user].gh)+'</span><h1 class="big" style="margin-top:12px">Projects</h1></div>'+(SES.user==='jadson'?'<button class="btn pri" data-go="#/new">+ New project</button>':'')+'</div>'+
+  '<div class="card" style="margin-top:24px">'+mine+
+  '<div class="proj"><div class="thumbS" style="background:linear-gradient(135deg,#0F2420,#1D3A34)"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center">'+LOGO(30,true)+'</div></div><div style="flex:1"><h3 class="t">GJG · presentations hub</h3><p class="small" style="margin-top:3px">jads-Marcelino/GJG · Public · imported</p><p class="small">https://jads-marcelino.github.io/GJG/</p></div><span class="pill">read-only import</span></div>'+
+  '<div class="proj"><div class="thumbS" style="background:#F8F6F1;border:1px solid var(--line)"><div style="position:absolute;inset:10px;border-top:3px solid #1F5A4C"></div></div><div style="flex:1"><h3 class="t">Meridiano · private sources</h3><p class="small" style="margin-top:3px">jads-Marcelino/Meridiano · Private · imported</p></div><span class="pill">read-only import</span></div>'+
+  '</div>'+(S.project?'':'<p class="muted" style="margin-top:18px">No studio project yet. Create one from a Meridiano template.</p>')+'</div>';
+  if(S.project)mountStage(document.getElementById('dashThumb'),S.live['slides/01-cover.html']);
+};
+
+/* ---------- NEW PROJECT ---------- */
+var NP={step:1,template:'course',name:'Data Strategy for Leaders',repo:'data-strategy-for-leaders',visibility:'Public'};
+var TEMPLATES=[['course','Executive course deck','Chapters, polls, quizzes, myth-or-fact and speaker notes'],['inst','Institutional deck','Point of view, partners, practices, method'],['disc','Discovery guide','Triage and stage guides, exported to PDF in three languages'],['blank','Blank Meridiano deck','Brand fonts, colours and slide layouts only']];
+routes['#/new']=function(v){
+  if(!S.signedIn){go('#/signin');return;}
+  var body='';
+  if(NP.step===1){body='<h2 class="t">Choose a template</h2><p class="muted" style="margin:6px 0 18px">Templates carry the Meridiano look, the presenter and the build script.</p><div class="grid2">'+TEMPLATES.map(function(t){return '<button class="card" data-act="tpl" data-v="'+t[0]+'" style="text-align:left;padding:18px;'+(NP.template===t[0]?'border-color:var(--brass);box-shadow:inset 0 3px 0 var(--brass)':'')+'"><h3 class="t">'+t[1]+'</h3><p class="small" style="margin-top:6px">'+t[2]+'</p></button>'}).join('')+'</div><div style="margin-top:22px;text-align:right"><button class="btn pri" data-act="npNext">Continue</button></div>';}
+  else if(NP.step===2){body='<h2 class="t">Name it</h2><p class="muted" style="margin:6px 0 18px">This becomes the repository and the address of the site.</p>'+
+    '<div class="field"><label>Project name</label><input id="npName" value="'+esc(NP.name)+'"></div>'+
+    '<div class="field"><label>Repository</label><input id="npRepo" value="'+esc(NP.repo)+'"></div>'+
+    '<div class="field"><label>Visibility</label><select id="npVis"><option '+(NP.visibility==='Public'?'selected':'')+'>Public</option><option '+(NP.visibility==='Private'?'selected':'')+'>Private</option></select></div>'+
+    '<p class="small" id="npNote">'+visNote(NP.visibility)+'</p>'+
+    '<div class="card" style="padding:14px;margin-top:14px;background:#FCFBF8"><p class="small">Site address</p><p style="font:14px ui-monospace,Menlo,monospace;margin-top:4px" id="npUrl">https://jads-marcelino.github.io/'+esc(NP.repo)+'/</p></div>'+
+    '<div style="margin-top:22px;display:flex;justify-content:space-between"><button class="btn" data-act="npBack">Back</button><button class="btn pri" data-act="npCreate">Create project</button></div>';}
+  else {body='<h2 class="t">Creating '+esc(NP.name)+'</h2><p class="muted" style="margin:6px 0 14px">This is what happens on GitHub, in order.</p><div id="npSteps"></div><div id="npDone" class="hidden" style="margin-top:20px;display:flex;gap:10px"><button class="btn pri" data-go="#/project">Go to project</button><button class="btn br" data-act="openShare">Invite someone</button></div>';}
+  v.innerHTML='<div class="wrap" style="max-width:720px"><p class="small" style="margin-bottom:12px">New project · step '+Math.min(NP.step,3)+' of 3</p><div class="card" style="padding:26px">'+body+'</div></div>';
+  if(NP.step===2){
+    var n=document.getElementById('npName'),r=document.getElementById('npRepo'),vv=document.getElementById('npVis');
+    n.oninput=function(){NP.name=n.value;NP.repo=slug(n.value);r.value=NP.repo;document.getElementById('npUrl').textContent='https://jads-marcelino.github.io/'+NP.repo+'/';};
+    r.oninput=function(){NP.repo=slug(r.value)||'';document.getElementById('npUrl').textContent='https://jads-marcelino.github.io/'+NP.repo+'/';};
+    vv.onchange=function(){NP.visibility=vv.value;document.getElementById('npNote').innerHTML=visNote(vv.value);};
+  }
+  if(NP.step===3)runSteps('npSteps',[
+    'Create repository jads-Marcelino/'+NP.repo+' ('+NP.visibility.toLowerCase()+')',
+    'Push template: slides/, deck.json, build.py, presenter, fonts',
+    'Add GitHub Actions workflow: build on every commit',
+    'Enable GitHub Pages from the workflow',
+    'First build and deploy',
+    'Live at https://jads-marcelino.github.io/'+NP.repo+'/'
+  ],function(){
+    var t=TEMPLATES.filter(function(x){return x[0]===NP.template})[0];
+    createProject({name:NP.name,repo:NP.repo||'project',visibility:NP.visibility,template:NP.template,templateName:t[1]}); persist(); NP.step=1;
+    document.getElementById('npDone').classList.remove('hidden'); toast('Project created and published','jadson',true);
+  });
+};
+function visNote(v){return v==='Public'?'Anyone with the link can open the .io site and see the repository. Only invited people can edit.':'Code stays private. GitHub Pages on a private repository needs a paid GitHub plan; the site itself is still reachable by link.';}
+function runSteps(id,steps,done){
+  var el=document.getElementById(id),i=0;
+  function draw(){el.innerHTML=steps.map(function(s,k){return '<div class="step '+(k<i?'done':k===i?'run':'')+'"><span class="dot">'+(k<i?'✓':'')+'</span><span style="padding-top:3px;'+(k>i?'color:var(--sub)':'')+'">'+esc(s)+'</span></div>'}).join('');}
+  draw(); var tm=setInterval(function(){i++;draw();if(i>=steps.length){clearInterval(tm);done&&done();}},650);
+}
+
+/* ---------- PROJECT ---------- */
+routes['#/project']=function(v){
+  if(!S.project){go('#/dashboard');return;}
+  var mem=S.members.map(function(m){var u=USERS[m.id];return '<div style="display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)">'+av(m.id)+'<div style="flex:1"><b>'+esc(u.name)+'</b><p class="small">'+u.email+' · @'+u.gh+'</p></div><span class="pill '+(m.role==='Owner'?'warn':'blue')+'">'+m.role+'</span></div>'}).join('')+
+    S.invites.filter(function(i){return i.status==='pending'}).map(function(i){return '<div style="display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)"><span class="av" style="background:#C9D3CE">?</span><div style="flex:1"><b>'+esc(i.email)+'</b><p class="small">invited '+ago(i.t)+' · waiting to sign up</p></div><span class="pill">'+i.role+' · pending</span></div>'}).join('');
+  var act=S.activity.slice(0,10).map(function(a){return '<div style="display:flex;gap:10px;padding:8px 0;align-items:flex-start">'+av(a.who,'sm')+'<p style="flex:1;line-height:1.45"><b>'+USERS[a.who].short+'</b> '+a.txt+'</p><span class="small">'+ago(a.t)+'</span></div>'}).join('');
+  v.innerHTML='<div class="wrap"><div style="display:flex;gap:16px;align-items:flex-end;flex-wrap:wrap"><div style="flex:1"><span class="chip">'+S.project.owner+'/'+S.project.repo+'</span><h1 class="big" style="margin-top:12px">'+esc(S.project.name)+'</h1><p style="margin-top:8px"><a href="#/site">'+esc(siteUrl())+'</a> <span class="pill ok" style="margin-left:6px">'+(S.deploy.state==='live'?'Live':'Deploying')+' · '+(S.liveSha||'')+'</span></p></div><button class="btn" data-act="openShare">Share</button><button class="btn pri" data-go="#/studio">Open studio</button></div>'+
+  '<div class="grid2" style="margin-top:26px;grid-template-columns:1.2fr .8fr"><div class="card" style="padding:14px"><div class="stage" id="projStage"></div></div>'+
+  '<div class="card" style="padding:20px"><h3 class="t">People</h3>'+mem+'<button class="btn sm" style="margin-top:12px" data-act="openShare">+ Invite by e-mail</button></div></div>'+
+  '<div class="grid2" style="margin-top:18px"><div class="card" style="padding:20px"><h3 class="t">Activity</h3>'+(act||'<p class="muted">Nothing yet.</p>')+'</div>'+
+  '<div class="card" style="padding:20px"><h3 class="t">Versions</h3>'+S.commits.slice(0,6).map(function(c){return '<div class="commit">'+av(c.author,'sm')+'<div style="flex:1"><b>'+esc(c.msg)+'</b><p class="small">'+USERS[c.author].short+' · '+ago(c.t)+'</p></div><span class="sha">'+c.sha+'</span></div>'}).join('')+'</div></div></div>';
+  mountStage(document.getElementById('projStage'),S.live['slides/01-cover.html']);
+};
+
+/* ---------- SHARE MODAL ---------- */
+function openShare(){
+  if(!S.project){ensureProject();persist();}
+  var bg=document.createElement('div');bg.className='modal-bg';
+  bg.innerHTML='<div class="modal"><h2 class="t">Share “'+esc(S.project.name)+'”</h2><p class="muted" style="margin:6px 0 18px">They will get an e-mail, create an account and connect GitHub. Editors are added as collaborators on the repository.</p>'+
+  '<div class="field"><label>E-mail</label><input id="shEmail" value="'+USERS.gustavo.email+'"></div>'+
+  '<div class="field"><label>Role</label><select id="shRole"><option>Editor</option><option>Commenter</option><option>Viewer</option></select></div>'+
+  '<p class="small" style="margin:-4px 0 14px">Editor: edits and commits · Commenter: comments only · Viewer: sees the studio and the site</p>'+
+  '<div class="field"><label>Message (optional)</label><textarea id="shMsg" rows="2">Can you review the course deck before Monday?</textarea></div>'+
+  '<div style="display:flex;justify-content:space-between;align-items:center"><button class="btn ghost" data-act="closeModal">Cancel</button><button class="btn pri" data-act="sendInvite">Send invite</button></div></div>';
+  bg.addEventListener('click',function(e){if(e.target===bg)bg.remove();});
+  document.body.appendChild(bg);
+}
+function sendInvite(){
+  var em=document.getElementById('shEmail').value.trim(),role=document.getElementById('shRole').value,msg=document.getElementById('shMsg').value;
+  if(!/@/.test(em)){alert('Enter an e-mail');return;}
+  S.invites=S.invites.filter(function(i){return i.email!==em});
+  S.invites.push({email:em,role:role,status:isMember('gustavo')&&em===USERS.gustavo.email?'accepted':'pending',t:now(),by:'jadson',msg:msg});
+  log('jadson','invited '+em+' as '+role); persist();
+  var m=document.querySelector('.modal'); m.innerHTML='<h2 class="t">Invite sent</h2><p class="muted" style="margin:8px 0 18px">'+esc(em)+' will receive an e-mail with a link to join. The invite is valid for 7 days.</p><div class="card" style="padding:14px;background:#FCFBF8"><p class="small">Invite link</p><p style="font:13px ui-monospace,Menlo,monospace;margin-top:4px;word-break:break-all">https://studio.meridiano-consulting.com/join/'+sha()+sha()+'</p></div><div style="display:flex;justify-content:space-between;margin-top:18px"><button class="btn" data-act="closeModal">Done</button><button class="btn br" data-act="toInbox">See the e-mail they receive →</button></div>';
+  if(route()==='#/project')render();
+}
+
+/* ---------- INBOX (guest) ---------- */
+routes['#/inbox']=function(v){
+  setUser('gustavo'); renderNav(route()); ensureProject(); if(!S.invites.length){S.invites.push({email:USERS.gustavo.email,role:'Editor',status:'pending',t:now(),by:'jadson',msg:'Can you review the course deck before Monday?'});log('jadson','invited '+USERS.gustavo.email+' as Editor');persist();}
+  var inv=S.invites[S.invites.length-1];
+  v.innerHTML='<div class="wrap"><p class="small" style="margin-bottom:10px">Simulated mailbox of <b>'+esc(inv.email)+'</b></p><div class="card mailbox" style="overflow:hidden"><div class="list"><div class="mail sel"><b>Meridiano Studio</b><p class="small" style="margin-top:3px">Jadson invited you to “'+esc(S.project.name)+'”</p></div><div class="mail"><b class="muted">Calendar</b><p class="small">Health-plan prospect · Tue 10:00</p></div></div>'+
+  '<div style="padding:34px;max-width:620px"><div style="display:flex;align-items:center;gap:10px">'+LOGO(34)+'<b class="serif" style="font-size:20px">Meridiano Studio</b></div>'+
+  '<h2 class="t" style="margin-top:22px">Jadson Marcelino invited you to edit<br><i style="color:var(--brass2)">'+esc(S.project.name)+'</i></h2>'+
+  (inv.msg?'<p style="margin-top:16px;padding:14px;border-left:3px solid var(--brass);background:#FCFBF8;line-height:1.5">“'+esc(inv.msg)+'”</p>':'')+
+  '<p class="muted" style="margin-top:16px;line-height:1.55">Role: <b>'+inv.role+'</b>. You will create a Meridiano Studio account and connect your GitHub, so your changes are saved as commits under your name.</p>'+
+  '<button class="btn pri" style="margin-top:20px" data-go="#/join">Accept invitation</button><p class="small" style="margin-top:20px">Site: '+esc(siteUrl())+'</p></div></div></div>';
+};
+
+/* ---------- JOIN (guest) ---------- */
+var JN={step:1};
+routes['#/join']=function(v){
+  setUser('gustavo'); renderNav(route()); ensureProject(); var inv=S.invites[S.invites.length-1]||{email:USERS.gustavo.email,role:'Editor'};
+  var b='';
+  if(JN.step===1)b='<h2 class="t">Create your account</h2><p class="muted" style="margin:6px 0 18px">You were invited to <b>'+esc(S.project.name)+'</b> as '+inv.role+'.</p>'+
+    '<div class="field"><label>Name</label><input id="jnName" value="'+USERS.gustavo.name+'"></div><div class="field"><label>E-mail</label><input value="'+esc(inv.email)+'" readonly></div><div class="field"><label>Password</label><input type="password" value="••••••••••"></div>'+
+    '<button class="btn pri" style="width:100%;justify-content:center" data-act="jnNext">Create account</button>';
+  else if(JN.step===2)b='<h2 class="t">Connect GitHub</h2><p class="muted" style="margin:6px 0 18px;line-height:1.5">Meridiano Studio saves every version on GitHub. Connecting your account adds you as a collaborator on <b>'+S.project.owner+'/'+S.project.repo+'</b> and signs your commits with your name.</p><button class="btn pri" style="width:100%;justify-content:center;padding:12px" data-act="jnGh">'+GHICON+' Connect GitHub</button><p class="small" style="margin-top:12px">No GitHub account? You can create one on the next screen.</p>';
+  else if(JN.step===3)b='<div class="gh" style="margin:0;border:0;padding:0"><div style="text-align:center">'+GHICON.replace('18','36').replace('18','36')+'<h2 style="font-weight:400;font-size:21px;margin:10px 0 4px">Authorize Meridiano Studio</h2><p style="color:#59636E">to act on your behalf</p></div><ul style="margin:16px 0"><li>✓ <span>Push commits to repositories you are invited to</span></li><li>✓ <span>Read and write pull request and commit comments</span></li><li>✓ <span>E-mail address (read-only)</span></li></ul><div class="field"><label>Signed in as</label><input value="@'+USERS.gustavo.gh+'" readonly></div><button class="btngh" data-act="jnAuth">Authorize</button></div>';
+  else b='<h2 class="t">You’re in</h2><div id="jnSteps" style="margin-top:12px"></div><div id="jnDone" class="hidden" style="margin-top:18px;display:flex;gap:10px"><button class="btn pri" data-act="jnStudio">Open the studio</button></div>';
+  v.innerHTML='<div class="wrap" style="max-width:520px"><p class="small" style="margin-bottom:10px">Join · step '+Math.min(JN.step,4)+' of 4</p><div class="card" style="padding:26px">'+b+'</div></div>';
+  if(JN.step===4)runSteps('jnSteps',['Account created for '+inv.email,'GitHub connected as @'+USERS.gustavo.gh,'Added as collaborator on '+S.project.owner+'/'+S.project.repo+' ('+inv.role+')','Studio access granted'],function(){
+    ensureGuestAccept(inv); document.getElementById('jnDone').classList.remove('hidden');});
+};
+function ensureGuestAccept(inv){ inv.status='accepted'; if(!isMember('gustavo')){S.members.push({id:'gustavo',role:inv.role,joined:now()}); log('gustavo','accepted the invite and connected GitHub @'+USERS.gustavo.gh);} persist(); toast('Gustavo joined '+esc(S.project.name),'gustavo'); }
+
+/* ============================================================
+   STUDIO
+   ============================================================ */
+var panes=[];
+function newPane(user,compact){return {id:panes.length,user:user,compact:!!compact,path:Object.keys(S.files)[0],mode:'visual',tab:'comments',draft:'',msg:'',el:null,editing:null};}
+routes['#/studio']=function(v){
+  ensureProject(); if(SES.user==='gustavo')ensureGuest(); persist();
+  v.innerHTML='<div id="studio"></div>'; panes=[newPane(SES.user,false)]; mountPanes();
+};
+routes['#/together']=function(v){
+  ensureGuest(); persist();
+  v.innerHTML='<div style="display:flex;align-items:center;gap:12px;padding:10px 14px 0;flex-wrap:wrap"><span class="chip">Two people · same document</span><span class="small">Left is Jadson, right is Gustavo. Click a text on either slide and type: it changes on both sides as you type. Commit from either side and open the Live site.</span></div><div id="studio" style="height:calc(100vh - 100px)"></div>';
+  panes=[newPane('jadson',true),newPane('gustavo',true)]; panes[1].tab='changes'; mountPanes();
+};
+function mountPanes(){var st=document.getElementById('studio');st.innerHTML='';panes.forEach(function(p,i){p.id=i;var d=document.createElement('div');d.className='pane'+(p.compact?' compact':'');p.el=d;st.appendChild(d);renderPane(p);});}
+function paths(){return Object.keys(S.files);}
+function dirtyPaths(){return paths().filter(function(k){return S.files[k]!==S.base[k]});}
+function slideTitle(src){var m=/data-edit="title"[^>]*>([\s\S]*?)<\/h[12]>/.exec(src);var d=document.createElement('div');d.innerHTML=m?m[1]:'';return d.textContent;}
+
+function renderPane(p){
+  p.el.innerHTML='<div class="ptop"></div><div class="pbody"><div class="pleft"></div><div class="pcenter"></div><div class="pright"></div></div>';
+  renderTop(p);renderLeft(p);renderCenter(p);renderRight(p);
+}
+function q(p,s){return p.el.querySelector(s);}
+function renderTop(p){
+  var d=dirtyPaths().length, u=USERS[p.user];
+  var online=onlineUsers();
+  q(p,'.ptop').innerHTML='<span class="ttl">'+esc(S.project.name)+'</span><span class="brn">⎇ main</span>'+
+  '<div class="faces">'+S.members.map(function(m){return av(m.id,(online.indexOf(m.id)>=0?'on ':'')+'sm')}).join('')+'</div><div style="flex:1"></div>'+
+  (p.compact?'<span class="small" style="display:flex;align-items:center;gap:6px">'+av(p.user,'sm')+u.short+'</span>':(p.user==='jadson'?'<button class="btn sm br" data-act="bot" title="Watch a collaborator edit, comment and commit">▶ Simulate Gustavo</button>':'')+'<button class="btn sm" data-act="openShare">Share</button>')+
+  '<button class="btn sm" data-p="'+p.id+'" data-act="toChanges">'+(d?'<span style="width:8px;height:8px;border-radius:50%;background:var(--brass)"></span>':'')+'Commit'+(d?' ('+d+')':'')+'</button>'+
+  '<button class="btn sm pri" data-go="#/site">Live site ↗</button>';
+}
+function onlineUsers(){var o=[SES.user];panes.forEach(function(p){if(o.indexOf(p.user)<0)o.push(p.user)});Object.keys(S.presence).forEach(function(k){if(now()-S.presence[k].t<60000&&o.indexOf(k)<0)o.push(k)});return o;}
+function renderLeft(p){
+  var L=q(p,'.pleft');
+  L.innerHTML=paths().map(function(k,i){var cm=S.comments.filter(function(c){return c.path===k&&!c.resolved}).length;
+    var who=Object.keys(S.presence).filter(function(u){return u!==p.user&&S.presence[u].path===k&&now()-S.presence[u].t<60000});
+    return '<div class="th '+(p.path===k?'sel':'')+'" data-p="'+p.id+'" data-act="pick" data-v="'+k+'"><span class="num">'+(i+1)+'</span>'+(cm?'<span class="cm">'+cm+'</span>':'')+(S.files[k]!==S.base[k]?'<span class="dirty" title="uncommitted changes"></span>':'')+'<span class="who">'+who.map(function(u){return av(u,'sm')}).join('')+'</span><div class="mini">'+S.files[k]+'</div></div>'}).join('');
+  L.querySelectorAll('.th').forEach(function(t){var w=t.clientWidth||130;t.querySelector('.mini').style.transform='scale('+(w/1920)+')';});
+}
+function renderCenter(p){
+  var C=q(p,'.pcenter');
+  C.innerHTML='<div class="ctool"><div class="seg"><button data-p="'+p.id+'" data-act="mode" data-v="visual" class="'+(p.mode==='visual'?'on':'')+'">Visual</button><button data-p="'+p.id+'" data-act="mode" data-v="code" class="'+(p.mode==='code'?'on':'')+'">Code</button></div><span class="path">'+p.path+'</span><div style="flex:1"></div><button class="btn sm" data-p="'+p.id+'" data-act="addCommentHere" title="Comment on this slide">💬 Comment</button></div>'+
+   (p.mode==='visual'?'<div class="cwrap"><div class="stage editing"><div class="slide"></div></div></div>':'<textarea class="code" spellcheck="false"></textarea>');
+  if(p.mode==='visual'){fillCanvas(p);}
+  else{var ta=C.querySelector('textarea');ta.value=S.files[p.path];ta.oninput=function(){applyEdit(p,p.path,ta.value,'code');};ta.onfocus=function(){setPresence(p,p.path,'code');};}
+}
+function fitStage(stage){var sl=stage.querySelector('.slide');function f(){var w=stage.clientWidth;if(w)sl.style.transform='scale('+(w/1920)+')';}f();if(window.ResizeObserver){new ResizeObserver(f).observe(stage);}else window.addEventListener('resize',f);}
+function mountStage(stage,html){stage.innerHTML='<div class="slide">'+html+'</div>';fitStage(stage);}
+function fillCanvas(p){
+  var stage=q(p,'.stage'), sl=stage.querySelector('.slide');
+  sl.innerHTML=S.files[p.path]; fitStage(stage);
+  sl.querySelectorAll('[data-edit]').forEach(function(el){
+    el.setAttribute('contenteditable','true'); el.setAttribute('spellcheck','false');
+    el.addEventListener('focus',function(){p.editing=el.getAttribute('data-edit');setPresence(p,p.path,p.editing);});
+    el.addEventListener('blur',function(){p.editing=null;});
+    el.addEventListener('input',function(){applyEdit(p,p.path,serialize(sl),'visual');});
+    el.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();el.blur();}});
+  });
+  drawPresence(p);
+}
+function serialize(sl){var c=sl.cloneNode(true);c.querySelectorAll('[contenteditable]').forEach(function(e){e.removeAttribute('contenteditable');e.removeAttribute('spellcheck');});return c.innerHTML;}
+function drawPresence(p){
+  if(p.mode!=='visual')return; var stage=q(p,'.stage'); if(!stage)return;
+  stage.querySelectorAll('.pres').forEach(function(e){e.remove()});
+  Object.keys(S.presence).forEach(function(u){
+    var pr=S.presence[u]; if(u===p.user||pr.path!==p.path||!pr.key||now()-pr.t>60000)return;
+    var el=stage.querySelector('[data-edit="'+pr.key+'"]'); if(!el)return;
+    var a=stage.getBoundingClientRect(),b=el.getBoundingClientRect();
+    var box=document.createElement('div');box.className='pres';box.style.borderColor=USERS[u].color;
+    box.style.left=(b.left-a.left-5)+'px';box.style.top=(b.top-a.top-5)+'px';box.style.width=(b.width+10)+'px';box.style.height=(b.height+10)+'px';
+    box.innerHTML='<span style="background:'+USERS[u].color+'">'+USERS[u].short+(pr.typing&&now()-pr.typing<1500?' is typing…':'')+'</span>';stage.appendChild(box);
+  });
+}
+function setPresence(p,path,key,typing){S.presence[p.user]={path:path,key:key,t:now(),typing:typing?now():(S.presence[p.user]&&S.presence[p.user].typing)};share(p,{presence:true});}
+
+/* shared-state change propagation */
+var thumbTimer=null;
+function applyEdit(src,path,html,how){
+  S.files[path]=html; S.presence[src?src.user:'gustavo']={path:path,key:src?src.editing||how:'title',t:now(),typing:now()};
+  share(src,{edit:path});
+}
+function share(src,what){persist();onShared(src,what);}
+function onShared(src,what){
+  var r=route();
+  if(r==='#/studio'||r==='#/together'){
+    panes.forEach(function(p){
+      var isSrc=(p===src);
+      renderTop(p);
+      if(!isSrc&&(!what||what.edit===p.path||what.remote||what.all)){
+        if(p.mode==='visual'){ var stage=q(p,'.stage'); var active=stage&&stage.contains(document.activeElement); if(!active)fillCanvas(p); else drawPresence(p);}
+        else { var ta=q(p,'textarea.code'); if(ta&&document.activeElement!==ta)ta.value=S.files[p.path]; }
+      } else drawPresence(p);
+      if(!(p.el.querySelector('.pright').contains(document.activeElement))) renderRight(p); else p.pendingRight=true;
+    });
+    clearTimeout(thumbTimer);thumbTimer=setTimeout(function(){panes.forEach(renderLeft)},250);
+  } else if(r==='#/site'){ siteCheck(); }
+  else if(what&&what.remote&&(r==='#/project'||r==='#/dashboard')) render();
+}
+document.addEventListener('focusout',function(){setTimeout(function(){panes.forEach(function(p){if(p.pendingRight&&!p.el.querySelector('.pright').contains(document.activeElement)){p.pendingRight=false;renderRight(p);}})},0);});
+
+/* right panel */
+function renderRight(p){
+  var R=q(p,'.pright'); if(!R)return;
+  var open=S.comments.filter(function(c){return !c.resolved}).length, d=dirtyPaths().length;
+  var tabs=[['comments','Comments',open],['changes','Changes',d],['history','History',0],['deploy','Deploy',0]];
+  R.innerHTML='<div class="tabs">'+tabs.map(function(t){return '<button data-p="'+p.id+'" data-act="tab" data-v="'+t[0]+'" class="'+(p.tab===t[0]?'on':'')+'">'+t[1]+(t[2]?'<span class="bd">'+t[2]+'</span>':'')+'</button>'}).join('')+'</div><div class="rbody"></div>';
+  var B=R.querySelector('.rbody');
+  if(p.tab==='comments')B.innerHTML=commentsHTML(p);
+  if(p.tab==='changes')B.innerHTML=changesHTML(p);
+  if(p.tab==='history')B.innerHTML=historyHTML(p);
+  if(p.tab==='deploy')B.innerHTML=deployHTML(p);
+  var ta=B.querySelector('[data-draft]'); if(ta){ta.value=p[ta.getAttribute('data-draft')]||'';ta.oninput=function(){p[ta.getAttribute('data-draft')]=ta.value;};}
+  B.querySelectorAll('[data-reply]').forEach(function(i){i.value=(p.replies||{})[i.getAttribute('data-reply')]||'';i.oninput=function(){p.replies=p.replies||{};p.replies[i.getAttribute('data-reply')]=i.value;};});
+}
+function mention(t){return esc(t).replace(/@(Jadson|Gustavo)/g,'<span class="ment">@$1</span>');}
+function commentsHTML(p){
+  var here=S.comments.filter(function(c){return c.path===p.path}), others=S.comments.filter(function(c){return c.path!==p.path&&!c.resolved});
+  var form='<div style="margin-bottom:14px"><textarea class="in" rows="2" data-draft="draft" placeholder="Comment on slide '+(paths().indexOf(p.path)+1)+'… use @'+(p.user==='jadson'?'Gustavo':'Jadson')+' to notify"></textarea><div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px"><span class="small">'+(p.editing?'On “'+p.editing+'”':'On this slide')+'</span><button class="btn sm pri" data-p="'+p.id+'" data-act="comment">Comment</button></div></div>';
+  function one(c){return '<div class="cmt '+(c.resolved?'res':'')+'"><div class="h">'+av(c.author,'sm')+'<b>'+USERS[c.author].short+'</b><span class="small">'+ago(c.t)+'</span></div>'+(c.key?'<p class="anc">on “'+c.key+'” · slide '+(paths().indexOf(c.path)+1)+'</p>':'<p class="anc">slide '+(paths().indexOf(c.path)+1)+'</p>')+'<p>'+mention(c.text)+'</p>'+
+    c.replies.map(function(r){return '<div class="rep"><div class="h">'+av(r.author,'sm')+'<b>'+USERS[r.author].short+'</b><span class="small">'+ago(r.t)+'</span></div><p>'+mention(r.text)+'</p></div>'}).join('')+
+    (c.resolved?'<p class="small" style="margin-top:6px">Resolved by '+USERS[c.resolvedBy].short+'</p>':'<div style="display:flex;gap:6px;margin-top:8px"><input class="in" style="padding:6px 9px" data-reply="'+c.id+'" placeholder="Reply…"><button class="btn sm" data-p="'+p.id+'" data-act="reply" data-v="'+c.id+'">↵</button><button class="btn sm" data-p="'+p.id+'" data-act="resolve" data-v="'+c.id+'" title="Resolve">✓</button></div>')+'</div>';}
+  return form+(here.length?here.slice().reverse().map(one).join(''):'<p class="small" style="margin-bottom:12px">No comments on this slide yet.</p>')+
+    (others.length?'<p class="small" style="margin:14px 0 8px;font-weight:700;letter-spacing:1px;text-transform:uppercase">Other slides</p>'+others.slice().reverse().map(one).join(''):'')+
+    '<p class="small" style="margin-top:12px;line-height:1.45">Comments are stored with the project and mirrored to the commit on GitHub, so they survive outside the studio.</p>';
+}
+function diffLines(a,b){var A=a.split('\n'),B=b.split('\n'),n=A.length,m=B.length,dp=[],i,j;for(i=0;i<=n;i++){dp[i]=new Array(m+1).fill(0);}
+  for(i=n-1;i>=0;i--)for(j=m-1;j>=0;j--)dp[i][j]=A[i]===B[j]?dp[i+1][j+1]+1:Math.max(dp[i+1][j],dp[i][j+1]);
+  var out=[];i=0;j=0;while(i<n&&j<m){if(A[i]===B[j]){i++;j++;}else if(dp[i+1][j]>=dp[i][j+1]){out.push(['d',A[i++]]);}else out.push(['a',B[j++]]);}
+  while(i<n)out.push(['d',A[i++]]);while(j<m)out.push(['a',B[j++]]);return out;}
+function textOf(line){var d=document.createElement('div');d.innerHTML=line;var t=d.textContent.trim();return t||line.replace(/\s+/g,' ').slice(0,90);}
+function diffHTML(path,a,b){var ops=diffLines(a||'',b||'');if(!ops.length)return '';return '<div class="diff"><div class="fh">'+path+'</div>'+ops.map(function(o){return '<div class="'+o[0]+'">'+(o[0]==='a'?'+ ':'− ')+esc(textOf(o[1]))+'</div>'}).join('')+'</div>';}
+function changesHTML(p){
+  var d=dirtyPaths(); var lastBy={};Object.keys(S.presence).forEach(function(u){lastBy[S.presence[u].path]=u;});
+  if(!d.length)return '<div style="text-align:center;padding:30px 10px"><p class="serif" style="font-size:22px;color:var(--g)">Everything is committed</p><p class="small" style="margin-top:6px;line-height:1.5">Edit any text on a slide. Changes are shared live with everyone in the studio, and become a version when someone commits.</p></div>';
+  var users=[];d.forEach(function(k){var u=lastBy[k];if(u&&users.indexOf(u)<0)users.push(u)});
+  return '<p class="small" style="margin-bottom:8px">'+d.length+' file'+(d.length>1?'s':'')+' changed since '+(S.commits[0]?'<span class="sha">'+S.commits[0].sha+'</span>':'')+' · shared draft'+(users.length?' · edited by '+users.map(function(u){return USERS[u].short}).join(' & '):'')+'</p>'+
+    d.map(function(k){return diffHTML(k,S.base[k],S.files[k])}).join('')+
+    '<div style="position:sticky;bottom:-14px;background:#fff;padding:10px 0 4px;border-top:1px solid var(--line)"><textarea class="in" rows="2" data-draft="msg" placeholder="Describe the change (commit message)"></textarea><div style="display:flex;gap:8px;margin-top:8px"><button class="btn sm" data-p="'+p.id+'" data-act="discard">Discard</button><button class="btn sm pri" style="flex:1;justify-content:center" data-p="'+p.id+'" data-act="commit">Commit &amp; publish as '+USERS[p.user].short+'</button></div><p class="small" style="margin-top:6px">Creates a commit on <b>main</b> signed by @'+USERS[p.user].gh+' and redeploys '+esc(siteUrl())+'</p></div>';
+}
+function historyHTML(p){
+  return S.commits.map(function(c,i){return '<div class="commit">'+av(c.author,'sm')+'<div style="flex:1;min-width:0"><b>'+esc(c.msg)+'</b><p class="small">'+USERS[c.author].short+' · '+ago(c.t)+' · '+c.changed.length+' file'+(c.changed.length>1?'s':'')+(S.liveSha===c.sha?' · <span class="pill ok">live</span>':'')+'</p>'+
+   '<div style="display:flex;gap:6px;margin-top:6px"><span class="sha">'+c.sha+'</span><button class="btn sm" style="padding:2px 8px" data-p="'+p.id+'" data-act="showCommit" data-v="'+c.sha+'">'+(p.openSha===c.sha?'Hide':'View')+' changes</button>'+(i>0?'<button class="btn sm" style="padding:2px 8px" data-p="'+p.id+'" data-act="restore" data-v="'+c.sha+'">Restore</button>':'')+'</div>'+
+   (p.openSha===c.sha?c.changed.map(function(k){var prev=S.commits[i+1];return diffHTML(k,prev?prev.snap[k]:'',c.snap[k])}).join('')||'<p class="small">Initial version</p>':'')+'</div></div>'}).join('');
+}
+function deployHTML(p){
+  var dp=S.deploy, st=dp.state;
+  var steps=dp.steps&&dp.steps.length?dp.steps:['Checkout '+(dp.sha||''),'Build: python build.py','Upload Pages artifact','Deploy to GitHub Pages'];
+  var k=st==='live'?steps.length:(dp.k||0);
+  return '<div class="card" style="padding:14px;box-shadow:none"><p class="small">Site</p><p style="font:13px ui-monospace,Menlo,monospace;margin:4px 0 10px;word-break:break-all"><a href="#/site">'+esc(siteUrl())+'</a></p>'+
+   '<p>'+(st==='live'?'<span class="pill ok">Live</span>':'<span class="pill warn">Deploying</span>')+' <span class="sha" style="margin-left:6px">'+(st==='live'?S.liveSha:dp.sha)+'</span> <span class="small">'+ago(dp.at)+'</span></p></div>'+
+   '<p class="small" style="margin:14px 0 6px;font-weight:700;letter-spacing:1px;text-transform:uppercase">GitHub Actions · pages-build</p><div class="log">'+steps.map(function(s,i){return '<div><span class="dot" style="width:16px;height:16px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:10px;color:#fff;background:'+(i<k?'var(--g2)':'#D3D9D5')+'">'+(i<k?'✓':'')+'</span>'+esc(s)+'</div>'}).join('')+'</div>'+
+   '<p class="small" style="margin-top:12px;line-height:1.5">The studio is live; the site is versioned. Visitors see a new version of the .io when they refresh after a commit.</p>';
+}
+
+/* actions */
+function paneById(id){return panes[+id];}
+function doCommit(p){
+  var d=dirtyPaths(); if(!d.length)return;
+  var msg=(p.msg||'').trim()||('Update '+d.map(function(k){return k.replace('slides/','').replace('.html','')}).join(', '));
+  var c={sha:sha(),msg:msg,author:p.user,t:now(),changed:d,snap:clone(S.files)};
+  S.commits.unshift(c); S.base=clone(S.files); p.msg='';
+  log(p.user,'committed “'+msg+'” ('+c.sha+')');
+  startDeploy(c); share(p,{all:true});
+  toast(USERS[p.user].short+' committed “'+esc(msg)+'” · deploying',p.user);
+}
+var deployTimer=null;
+function startDeploy(c){
+  S.deploy={state:'building',sha:c.sha,at:now(),k:0,steps:['Checkout '+c.sha,'Build: python build.py','Upload Pages artifact','Deploy to GitHub Pages']};
+  clearInterval(deployTimer);
+  deployTimer=setInterval(function(){S.deploy.k++; if(S.deploy.k>=4){clearInterval(deployTimer);S.deploy.state='live';S.deploy.at=now();S.live=clone(c.snap);S.liveSha=c.sha;log(c.author,'published '+c.sha+' to '+siteUrl());toast('Live: '+c.sha+' is on the .io',c.author,true);} share(null,{all:true});},900);
+}
+function addComment(p){
+  var t=(p.draft||'').trim(); if(!t)return;
+  S.comments.push({id:sha(),path:p.path,key:p.editing,author:p.user,text:t,t:now(),replies:[],resolved:false}); p.draft='';
+  log(p.user,'commented on slide '+(paths().indexOf(p.path)+1));
+  share(p,{all:true});
+  var other=p.user==='jadson'?'Gustavo':'Jadson'; if(t.indexOf('@'+other)>=0)toast(USERS[p.user].short+' mentioned '+other+': “'+esc(t.slice(0,60))+'”',p.user);
+  renderRight(p);
+}
+
+/* ---------- LIVE SITE (.io) ---------- */
+var SITE={i:0,shown:null,watch:null};
+routes['#/site']=function(v){
+  ensureProject(); SITE.shown=S.liveSha; SITE.snap=clone(S.live);
+  v.innerHTML='<div style="padding:0 16px"><div class="browser"><div class="bbar"><span class="dots"><i></i><i></i><i></i></span><button class="btn sm ghost" data-act="siteReload" title="Refresh">⟳</button><div class="url">🔒 <b>'+esc(siteUrl().replace('https://',''))+'</b></div><span class="small" id="siteVer"></span></div><div class="sitebody" id="siteBody"><div class="stage" id="siteStage"></div></div>'+
+  '<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-top:1px solid var(--line)"><button class="btn sm" data-act="sitePrev">‹</button><span id="siteN" class="small"></span><button class="btn sm" data-act="siteNext">›</button><div style="flex:1"></div><span class="small">Public page on GitHub Pages · anyone with the link</span></div></div>'+
+  '<p class="small" style="text-align:center;margin-bottom:30px">This is what a client sees. It changes only after a commit is deployed: keep this open, commit in the studio, then refresh.</p></div>';
+  drawSite(); SITE.watch=setInterval(siteCheck,1000);
+};
+function drawSite(){var ks=Object.keys(SITE.snap);SITE.i=Math.max(0,Math.min(SITE.i,ks.length-1));mountStage(document.getElementById('siteStage'),SITE.snap[ks[SITE.i]]);
+  document.getElementById('siteN').textContent=(SITE.i+1)+' / '+ks.length;var c=S.commits.filter(function(x){return x.sha===SITE.shown})[0];
+  document.getElementById('siteVer').innerHTML='version <span class="sha">'+SITE.shown+'</span>'+(c?' · '+USERS[c.author].short:'');}
+function siteCheck(){var b=document.getElementById('siteBody');if(!b)return;var n=b.querySelector('.newver');
+  if(S.liveSha!==SITE.shown){if(!n){n=document.createElement('div');n.className='newver';n.setAttribute('data-act','siteReload');b.appendChild(n);}n.textContent='New version '+S.liveSha+' published · refresh';}
+  else if(n)n.remove();}
+function stopSiteWatch(){if(SITE.watch){clearInterval(SITE.watch);SITE.watch=null;}}
+
+/* ---------- HOW IT WORKS ---------- */
+routes['#/how']=function(v){
+  v.innerHTML='<div class="wrap"><span class="chip">Architecture</span><h1 class="big" style="margin-top:12px">How it would work for real</h1><p class="lead" style="margin-top:12px">The same process we followed by hand in these sessions, automated: a Meridiano template in a GitHub repository, a build script, GitHub Pages for the .io and people working on the files. The studio adds live editing, comments and a safe way for non-developers to commit.</p>'+
+  '<div class="flowrow"><span class="f">Owner signs in with GitHub</span><span class="ar">→</span><span class="f">Repo + Pages created from template</span><span class="ar">→</span><span class="f">Invite by e-mail</span><span class="ar">→</span><span class="f">Guest signs up + connects GitHub</span><span class="ar">→</span><span class="f">Live co-editing</span><span class="ar">→</span><span class="f">Commit</span><span class="ar">→</span><span class="f">Actions build → .io updated</span></div>'+
+  '<div class="arch" style="margin-top:10px">'+
+  node('Studio (web app)',['Next.js or SvelteKit, runs in any browser, iPad included','Visual and code editing of slides','Comments, mentions, history, restore','Deployed on Vercel or Cloudflare'])+
+  node('Real-time layer',['Yjs (CRDT) over WebSocket, or Liveblocks','Merges simultaneous typing without conflicts','Presence: who is where, who is typing','Draft state persisted every few seconds'])+
+  node('Backend',['Auth: GitHub OAuth through a GitHub App','Invites: signed links, e-mail via Resend or SES','Postgres: users, projects, roles, comments','Commits through the GitHub API, as the user'])+
+  node('GitHub',['One repository per project, from a Meridiano template','Collaborators added on invite acceptance','Actions: python build.py on every push','Pages publishes the .io; history lives in Git'])+
+  '</div>'+
+  '<h2 class="t" style="margin:34px 0 12px">The three steps, mapped</h2><table class="t"><tr><th>Step</th><th>What the person does</th><th>What happens behind</th></tr>'+
+  '<tr><td><b>1 · Owner creates and shares</b></td><td>Signs in with GitHub, picks a template, names the project, types an e-mail and a role</td><td>GitHub App creates the repo from the template, enables Pages, runs the first build. The invite is a signed token stored in Postgres and sent by e-mail</td></tr>'+
+  '<tr><td><b>2 · Guest joins</b></td><td>Opens the e-mail, creates an account, clicks Connect GitHub</td><td>OAuth links the GitHub user; the App adds them as collaborator with the right permission (write for Editors)</td></tr>'+
+  '<tr><td><b>3 · Both work</b></td><td>Edit text visually or in code, comment, commit</td><td>Edits sync live through Yjs. A commit writes the files with the GitHub API under the author’s name; Actions rebuilds; the .io serves the new version on refresh</td></tr></table>'+
+  '<h2 class="t" style="margin:34px 0 12px">What is simulated in this prototype</h2><table class="t"><tr><th>Real here</th><th>Simulated here</th></tr><tr><td>Live editing between the two panes and between browser tabs on the same device · comments, replies and resolve · diffs, commits, history and restore · the published site changing only after a commit</td><td>GitHub sign-in, repositories, collaborators, Actions and Pages · e-mail delivery · accounts and passwords · sync between different devices (needs the real-time server)</td></tr></table>'+
+  '<h2 class="t" style="margin:34px 0 12px">Rough cost to run</h2><table class="t"><tr><th>Item</th><th>Starting cost</th></tr><tr><td>GitHub (Pages, Actions, repos)</td><td>Free for public repos; Team plan for private repos with Pages</td></tr><tr><td>Hosting the studio</td><td>Free tier to ~US$20/month</td></tr><tr><td>Real-time (Liveblocks or self-hosted Yjs)</td><td>Free tier for a small team; self-hosted on a small server</td></tr><tr><td>Postgres + e-mail</td><td>Free tiers cover the first projects</td></tr></table>'+
+  '<p class="small" style="margin-top:12px">Indicative; vendor prices change and should be checked before building.</p></div>';
+};
+function node(t,items){return '<div class="node"><h4>'+t+'</h4><ul>'+items.map(function(i){return '<li>'+i+'</li>'}).join('')+'</ul></div>';}
+
+/* ---------- simulated collaborator ---------- */
+var botOn=false;
+function runBot(){
+  if(botOn)return; ensureGuest(); persist(); botOn=true;
+  var path='slides/06-next-step.html', p=null;
+  var target='Pick one decision. Measure it before and after. Then scale.';
+  var cur=S.files[path], m=/(data-edit="title"[^>]*>)([\s\S]*?)(<\/h2>)/.exec(cur), start=m[2];
+  toast('Gustavo opened the studio','gustavo',true);
+  panes.forEach(function(pp){if(!pp.compact&&pp.user!=='gustavo'){pp.path=path;pp.tab='comments';renderLeft(pp);renderCenter(pp);renderRight(pp);}});
+  S.presence.gustavo={path:path,key:'title',t:now()}; share(null,{all:true});
+  var base=start.indexOf('Then scale')>=0?start.replace(/ Then scale\.?/,''):start; var add=target.slice(base.length); if(target.indexOf(base)!==0){add=' Then scale.';}
+  var i=0;
+  setTimeout(function step(){
+    if(i<=add.length){var t=base+add.slice(0,i);S.files[path]=S.files[path].replace(/(data-edit="title"[^>]*>)([\s\S]*?)(<\/h2>)/,'$1'+t+'$3');S.presence.gustavo={path:path,key:'title',t:now(),typing:now()};share(null,{edit:path});i++;setTimeout(step,110);}
+    else setTimeout(function(){
+      S.comments.push({id:sha(),path:path,key:'title',author:'gustavo',text:'@Jadson I added “Then scale.” to the closing line. OK to use this version in the health-plan meeting?',t:now(),replies:[],resolved:false});
+      log('gustavo','commented on slide 6'); share(null,{all:true}); toast('Gustavo mentioned you: “I added Then scale. to the closing line…”','gustavo',true);
+      setTimeout(function(){var gp={user:'gustavo',msg:'Tighten closing line'};doCommit(gp);botOn=false;},2600);
+    },700);
+  },1200);
+}
+
+/* ---------- global click delegation ---------- */
+document.addEventListener('click',function(e){
+  var g=e.target.closest('[data-go]'); if(g){e.preventDefault();var m=document.querySelector('.modal-bg');if(m)m.remove();go(g.getAttribute('data-go'));return;}
+  var a=e.target.closest('[data-act]'); if(!a)return;
+  var act=a.getAttribute('data-act'), v=a.getAttribute('data-v'), p=a.hasAttribute('data-p')?paneById(a.getAttribute('data-p')):null;
+  switch(act){
+    case 'reset': if(confirm('Reset the demo to the beginning?')){S=seed();persist();setUser('jadson');NP.step=1;JN.step=1;go('#/');}break;
+    case 'demoTogether': go('#/together'); break;
+    case 'ghOwner': go('#/gh-owner'); break;
+    case 'ghOwnerOk': S.signedIn=true; persist(); go(S.project?'#/dashboard':'#/new'); break;
+    case 'tpl': NP.template=v; var t=TEMPLATES.filter(function(x){return x[0]===v})[0]; if(v==='course'){NP.name='Data Strategy for Leaders';} else NP.name=t[1].replace(' deck','').replace('Blank Meridiano','New Meridiano deck'); NP.repo=slug(NP.name); render(); break;
+    case 'npNext': NP.step=2; render(); break;
+    case 'npBack': NP.step=1; render(); break;
+    case 'npCreate': if(!NP.repo){alert('Choose a repository name');break;} NP.step=3; render(); break;
+    case 'openShare': if(!S.signedIn){S.signedIn=true;} openShare(); break;
+    case 'closeModal': var mb=document.querySelector('.modal-bg'); if(mb)mb.remove(); break;
+    case 'sendInvite': sendInvite(); break;
+    case 'toInbox': document.querySelector('.modal-bg').remove(); go('#/inbox'); break;
+    case 'jnNext': JN.step=2; render(); break;
+    case 'jnGh': JN.step=3; render(); break;
+    case 'jnAuth': JN.step=4; render(); break;
+    case 'jnStudio': setUser('gustavo'); JN.step=1; go('#/studio'); break;
+    case 'pick': p.path=v; p.editing=null; S.presence[p.user]={path:v,key:null,t:now()}; renderLeft(p); renderCenter(p); renderRight(p); share(p,{presence:true}); break;
+    case 'mode': p.mode=v; renderCenter(p); break;
+    case 'tab': p.tab=v; renderRight(p); break;
+    case 'toChanges': p.tab='changes'; renderRight(p); break;
+    case 'addCommentHere': p.tab='comments'; renderRight(p); var ta=q(p,'.pright textarea'); if(ta)ta.focus(); break;
+    case 'comment': addComment(p); break;
+    case 'reply': var c=S.comments.filter(function(x){return x.id===v})[0]; var txt=((p.replies||{})[v]||'').trim(); if(c&&txt){c.replies.push({author:p.user,text:txt,t:now()});p.replies[v]='';log(p.user,'replied to a comment');share(p,{all:true});renderRight(p);} break;
+    case 'resolve': var c2=S.comments.filter(function(x){return x.id===v})[0]; if(c2){c2.resolved=true;c2.resolvedBy=p.user;share(p,{all:true});renderRight(p);} break;
+    case 'commit': doCommit(p); break;
+    case 'discard': if(confirm('Discard all uncommitted changes for everyone?')){S.files=clone(S.base);log(p.user,'discarded uncommitted changes');share(p,{all:true});panes.forEach(function(x){renderCenter(x);renderLeft(x);});} break;
+    case 'showCommit': p.openSha=p.openSha===v?null:v; renderRight(p); break;
+    case 'restore': var cc=S.commits.filter(function(x){return x.sha===v})[0]; if(cc&&confirm('Bring back version '+v+' as uncommitted changes?')){S.files=clone(cc.snap);log(p.user,'restored version '+v);share(p,{all:true});panes.forEach(function(x){renderCenter(x);renderLeft(x);});p.tab='changes';renderRight(p);} break;
+    case 'siteReload': SITE.shown=S.liveSha; SITE.snap=clone(S.live); drawSite(); siteCheck(); break;
+    case 'sitePrev': SITE.i--; drawSite(); break;
+    case 'siteNext': SITE.i++; drawSite(); break;
+    case 'bot': runBot(); break;
+  }
+});
+document.addEventListener('keydown',function(e){if(route()==='#/site'){if(e.key==='ArrowRight'){SITE.i++;drawSite();}if(e.key==='ArrowLeft'){SITE.i--;drawSite();}}});
+setInterval(function(){ if(route()==='#/studio'||route()==='#/together'){panes.forEach(function(p){drawPresence(p);});} },1500);
+render();
+</script>
+</body></html>
