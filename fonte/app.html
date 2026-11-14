@@ -1,751 +1,768 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Meridiano Studio · prototype</title>
+<title>Meridiano Studio</title>
 <style>
 /*FONTS*/
-:root{--g:#0F2420;--g2:#1F5A4C;--teal:#2E8070;--brass:#C9A94E;--brass2:#A8832C;--ink:#14211D;--mut:#5E716A;--sub:#8FA79F;--line:#E2E6E1;--paper:#F8F6F1;--card:#FFFFFF;--tint:#E2EEE8;--red:#B4532F}
+:root{--g:#0F2420;--g2:#1F5A4C;--teal:#2E8070;--brass:#C9A94E;--brass2:#A8832C;--ink:#14211D;--mut:#5E716A;--sub:#8FA79F;--line:#E2E6E1;--paper:#F8F6F1;--tint:#E2EEE8;--sand:#F5ECD3}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
 body{font-family:Karla,Arial,sans-serif;color:var(--ink);background:var(--paper);font-size:14px;-webkit-text-size-adjust:100%}
-button,input,textarea,select{font:inherit;color:inherit}
-button{cursor:pointer;border:0;background:none}
+button,input,textarea,select{font:inherit;color:inherit}button{cursor:pointer;border:0;background:none}
 a{color:var(--g2)}
-.serif{font-family:Newsreader,Georgia,serif}
-/* top bar */
-#nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:18px;height:58px;padding:0 22px;background:rgba(248,246,241,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+#nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:14px;height:60px;padding:0 22px;background:rgba(248,246,241,.93);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
 #nav .logo{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--g)}
-#nav .logo b{font:400 20px Newsreader;letter-spacing:-.3px}#nav .logo i{font:700 9px Karla;letter-spacing:2.5px;color:var(--brass2);font-style:normal;text-transform:uppercase;border:1px solid var(--brass);border-radius:100px;padding:2px 7px}
-#nav .links{display:flex;gap:4px;margin-left:10px}
-#nav .links a{text-decoration:none;color:var(--mut);font-weight:600;padding:8px 12px;border-radius:8px}
+#nav .logo b{font:400 21px Newsreader;letter-spacing:-.3px}
+#nav .links{display:flex;gap:2px;margin-left:8px}
+#nav .links a{text-decoration:none;color:var(--mut);font-weight:700;padding:8px 12px;border-radius:9px}
 #nav .links a.on{color:var(--g);background:var(--tint)}
 #nav .sp{flex:1}
-.persona{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:#fff;border-radius:100px;padding:4px 12px 4px 4px;font-weight:600}
-.persona select{border:0;background:transparent;font-weight:600;outline:none}
-.av{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;color:#fff;font:700 11px Karla;flex:none;position:relative}
-.av.sm{width:22px;height:22px;font-size:9px}
-.av.on::after{content:'';position:absolute;right:-1px;bottom:-1px;width:8px;height:8px;border-radius:50%;background:#3BB273;border:2px solid #fff}
-.btn{display:inline-flex;align-items:center;gap:8px;border-radius:9px;padding:9px 15px;font-weight:700;border:1px solid var(--line);background:#fff;color:var(--g);white-space:nowrap}
-.btn:hover{border-color:#C9D3CE}
-.btn.pri{background:var(--g);border-color:var(--g);color:#fff}
-.btn.br{background:var(--brass);border-color:var(--brass);color:var(--g)}
-.btn.ghost{background:transparent}
-.btn.sm{padding:6px 11px;font-size:13px}
-.btn[disabled]{opacity:.45;cursor:default}
-.chip{display:inline-flex;align-items:center;gap:6px;background:var(--tint);color:var(--g2);font:700 10px Karla;letter-spacing:2px;text-transform:uppercase;padding:5px 11px 4px;border-radius:100px}
+.persona{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:#fff;border-radius:100px;padding:4px 10px 4px 4px;font-weight:700}
+.persona select{border:0;background:transparent;font-weight:700;outline:none;max-width:170px}
+.av{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;color:#fff;font:700 11px Karla;flex:none;position:relative;border:2px solid #fff}
+.av.sm{width:24px;height:24px;font-size:9px}.av.lg{width:44px;height:44px;font-size:14px}
+.av.on::after{content:'';position:absolute;right:-2px;bottom:-2px;width:9px;height:9px;border-radius:50%;background:#3BB273;border:2px solid #fff}
+.av.ai{background:linear-gradient(135deg,#1F5A4C,#C9A94E)!important}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:10px;padding:10px 16px;font-weight:700;border:1px solid var(--line);background:#fff;color:var(--g);white-space:nowrap}
+.btn:hover{border-color:#C9D3CE}.btn.pri{background:var(--g);border-color:var(--g);color:#fff}.btn.br{background:var(--brass);border-color:var(--brass);color:var(--g)}
+.btn.ok{background:#1F7A4A;border-color:#1F7A4A;color:#fff}.btn.no{color:#9A3B1B}
+.btn.sm{padding:6px 11px;font-size:13px;border-radius:8px}.btn.xl{padding:18px 28px;font-size:18px;border-radius:14px}
+.chip{display:inline-flex;align-items:center;gap:7px;background:var(--tint);color:var(--g2);font:700 10.5px Karla;letter-spacing:2px;text-transform:uppercase;padding:6px 12px 5px;border-radius:100px}
 .chip::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--brass)}
+.live{display:inline-flex;align-items:center;gap:6px;font:700 11px Karla;letter-spacing:1px;text-transform:uppercase;color:#C0392B}
+.live::before{content:'';width:8px;height:8px;border-radius:50%;background:#E0533D;animation:pulse 1.4s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(224,83,61,.5)}70%{box-shadow:0 0 0 8px rgba(224,83,61,0)}100%{box-shadow:0 0 0 0 rgba(224,83,61,0)}}
 .pill{display:inline-block;font:700 11px Karla;padding:3px 9px;border-radius:100px;background:#F1F3EF;color:var(--mut)}
-.pill.ok{background:#E2F3E9;color:#22784A}.pill.warn{background:#F7EDD5;color:#8A6A1F}.pill.blue{background:#DEECF1;color:#2F6F86}
-.card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 14px 30px -24px rgba(15,36,32,.45)}
-.wrap{max-width:1180px;margin:0 auto;padding:40px 28px 80px}
-h1.big{font:400 52px/1.05 Newsreader;letter-spacing:-1.2px;color:var(--g)}
-h2.t{font:400 30px/1.15 Newsreader;color:var(--g)}
-h3.t{font:400 21px/1.2 Newsreader;color:var(--g)}
-.lead{font-size:17px;line-height:1.55;color:var(--mut);max-width:720px}
+.pill.ok{background:#E2F3E9;color:#1F7A4A}.pill.warn{background:var(--sand);color:#8A6A1F}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 16px 34px -26px rgba(15,36,32,.5)}
+.wrap{max-width:1200px;margin:0 auto;padding:40px 28px 80px}
+h1.big{font:400 58px/1.03 Newsreader;letter-spacing:-1.6px;color:var(--g)}
+h2.t{font:400 32px/1.1 Newsreader;color:var(--g)}h3.t{font:400 21px/1.2 Newsreader;color:var(--g)}
+.lead{font-size:18px;line-height:1.55;color:var(--mut);max-width:620px}
 .muted{color:var(--mut)}.small{font-size:12.5px;color:var(--mut)}
-.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-@media(max-width:900px){.grid3,.grid2{grid-template-columns:1fr}}
-.field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
-.field label{font:700 11px Karla;letter-spacing:1.5px;text-transform:uppercase;color:var(--mut)}
-.field input,.field select,.field textarea{border:1px solid #D6DCD7;background:#fff;border-radius:9px;padding:10px 12px;outline:none}
-.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--g2);box-shadow:0 0 0 3px var(--tint)}
-.field input[readonly]{background:#F4F5F2;color:var(--mut)}
-.step{display:flex;gap:14px;align-items:flex-start;padding:10px 0}
-.step .dot{width:24px;height:24px;border-radius:50%;border:2px solid #CCD4CF;flex:none;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff}
-.step.done .dot{background:var(--g2);border-color:var(--g2)}.step.run .dot{border-color:var(--brass);border-top-color:transparent;animation:spin .8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+@media(max-width:980px){.grid3,.grid4{grid-template-columns:1fr 1fr}}
 .toast-wrap{position:fixed;right:18px;bottom:18px;display:flex;flex-direction:column;gap:8px;z-index:200}
-.toast{background:var(--g);color:#EDEDE7;border-radius:11px;padding:11px 15px;max-width:360px;box-shadow:0 18px 30px -18px rgba(0,0,0,.6);display:flex;gap:10px;align-items:center;animation:tin .3s ease}
+.toast{background:var(--g);color:#EDEDE7;border-radius:12px;padding:11px 15px;max-width:380px;box-shadow:0 18px 30px -18px rgba(0,0,0,.6);display:flex;gap:10px;align-items:center;animation:tin .3s ease}
 @keyframes tin{from{opacity:0;transform:translateY(10px)}}
-.modal-bg{position:fixed;inset:0;background:rgba(15,36,32,.35);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px}
-.modal{width:520px;max-width:100%;background:#fff;border-radius:16px;padding:26px;box-shadow:0 30px 60px -30px rgba(0,0,0,.5)}
-/* tour */
-.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center}
-@media(max-width:900px){.hero{grid-template-columns:1fr}}
-.stepcard{padding:24px;display:flex;flex-direction:column;gap:10px}
-.stepcard .n{font:400 44px/1 Newsreader;color:var(--brass2)}
-.stepcard .btns{margin-top:auto;display:flex;gap:8px;flex-wrap:wrap;padding-top:8px}
-/* dashboard */
-.proj{display:flex;gap:16px;align-items:center;padding:16px 18px;border-bottom:1px solid var(--line)}
-.proj:last-child{border-bottom:0}
-.thumbS{width:132px;height:74px;border-radius:7px;overflow:hidden;flex:none;position:relative;background:var(--g)}
-/* studio */
-#studio{display:flex;gap:10px;padding:10px;height:calc(100vh - 58px)}
-.pane{flex:1;min-width:0;display:flex;flex-direction:column;background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden}
-.ptop{display:flex;align-items:center;gap:10px;padding:9px 12px;border-bottom:1px solid var(--line);background:#FCFBF8}
-.ptop .ttl{font:400 17px Newsreader;color:var(--g);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ptop .brn{white-space:nowrap;font:600 12px ui-monospace,Menlo,monospace;color:var(--mut);background:#F1F3EF;border-radius:6px;padding:3px 7px}
-.ptop .faces{display:flex;margin-left:6px}.ptop .faces .av{margin-left:-6px;border:2px solid #fff}
-.pbody{flex:1;min-height:0;display:grid;grid-template-columns:150px 1fr 320px}
-.pleft{border-right:1px solid var(--line);overflow:auto;padding:10px;display:flex;flex-direction:column;gap:9px;background:#FCFBF8}
-.th{position:relative;border-radius:7px;overflow:hidden;border:2px solid transparent;cursor:pointer;background:var(--g);aspect-ratio:16/9}
-.th.sel{border-color:var(--brass)}
-.th .num{position:absolute;left:4px;top:3px;font:700 9px Karla;color:#fff;background:rgba(15,36,32,.6);border-radius:4px;padding:1px 4px;z-index:2}
-.th .cm{position:absolute;right:4px;top:3px;font:700 9px Karla;color:var(--g);background:var(--brass);border-radius:8px;padding:1px 5px;z-index:2}
-.th .who{position:absolute;right:3px;bottom:3px;z-index:2;display:flex}
-.th .dirty{position:absolute;left:4px;bottom:4px;width:7px;height:7px;border-radius:50%;background:var(--brass);z-index:2}
-.mini{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;pointer-events:none}
-.pcenter{display:flex;flex-direction:column;min-width:0;background:#EEF0EB}
-.ctool{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--line);background:#F7F7F3}
-.seg{display:inline-flex;background:#E6E9E4;border-radius:8px;padding:2px}
-.seg button{padding:5px 11px;border-radius:6px;font-weight:700;font-size:12.5px;color:var(--mut)}
-.seg button.on{background:#fff;color:var(--g);box-shadow:0 1px 3px rgba(0,0,0,.12)}
-.path{font:12px ui-monospace,Menlo,monospace;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.cwrap{flex:1;min-height:0;overflow:auto;padding:16px;display:flex;align-items:flex-start;justify-content:center}
-.stage{position:relative;width:100%;max-width:1100px;aspect-ratio:16/9;border-radius:8px;overflow:hidden;box-shadow:0 18px 40px -22px rgba(15,36,32,.6);background:var(--g)}
+.modal-bg{position:fixed;inset:0;background:rgba(15,36,32,.38);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal{width:540px;max-width:100%;background:#fff;border-radius:18px;padding:26px;box-shadow:0 30px 60px -30px rgba(0,0,0,.5)}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}.field label{font:700 11px Karla;letter-spacing:1.5px;text-transform:uppercase;color:var(--mut)}
+.in{width:100%;border:1px solid #D6DCD7;border-radius:10px;padding:10px 12px;outline:none;background:#fff;resize:vertical}
+.in:focus{border-color:var(--g2);box-shadow:0 0 0 3px var(--tint)}
+.stage{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;background:var(--g);border-radius:10px}
 .slide{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0}
-.slide [data-edit]{outline:none;border-radius:6px;transition:box-shadow .15s}
-.editing .slide [data-edit]:hover{box-shadow:0 0 0 4px rgba(201,169,78,.55)}
+/* HOME */
+.hero{display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:center;padding-top:10px}
+@media(max-width:980px){.hero{grid-template-columns:1fr}}
+.hero h1 i{color:var(--brass2)}
+.cta{display:flex;flex-direction:column;gap:10px;margin-top:28px;align-items:flex-start}
+.cta .btn.xl{box-shadow:0 18px 30px -16px rgba(168,131,44,.8)}
+.cta .btn.xl .live{color:var(--g)}.cta .btn.xl .live::before{background:#C0392B}
+.demo{position:relative;padding:18px;border-radius:22px;background:linear-gradient(160deg,#fff,#F1EFE7);border:1px solid var(--line);box-shadow:0 30px 60px -40px rgba(15,36,32,.7)}
+.demo .bar{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.demo .bar .faces{display:flex}.demo .bar .faces .av{margin-left:-7px;transform:scale(0);transition:transform .35s cubic-bezier(.3,1.6,.5,1)}
+.demo .bar .faces .av.in{transform:scale(1)}
+.demo .cap{display:flex;gap:10px;align-items:center;margin-top:14px;min-height:48px}
+.demo .cap .n{font:400 30px/1 Newsreader;color:var(--brass2);width:26px}
+.demo .cap p{font-size:15px;line-height:1.4;color:var(--ink)}
+.demo .dots{display:flex;gap:6px;margin-top:8px}.demo .dots i{width:22px;height:4px;border-radius:2px;background:#DCE1DC;transition:background .3s}.demo .dots i.on{background:var(--brass)}
+.ov{position:absolute;pointer-events:none;border-radius:6px;transition:all .3s;z-index:5}
+.ov span{position:absolute;left:-2px;top:-22px;font:700 10px Karla;color:#fff;padding:3px 7px;border-radius:5px 5px 5px 0;white-space:nowrap}
+.stamp{position:absolute;right:16px;top:16px;z-index:6;background:#1F7A4A;color:#fff;font:700 13px Karla;padding:7px 12px;border-radius:9px;transform:scale(0) rotate(-8deg);transition:transform .4s cubic-bezier(.3,1.6,.5,1)}
+.stamp.in{transform:scale(1) rotate(-4deg)}
+.aibox{position:absolute;left:14px;bottom:14px;z-index:6;background:#fff;border-radius:11px;padding:9px 12px;font-size:12.5px;display:flex;gap:8px;align-items:center;box-shadow:0 10px 20px -10px rgba(0,0,0,.5);opacity:0;transform:translateY(8px);transition:all .3s}
+.aibox.in{opacity:1;transform:none}
+.steps4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:56px}
+@media(max-width:980px){.steps4{grid-template-columns:1fr 1fr}}
+.s4{padding:20px}.s4 .ic{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:12px}
+.sec-h{display:flex;align-items:flex-end;gap:14px;margin:56px 0 18px}.sec-h div{flex:1}
+.deckcard{overflow:hidden;cursor:pointer;transition:transform .2s}
+.deckcard:hover{transform:translateY(-3px)}
+.deckcard .th{position:relative;aspect-ratio:16/9;overflow:hidden;background:var(--g)}
+.deckcard .th .live{position:absolute;left:10px;top:10px;background:#fff;border-radius:100px;padding:4px 9px;z-index:2}
+.deckcard .bd{padding:14px 16px}
+.faces{display:flex}.faces .av{margin-left:-7px}.faces .av:first-child{margin-left:0}
+.mini{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;pointer-events:none}
+.tpl .th{border-bottom:1px solid var(--line)}
+.filters{display:flex;gap:6px;flex-wrap:wrap}.filters button{padding:7px 13px;border-radius:100px;border:1px solid var(--line);background:#fff;font-weight:700;color:var(--mut)}.filters button.on{background:var(--g);color:#fff;border-color:var(--g)}
+/* ROOM */
+#room{display:grid;grid-template-columns:168px 1fr 360px;height:calc(100vh - 60px)}
+@media(max-width:1100px){#room{grid-template-columns:120px 1fr 320px}}
+.rtop{grid-column:1/-1;display:flex;align-items:center;gap:12px;padding:10px 16px;border-bottom:1px solid var(--line);background:#fff}
+#room{grid-template-rows:auto minmax(0,1fr)}
+.rtop .ttl{font:400 19px Newsreader;color:var(--g);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:280px}
+.rtop .faces .av{cursor:pointer}
+.rleft{border-right:1px solid var(--line);overflow:auto;padding:10px;display:flex;flex-direction:column;gap:10px;background:#FCFBF8}
+.th2{position:relative;border-radius:8px;overflow:hidden;border:2px solid transparent;cursor:pointer;background:var(--g);aspect-ratio:16/9;flex:none}
+.th2.sel{border-color:var(--brass)}
+.th2 .num{position:absolute;left:4px;top:3px;font:700 9px Karla;color:#fff;background:rgba(15,36,32,.6);border-radius:4px;padding:1px 5px;z-index:2}
+.th2 .pr{position:absolute;right:4px;top:3px;font:700 9px Karla;color:var(--g);background:var(--brass);border-radius:8px;padding:1px 6px;z-index:2}
+.th2 .who{position:absolute;right:3px;bottom:3px;z-index:2;display:flex}.th2 .who .av{width:18px;height:18px;font-size:7px;border-width:1px;margin-left:-4px}
+.rcenter{display:flex;flex-direction:column;min-width:0;background:#ECEEE9}
+.banner{display:flex;align-items:center;gap:10px;padding:9px 16px;font-weight:700}
+.banner.follow{background:var(--g);color:#EDEDE7}.banner.prop{background:var(--sand);color:#6E5418}
+.ctool{display:flex;align-items:center;gap:8px;padding:9px 14px;border-bottom:1px solid var(--line);background:#F7F7F3}
+.seg{display:inline-flex;background:#E4E8E3;border-radius:9px;padding:2px}.seg button{padding:6px 12px;border-radius:7px;font-weight:700;font-size:12.5px;color:var(--mut)}.seg button.on{background:#fff;color:var(--g);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.cwrap{flex:1;min-height:0;overflow:auto;padding:18px;display:flex;align-items:flex-start;justify-content:center}
+.cwrap .stage{max-width:1120px;box-shadow:0 20px 44px -24px rgba(15,36,32,.7)}
+.editing .slide [data-edit]{outline:none;border-radius:6px}
+.editing .slide [data-edit]:hover{box-shadow:0 0 0 4px rgba(201,169,78,.5)}
 .editing .slide [data-edit]:focus{box-shadow:0 0 0 5px #C9A94E}
-.pres{position:absolute;pointer-events:none;border:3px solid;border-radius:6px;z-index:5;transition:all .2s}
-.pres span{position:absolute;left:-3px;top:-24px;font:700 11px Karla;color:#fff;padding:3px 8px;border-radius:6px 6px 6px 0;white-space:nowrap}
-.code{flex:1;min-height:0;width:100%;border:0;outline:none;resize:none;padding:16px;font:12.5px/1.55 ui-monospace,Menlo,monospace;background:#0F2420;color:#D8E3DE}
-.pright{border-left:1px solid var(--line);display:flex;flex-direction:column;min-height:0}
-.tabs{display:flex;border-bottom:1px solid var(--line);padding:0 8px;background:#FCFBF8}
-.tabs button{padding:11px 9px;font-weight:700;font-size:12.5px;color:var(--mut);border-bottom:2px solid transparent}
+.rright{border-left:1px solid var(--line);display:flex;flex-direction:column;min-height:0;background:#fff}
+.tabs{display:flex;border-bottom:1px solid var(--line);padding:0 6px;background:#FCFBF8}
+.tabs button{flex:1;padding:12px 4px;font-weight:700;font-size:12.5px;color:var(--mut);border-bottom:2px solid transparent}
 .tabs button.on{color:var(--g);border-bottom-color:var(--brass)}
-.tabs .bd{display:inline-block;min-width:17px;padding:0 5px;margin-left:4px;border-radius:9px;background:var(--brass);color:var(--g);font-size:10.5px}
+.bd2{display:inline-block;min-width:17px;padding:0 5px;margin-left:4px;border-radius:9px;background:var(--brass);color:var(--g);font-size:10.5px}
 .rbody{flex:1;min-height:0;overflow:auto;padding:14px}
-.cmt{border:1px solid var(--line);border-radius:11px;padding:11px;margin-bottom:10px;background:#fff}
-.cmt.res{opacity:.55}
-.cmt .h{display:flex;gap:8px;align-items:center;margin-bottom:6px}.cmt .h b{font-size:13px}.cmt .h .small{margin-left:auto}
-.cmt p{line-height:1.45}
-.cmt .anc{font:600 11px Karla;color:var(--brass2);margin-bottom:5px}
-.cmt .rep{border-left:2px solid var(--tint);margin:8px 0 0 6px;padding-left:9px}
+.msg{display:flex;gap:9px;margin-bottom:12px}.msg .bub{flex:1;background:#F4F5F1;border-radius:4px 12px 12px 12px;padding:10px 12px;line-height:1.45}
+.msg.me .bub{background:var(--tint)}.msg.ai .bub{background:#FBF6E8;border:1px solid #EFE2BC}
+.prompts{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 10px}.prompts button{border:1px solid #E7DAB2;background:#FFFCF3;border-radius:100px;padding:6px 11px;font-size:12.5px;font-weight:700;color:#7A5C17}
+.prop{border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:12px;background:#fff}
+.prop.open{box-shadow:inset 3px 0 0 var(--brass)}
+.prop .h{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.diff{font:12px/1.5 Karla;border-radius:9px;overflow:hidden;margin:6px 0;border:1px solid var(--line)}
+.diff div{padding:4px 9px}.diff .d{background:#FBE9E4;color:#9A3B1B;text-decoration:line-through;text-decoration-color:rgba(154,59,27,.45)}.diff .a{background:#E6F4EA;color:#1E6B3A}.diff .k{background:#F4F5F2;color:var(--mut);font:700 10px Karla;letter-spacing:1px;text-transform:uppercase}
+.cmt{border:1px solid var(--line);border-radius:12px;padding:11px;margin-bottom:10px}
+.cmt .h{display:flex;gap:8px;align-items:center;margin-bottom:5px}.cmt .h .small{margin-left:auto}
+.cmt .anc{font:700 11px Karla;color:var(--brass2);margin-bottom:4px}
 .ment{color:var(--g2);font-weight:700;background:var(--tint);border-radius:4px;padding:0 3px}
-textarea.in,input.in{width:100%;border:1px solid #D6DCD7;border-radius:9px;padding:9px 11px;outline:none;background:#fff;resize:vertical}
-textarea.in:focus,input.in:focus{border-color:var(--g2)}
-.diff{font:11.5px/1.5 ui-monospace,Menlo,monospace;border:1px solid var(--line);border-radius:9px;overflow:hidden;margin:6px 0 12px}
-.diff div{padding:1px 8px;white-space:pre-wrap;word-break:break-all}
-.diff .a{background:#E6F4EA;color:#1E6B3A}.diff .d{background:#FBE9E4;color:#9A3B1B;text-decoration:line-through;text-decoration-color:rgba(154,59,27,.4)}
-.diff .fh{background:#F4F5F2;color:var(--mut);font-weight:700}
-.commit{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
-.sha{font:600 11.5px ui-monospace,Menlo,monospace;color:var(--g2);background:var(--tint);border-radius:5px;padding:1px 6px}
-.log div{display:flex;gap:9px;align-items:center;padding:6px 0;font-size:13px}
-.compact .pbody{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr) 230px}
-.compact .pleft{flex-direction:row;overflow-x:auto;border-right:0;border-bottom:1px solid var(--line);padding:8px}
-.compact .pleft .th{width:96px;flex:none}
-.compact .pright{border-left:0;border-top:1px solid var(--line)}
-.compact .cwrap{padding:10px}
-/* site */
-.browser{max-width:1180px;margin:22px auto;border-radius:14px;overflow:hidden;border:1px solid #CFD6D1;background:#fff;box-shadow:0 30px 60px -40px rgba(0,0,0,.6)}
-.bbar{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#ECEEEA;border-bottom:1px solid #D9DED9}
-.bbar .dots i{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:5px;background:#D3D8D4}
-.url{flex:1;background:#fff;border-radius:8px;padding:7px 12px;font:13px ui-monospace,Menlo,monospace;color:var(--mut);display:flex;gap:6px;align-items:center}
-.url b{color:var(--ink);font-weight:500}
-.sitebody{background:#0B1C19;position:relative}
-.sitebody .stage{max-width:none;border-radius:0;box-shadow:none}
-.newver{position:absolute;left:50%;top:14px;transform:translateX(-50%);z-index:5;background:var(--brass);color:var(--g);font-weight:700;padding:8px 14px;border-radius:100px;box-shadow:0 10px 20px -10px rgba(0,0,0,.6);cursor:pointer}
-/* mail + github mock */
-.mailbox{display:grid;grid-template-columns:300px 1fr;min-height:520px}
-.mailbox .list{border-right:1px solid var(--line)}
-.mail{padding:14px 16px;border-bottom:1px solid var(--line);cursor:pointer}
-.mail.sel{background:var(--tint)}
-.gh{max-width:460px;margin:30px auto;background:#fff;border:1px solid #D0D7DE;border-radius:12px;padding:28px;font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;color:#1F2328}
-.gh .btngh{width:100%;background:#1F883D;color:#fff;border-radius:7px;padding:10px;font-weight:600}
-.gh li{list-style:none;display:flex;gap:10px;padding:9px 0;border-bottom:1px solid #EAEEF2;font-size:14px}
-/* how */
-.arch{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;align-items:stretch}
-@media(max-width:900px){.arch{grid-template-columns:1fr 1fr}}
-.node{padding:16px;border-radius:12px;background:#fff;border:1px solid var(--line);box-shadow:inset 0 3px 0 var(--g2)}
-.node h4{font:400 18px Newsreader;color:var(--g);margin-bottom:6px}
-.node ul{padding-left:16px;color:var(--mut);line-height:1.5;font-size:13px}
-.flowrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:18px 0}
-.flowrow .f{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-weight:700;color:var(--g)}
-.flowrow .ar{color:var(--brass2);font-weight:700}
-table.t{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;border:1px solid var(--line)}
-table.t th{background:var(--tint);color:var(--g2);font:700 11px Karla;letter-spacing:1.5px;text-transform:uppercase;text-align:left;padding:10px 12px}
-table.t td{padding:10px 12px;border-top:1px solid var(--line);vertical-align:top;line-height:1.45}
+.ver{display:flex;gap:10px;padding:11px 0;border-bottom:1px solid var(--line)}
+.vn{font:400 20px/1 Newsreader;color:var(--brass2);width:38px}
+.waiting{display:flex;gap:8px;align-items:center;background:#FFFCF3;border:1px dashed #E1CF9B;border-radius:10px;padding:8px 10px;font-size:12.5px;color:#7A5C17;margin-top:8px}
+.how-node{padding:18px;border-radius:14px;background:#fff;border:1px solid var(--line);box-shadow:inset 0 3px 0 var(--g2)}
+.how-node h4{font:400 19px Newsreader;color:var(--g);margin-bottom:6px}.how-node ul{padding-left:16px;color:var(--mut);line-height:1.5;font-size:13.5px}
+.viewer{background:#0B1C19;min-height:calc(100vh - 60px);display:flex;flex-direction:column;align-items:center;padding:20px}
+.viewer .stage{max-width:1240px;border-radius:12px}
 .hidden{display:none!important}
-@media(max-width:1100px){.pbody{grid-template-columns:120px 1fr 280px}}
+.paper{position:relative;width:100%;max-width:820px;background:#fff;border-radius:6px;box-shadow:0 20px 44px -26px rgba(15,36,32,.6);padding:64px 72px 80px}
+.docpage{font-family:Newsreader,Georgia,serif;color:#14211D}
+.docpage h1{font:400 40px/1.1 Newsreader;letter-spacing:-.6px;color:#0F2420;margin-bottom:6px}
+.docpage .meta{font:600 13px Karla;letter-spacing:1px;text-transform:uppercase;color:#A8832C;margin-bottom:26px}
+.docpage h2{font:400 26px/1.2 Newsreader;color:#0F2420;margin:28px 0 10px}
+.docpage p{font-size:18px;line-height:1.7;margin-bottom:12px}
+.paper.editing [data-edit]{outline:none;border-radius:4px}.paper.editing [data-edit]:hover{box-shadow:0 0 0 3px rgba(201,169,78,.45)}.paper.editing [data-edit]:focus{box-shadow:0 0 0 4px #C9A94E}
+.outl{padding:9px 10px;border-radius:9px;border:1px solid var(--line);background:#fff;cursor:pointer;font:400 14px/1.25 Newsreader;color:var(--g);position:relative}
+.outl.sel{border-color:var(--brass);box-shadow:inset 3px 0 0 var(--brass)}
+.outl .pr{font:700 9px Karla;color:var(--g);background:var(--brass);border-radius:8px;padding:1px 6px;margin-left:4px}
+.kind{position:absolute;right:10px;top:10px;z-index:2;font:700 10px Karla;letter-spacing:1px;text-transform:uppercase;background:#fff;color:var(--g2);border-radius:100px;padding:3px 8px}
+.aiset{display:inline-flex;align-items:center;gap:6px;border:1px solid #E7DAB2;background:#FFFCF3;border-radius:9px;padding:4px 8px;font-weight:700;font-size:12.5px;color:#7A5C17}
+.aiset select{border:0;background:transparent;font-weight:700;color:#7A5C17;outline:none}
 </style></head><body>
-<div id="nav"></div>
-<div id="view"></div>
-<div class="toast-wrap" id="toasts"></div>
+<div id="nav"></div><div id="view"></div><div class="toast-wrap" id="toasts"></div>
 <script>
-/* ============================================================
-   Meridiano Studio · navigable prototype
-   Shared state is kept in memory, mirrored to localStorage and
-   broadcast to other tabs (BroadcastChannel), so two panes or two
-   tabs see the same document live. GitHub, e-mail and Pages are
-   simulated; see "How it works" for the real architecture.
-   ============================================================ */
-var KEY = 'meridiano-studio-v1', TAB = Math.random().toString(36).slice(2);
-var USERS = {
-  jadson: {id:'jadson', name:'Jadson Marcelino', short:'Jadson', ini:'JM', color:'#A8832C', email:'jadson@meridiano-consulting.com', gh:'jads-Marcelino'},
-  gustavo:{id:'gustavo', name:'Gustavo Sabillón', short:'Gustavo', ini:'GS', color:'#2E8070', email:'gustavo@meridiano-consulting.com', gh:'gsabillon'}
+/* =================== Meridiano Studio · prototype v2 ===================
+   No Git for users. Live room per presentation: presence, follow/present,
+   live proposals (human or AI), comments for all, owner-only approval,
+   built-in version history, template library, published view.
+   Shared state syncs between panes and browser tabs on this device;
+   the remote team is simulated (see "How it works" for the real stack). */
+var KEY='meridiano-studio-v2',TAB=Math.random().toString(36).slice(2);
+var USERS={
+ jadson:{name:'Jadson Marcelino',short:'Jadson',ini:'JM',color:'#A8832C',role:'Owner',email:'jadson@meridiano-consulting.com'},
+ gustavo:{name:'Gustavo Sabillón',short:'Gustavo',ini:'GS',color:'#2E8070',role:'Editor',email:'gustavo@meridiano-consulting.com'},
+ gabriel:{name:'Gabriel Talasso',short:'Gabriel',ini:'GT',color:'#2F6F86',role:'Editor',email:'gabriel@meridiano-consulting.com'},
+ claude:{name:'Claude',short:'Claude',ini:'AI',color:'#1F5A4C',role:'AI'}
 };
-var LOGO = function(s, dark){ return '<svg viewBox="0 0 64 64" width="'+s+'" height="'+s+'"><circle cx="32" cy="32" r="18.5" fill="none" stroke="#C9A94E" stroke-width="1.8"/><path d="M 7.5 47.2 C 15.5 47.2 21.5 41.5 27.4 29.8 C 33.3 18.1 46.5 15.4 57 15.4" fill="none" stroke="'+(dark?'#EDEDE7':'#0F2420')+'" stroke-width="3.9" stroke-linecap="round"/><circle cx="32" cy="32" r="2.8" fill="#C9A94E"/></svg>'; };
+function LOGO(s,d){return '<svg viewBox="0 0 64 64" width="'+s+'" height="'+s+'"><circle cx="32" cy="32" r="18.5" fill="none" stroke="#C9A94E" stroke-width="1.8"/><path d="M 7.5 47.2 C 15.5 47.2 21.5 41.5 27.4 29.8 C 33.3 18.1 46.5 15.4 57 15.4" fill="none" stroke="'+(d?'#EDEDE7':'#0F2420')+'" stroke-width="3.9" stroke-linecap="round"/><circle cx="32" cy="32" r="2.8" fill="#C9A94E"/></svg>';}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function clone(o){return JSON.parse(JSON.stringify(o));}
+function uid(){return Math.random().toString(36).slice(2,9);}
+function now(){return Date.now();}
+function ago(t){var s=Math.round((now()-t)/1000);if(s<10)return 'just now';if(s<60)return s+'s ago';var m=Math.round(s/60);if(m<60)return m+' min ago';var h=Math.round(m/60);if(h<24)return h+' h ago';return Math.round(h/24)+' d ago';}
+function av(id,cls){var u=USERS[id];return '<span class="av '+(cls||'')+(id==='claude'?' ai':'')+'" style="background:'+u.color+'" title="'+esc(u.name)+'">'+(id==='claude'?'✦':u.ini)+'</span>';}
 
-/* ---------- slide templates (Meridiano course style, 1920x1080) ---------- */
-var BG = 'position:absolute;inset:0;background:#0F2420;font-family:Karla,Arial,sans-serif;color:#EDEDE7';
-var EY = 'font-size:24px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#C9A94E';
-var TI = 'font-family:Newsreader,Georgia,serif;font-size:72px;line-height:1.08;letter-spacing:-1.5px;color:#EDEDE7';
-var FT = '<p style="position:absolute;left:128px;bottom:64px;font-size:22px;color:#8FA79F">Data Strategy for Leaders</p>';
-var SLIDES = {
-'slides/01-cover.html': [
-'<section style="'+BG+'">',
-'<svg style="position:absolute;right:0;top:0" width="980" height="1080" viewBox="0 0 980 1080"><path d="M0 900 C 380 900 520 700 620 480 C 720 260 820 160 980 150" fill="none" stroke="#C9A94E" stroke-width="4"/><path d="M0 960 C 400 960 540 760 650 540 C 760 320 850 220 980 210" fill="none" stroke="#365C53" stroke-width="2"/><circle cx="620" cy="480" r="14" fill="#C9A94E"/></svg>',
-'<p data-edit="eyebrow" style="position:absolute;left:128px;top:150px;'+EY+'">Executive Education · Data &amp; Analytics</p>',
-'<h1 data-edit="title" style="position:absolute;left:128px;top:300px;width:1000px;font-family:Newsreader,Georgia,serif;font-size:132px;line-height:1.02;letter-spacing:-4px;color:#EDEDE7">Data Strategy for Leaders</h1>',
-'<p data-edit="sub" style="position:absolute;left:132px;top:640px;width:820px;font-family:Newsreader,Georgia,serif;font-size:40px;line-height:1.3;color:#AFC1BA">Turning data from a cost line into better decisions.</p>',
-'<p data-edit="meta" style="position:absolute;left:132px;bottom:64px;font-size:22px;color:#8FA79F">Meridiano · São Paulo · Panama City · Tegucigalpa</p>',
-'</section>'].join('\n'),
-'slides/02-ai-paradox.html': [
-'<section style="'+BG+'">',
-'<p data-edit="eyebrow" style="position:absolute;left:128px;top:128px;'+EY+'">Evidence · The AI paradox</p>',
-'<h2 data-edit="title" style="position:absolute;left:128px;top:180px;width:1500px;'+TI+'">Most AI pilots never reach the P&amp;L</h2>',
-'<p data-edit="big" style="position:absolute;left:120px;top:360px;font-family:Newsreader,Georgia,serif;font-size:300px;line-height:1;letter-spacing:-10px;color:#C9A94E">95%</p>',
-'<p data-edit="caption" style="position:absolute;left:132px;top:700px;width:760px;font-family:Newsreader,Georgia,serif;font-size:40px;line-height:1.25;color:#EDEDE7">of enterprise GenAI pilots show no measurable P&amp;L impact</p>',
-'<p data-edit="note" style="position:absolute;left:1080px;top:430px;width:700px;font-size:30px;line-height:1.45;color:#AFC1BA">The gap is rarely the model. It is the distance between a prediction and a decision someone owns.</p>',
-'<p data-edit="source" style="position:absolute;left:128px;bottom:64px;font-size:22px;color:#8FA79F">Source: MIT NANDA, The GenAI Divide: State of AI in Business 2025</p>',
-'</section>'].join('\n'),
-'slides/03-symptoms.html': [
-'<section style="'+BG+'">',
-'<p data-edit="eyebrow" style="position:absolute;left:128px;top:128px;'+EY+'">As is · Three symptoms</p>',
-'<h2 data-edit="title" style="position:absolute;left:128px;top:180px;width:1600px;'+TI+'">If you recognise these, the problem is not technical</h2>',
-'<div style="position:absolute;left:128px;top:420px;width:530px;height:420px;background:#1D3A34;border-top:4px solid #C9A94E;padding:44px"><p data-edit="c1t" style="font-family:Newsreader,Georgia,serif;font-size:48px;color:#EDEDE7">Silos</p><p data-edit="c1b" style="margin-top:20px;font-size:28px;line-height:1.45;color:#AFC1BA">Each area keeps its own data, with overlaps, gaps and inconsistencies.</p></div>',
-'<div style="position:absolute;left:695px;top:420px;width:530px;height:420px;background:#1D3A34;border-top:4px solid #C9A94E;padding:44px"><p data-edit="c2t" style="font-family:Newsreader,Georgia,serif;font-size:48px;color:#EDEDE7">Many versions of the truth</p><p data-edit="c2b" style="margin-top:20px;font-size:28px;line-height:1.45;color:#AFC1BA">The same KPI arrives with a different number in every meeting.</p></div>',
-'<div style="position:absolute;left:1262px;top:420px;width:530px;height:420px;background:#1D3A34;border-top:4px solid #C9A94E;padding:44px"><p data-edit="c3t" style="font-family:Newsreader,Georgia,serif;font-size:48px;color:#EDEDE7">HiPPO decisions</p><p data-edit="c3b" style="margin-top:20px;font-size:28px;line-height:1.45;color:#AFC1BA">The Highest Paid Person’s Opinion wins over the evidence in the room.</p></div>',
-FT,'</section>'].join('\n'),
-'slides/04-decision-chain.html': [
-'<section style="'+BG+'">',
-'<p data-edit="eyebrow" style="position:absolute;left:128px;top:128px;'+EY+'">Flow · The decision chain</p>',
-'<h2 data-edit="title" style="position:absolute;left:128px;top:180px;width:1600px;'+TI+'">Value appears only when data changes a decision</h2>',
-'<div style="position:absolute;left:128px;top:470px;width:1664px;height:4px;background:linear-gradient(90deg,#365C53 0%,#365C53 55%,#C9A94E 100%)"></div>',
-'<div style="position:absolute;left:128px;top:400px;width:300px;height:150px;background:#1D3A34;border:2px solid #365C53;padding:26px"><p data-edit="n1" style="font-family:Newsreader,Georgia,serif;font-size:40px">Data</p><p data-edit="n1s" style="font-size:22px;color:#8FA79F;margin-top:6px">raw records</p></div>',
-'<div style="position:absolute;left:469px;top:400px;width:300px;height:150px;background:#1D3A34;border:2px solid #365C53;padding:26px"><p data-edit="n2" style="font-family:Newsreader,Georgia,serif;font-size:40px">Information</p><p data-edit="n2s" style="font-size:22px;color:#8FA79F;margin-top:6px">organised, in context</p></div>',
-'<div style="position:absolute;left:810px;top:400px;width:300px;height:150px;background:#1D3A34;border:2px solid #365C53;padding:26px"><p data-edit="n3" style="font-family:Newsreader,Georgia,serif;font-size:40px">Insight</p><p data-edit="n3s" style="font-size:22px;color:#8FA79F;margin-top:6px">a pattern, explained</p></div>',
-'<div style="position:absolute;left:1151px;top:400px;width:300px;height:150px;background:#C9A94E;padding:26px;color:#0F2420"><p data-edit="n4" style="font-family:Newsreader,Georgia,serif;font-size:40px">Decision</p><p data-edit="n4s" style="font-size:22px;margin-top:6px">a choice is made</p></div>',
-'<div style="position:absolute;left:1492px;top:400px;width:300px;height:150px;background:#C9A94E;padding:26px;color:#0F2420"><p data-edit="n5" style="font-family:Newsreader,Georgia,serif;font-size:40px">Action</p><p data-edit="n5s" style="font-size:22px;margin-top:6px">behaviour changes</p></div>',
-'<p data-edit="note" style="position:absolute;left:128px;top:640px;width:1300px;font-size:30px;line-height:1.45;color:#AFC1BA">Most budgets stop at the dashboard. The return is realised two steps later, when a limit, a price or a process actually changes.</p>',
-'<p data-edit="source" style="position:absolute;left:128px;bottom:64px;font-size:22px;color:#8FA79F">Based on Ackoff’s data–information–knowledge hierarchy (1989), extended to decision and action</p>',
-'</section>'].join('\n'),
-'slides/05-icebreaker.html': [
-'<section style="'+BG+'">',
-'<p data-edit="eyebrow" style="position:absolute;left:128px;top:128px;'+EY+'">Icebreaker · 2 minutes</p>',
-'<h2 data-edit="title" style="position:absolute;left:128px;top:180px;width:1600px;'+TI+'">If your company’s data were a vehicle, which one?</h2>',
-'<div style="position:absolute;left:128px;top:440px;width:816px;height:130px;background:#1D3A34;border:2px solid #365C53;padding:0 32px;display:flex;align-items:center;gap:28px"><p style="font-family:Newsreader,Georgia,serif;font-size:56px;color:#C9A94E">A</p><p data-edit="o1" style="font-size:30px">A bicycle: it moves, but only with effort</p></div>',
-'<div style="position:absolute;left:976px;top:440px;width:816px;height:130px;background:#1D3A34;border:2px solid #365C53;padding:0 32px;display:flex;align-items:center;gap:28px"><p style="font-family:Newsreader,Georgia,serif;font-size:56px;color:#C9A94E">B</p><p data-edit="o2" style="font-size:30px">A taxi: someone else drives, you pay per ride</p></div>',
-'<div style="position:absolute;left:128px;top:600px;width:816px;height:130px;background:#1D3A34;border:2px solid #365C53;padding:0 32px;display:flex;align-items:center;gap:28px"><p style="font-family:Newsreader,Georgia,serif;font-size:56px;color:#C9A94E">C</p><p data-edit="o3" style="font-size:30px">A car with no dashboard: fast, but blind</p></div>',
-'<div style="position:absolute;left:976px;top:600px;width:816px;height:130px;background:#1D3A34;border:2px solid #365C53;padding:0 32px;display:flex;align-items:center;gap:28px"><p style="font-family:Newsreader,Georgia,serif;font-size:56px;color:#C9A94E">D</p><p data-edit="o4" style="font-size:30px">A plane on autopilot: data drives routine decisions</p></div>',
-FT,'</section>'].join('\n'),
-'slides/06-next-step.html': [
-'<section style="'+BG+'">',
-'<svg style="position:absolute;left:880px;top:200px" width="160" height="160" viewBox="0 0 64 64"><circle cx="32" cy="32" r="18.5" fill="none" stroke="#C9A94E" stroke-width="1.6"/><path d="M 7.5 47.2 C 15.5 47.2 21.5 41.5 27.4 29.8 C 33.3 18.1 46.5 15.4 57 15.4" fill="none" stroke="#EDEDE7" stroke-width="3.9" stroke-linecap="round"/><circle cx="32" cy="32" r="2.8" fill="#C9A94E"/></svg>',
-'<p data-edit="eyebrow" style="position:absolute;left:0;right:0;top:420px;text-align:center;'+EY+'">Your next step</p>',
-'<h2 data-edit="title" style="position:absolute;left:260px;width:1400px;top:480px;text-align:center;font-family:Newsreader,Georgia,serif;font-size:80px;line-height:1.12;letter-spacing:-2px;color:#EDEDE7">Pick one decision. Measure it before and after.</h2>',
-'<p data-edit="contact" style="position:absolute;left:0;right:0;top:800px;text-align:center;font-size:30px;letter-spacing:4px;color:#C9A94E">meridiano-consulting.com</p>',
-'</section>'].join('\n')
+/* ---------- slide builders (Meridiano look) ---------- */
+var BG='position:absolute;inset:0;background:#0F2420;font-family:Karla,Arial,sans-serif;color:#EDEDE7';
+var EY='font-size:24px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#C9A94E';
+var TI='font-family:Newsreader,Georgia,serif;font-size:72px;line-height:1.08;letter-spacing:-1.5px;color:#EDEDE7';
+var CURVE='<svg style="position:absolute;right:0;top:0" width="980" height="1080" viewBox="0 0 980 1080"><path d="M0 900 C 380 900 520 700 620 480 C 720 260 820 160 980 150" fill="none" stroke="#C9A94E" stroke-width="4"/><path d="M0 960 C 400 960 540 760 650 540 C 760 320 850 220 980 210" fill="none" stroke="#365C53" stroke-width="2"/><circle cx="620" cy="480" r="14" fill="#C9A94E"/></svg>';
+function sec(lines){return ['<section style="'+BG+'">'].concat(lines).concat(['</section>']).join('\n');}
+function foot(t){return '<p data-edit="foot" style="position:absolute;left:128px;bottom:64px;font-size:22px;color:#8FA79F">'+t+'</p>';}
+var B={
+ cover:function(ey,t,sub,ft){return sec([CURVE,'<p data-edit="eyebrow" style="position:absolute;left:128px;top:150px;'+EY+'">'+ey+'</p>','<h1 data-edit="title" style="position:absolute;left:128px;top:300px;width:1000px;font-family:Newsreader,Georgia,serif;font-size:124px;line-height:1.02;letter-spacing:-4px;color:#EDEDE7">'+t+'</h1>','<p data-edit="sub" style="position:absolute;left:132px;top:640px;width:820px;font-family:Newsreader,Georgia,serif;font-size:40px;line-height:1.3;color:#AFC1BA">'+sub+'</p>',foot(ft||'Meridiano · São Paulo · Panama City · Tegucigalpa')]);},
+ stat:function(ey,t,big,cap,note,src){return sec(['<p data-edit="eyebrow" style="position:absolute;left:128px;top:128px;'+EY+'">'+ey+'</p>','<h2 data-edit="title" style="position:absolute;left:128px;top:180px;width:1600px;'+TI+'">'+t+'</h2>','<p data-edit="big" style="position:absolute;left:120px;top:370px;font-family:Newsreader,Georgia,serif;font-size:290px;line-height:1;letter-spacing:-10px;color:#C9A94E">'+big+'</p>','<p data-edit="caption" style="position:absolute;left:132px;top:700px;width:780px;font-family:Newsreader,Georgia,serif;font-size:40px;line-height:1.25;color:#EDEDE7">'+cap+'</p>','<p data-edit="note" style="position:absolute;left:1080px;top:430px;width:700px;font-size:30px;line-height:1.45;color:#AFC1BA">'+note+'</p>',foot(src)]);},
+ cards:function(ey,t,c){var x=[128,695,1262];return sec(['<p data-edit="eyebrow" style="position:absolute;left:128px;top:128px;'+EY+'">'+ey+'</p>','<h2 data-edit="title" style="position:absolute;left:128px;top:180px;width:1600px;'+TI+'">'+t+'</h2>'].concat(c.map(function(k,i){return '<div style="position:absolute;left:'+x[i]+'px;top:420px;width:530px;height:420px;background:#1D3A34;border-top:4px solid #C9A94E;padding:44px"><p data-edit="c'+(i+1)+'t" style="font-family:Newsreader,Georgia,serif;font-size:48px;color:#EDEDE7">'+k[0]+'</p><p data-edit="c'+(i+1)+'b" style="margin-top:20px;font-size:28px;line-height:1.45;color:#AFC1BA">'+k[1]+'</p></div>';})).concat([foot('Data Strategy for Leaders')]));},
+ statement:function(ey,t,ct){return sec(['<svg style="position:absolute;left:880px;top:200px" width="160" height="160" viewBox="0 0 64 64"><circle cx="32" cy="32" r="18.5" fill="none" stroke="#C9A94E" stroke-width="1.6"/><path d="M 7.5 47.2 C 15.5 47.2 21.5 41.5 27.4 29.8 C 33.3 18.1 46.5 15.4 57 15.4" fill="none" stroke="#EDEDE7" stroke-width="3.9" stroke-linecap="round"/><circle cx="32" cy="32" r="2.8" fill="#C9A94E"/></svg>','<p data-edit="eyebrow" style="position:absolute;left:0;right:0;top:420px;text-align:center;'+EY+'">'+ey+'</p>','<h2 data-edit="title" style="position:absolute;left:260px;width:1400px;top:480px;text-align:center;font-family:Newsreader,Georgia,serif;font-size:80px;line-height:1.12;letter-spacing:-2px;color:#EDEDE7">'+t+'</h2>','<p data-edit="contact" style="position:absolute;left:0;right:0;top:800px;text-align:center;font-size:30px;letter-spacing:4px;color:#C9A94E">'+(ct||'meridiano-consulting.com')+'</p>']);},
+ poll:function(ey,t,o){var L='ABCD',pos=[[128,440],[976,440],[128,600],[976,600]];return sec(['<p data-edit="eyebrow" style="position:absolute;left:128px;top:128px;'+EY+'">'+ey+'</p>','<h2 data-edit="title" style="position:absolute;left:128px;top:180px;width:1600px;'+TI+'">'+t+'</h2>'].concat(o.map(function(x,i){return '<div style="position:absolute;left:'+pos[i][0]+'px;top:'+pos[i][1]+'px;width:816px;height:130px;background:#1D3A34;border:2px solid #365C53;padding:0 32px;display:flex;align-items:center;gap:28px"><p style="font-family:Newsreader,Georgia,serif;font-size:56px;color:#C9A94E">'+L[i]+'</p><p data-edit="o'+(i+1)+'" style="font-size:30px">'+x+'</p></div>';})).concat([foot('Data Strategy for Leaders · interaction')]));}
 };
+function DOC(title,meta,secs){return secs.map(function(sc,i){var h=i===0?'<h1 data-edit="title">'+title+'</h1>\n<p class="meta" data-edit="meta">'+meta+'</p>\n':'';return h+'<h2 data-edit="h">'+sc[0]+'</h2>\n'+sc[1].map(function(p,j){return '<p data-edit="p'+(j+1)+'">'+p+'</p>';}).join('\n');});}
+var TEMPLATES=[
+ {id:'course',cat:'Courses',name:'Executive course',desc:'Chapters, big numbers, polls and quizzes',slides:function(n){return [
+   B.cover('Executive Education · Data &amp; Analytics',n,'Turning data from a cost line into better decisions.'),
+   B.stat('Evidence · The AI paradox','Most AI pilots never reach the P&amp;L','95%','of enterprise GenAI pilots show no measurable P&amp;L impact','The gap is rarely the model. It is the distance between a prediction and a decision someone owns.','Source: MIT NANDA, The GenAI Divide: State of AI in Business 2025'),
+   B.cards('As is · Three symptoms','If you recognise these, the problem is not technical',[['Silos','Each area keeps its own data, with overlaps, gaps and inconsistencies.'],['Many versions of the truth','The same KPI arrives with a different number in every meeting.'],['HiPPO decisions','The Highest Paid Person’s Opinion wins over the evidence in the room.']]),
+   B.poll('Icebreaker · 2 minutes','If your company’s data were a vehicle, which one?',['A bicycle: it moves, but only with effort','A taxi: someone else drives, you pay per ride','A car with no dashboard: fast, but blind','A plane on autopilot: data drives routine decisions']),
+   B.statement('Your next step','Pick one decision. Measure it before and after.')];}},
+ {id:'disc',cat:'Sales',name:'Discovery guide',desc:'Triage and stage questions for prospect meetings',slides:function(n){return [
+   B.cover('Discovery guide · Health plans',n,'Find the stage in ten minutes, then ask the right questions.','Meridiano · internal'),
+   B.cards('Triage','Which stage are they at?',[['1 · Build the foundation','Spreadsheets and hand-made reports; every branch in a different format.'],['2 · Refine and scale','The architecture exists; dashboards are late, mismatched or rarely opened.'],['3 · Advance','Mature platform; they want forecasting, AI and stronger presentations.']]),
+   B.statement('What we want to sell','One data structure for the whole network.','meridiano-consulting.com')];}},
+ {id:'proposal',cat:'Sales',name:'Client proposal',desc:'Problem, approach, timeline and investment',slides:function(n){return [
+   B.cover('Proposal',n,'A 90-day path from scattered reports to one trusted view.','Meridiano · confidential'),
+   B.cards('Approach','Three phases, each with a decision at the end',[['Diagnose','2–4 weeks. Sources, indicators and a costed target architecture.'],['Build','A running pipeline and the first executive dashboard.'],['Prove','Value measured against the promise at +90 days.']]),
+   B.statement('Next step','Approve the diagnosis and pick two pilot branches.')];}},
+ {id:'qbr',cat:'Clients',name:'Quarterly business review',desc:'Results, numbers that moved, decisions needed',slides:function(n){return [
+   B.cover('Quarterly business review',n,'What moved, why, and what we decide next.'),
+   B.stat('Headline','The number that moved this quarter','+12%','approval rate at the same risk level','Driven by the new application score in two of five products.','Illustrative figures'),
+   B.statement('Decision needed','Extend the new score to the remaining three products.')];}},
+ {id:'workshop',cat:'Courses',name:'Workshop',desc:'Agenda, exercises and a timed group task',slides:function(n){return [
+   B.cover('Workshop',n,'Half a day to map one critical decision end to end.'),
+   B.poll('Warm-up','Where does your data mostly live today?',['Spreadsheets and e-mail attachments','Operational databases','A data warehouse on-premises','A cloud warehouse or lakehouse'])];}},
+ {id:'inst',cat:'Company',name:'Institutional',desc:'Point of view, partners, practices, method',slides:function(n){return [
+   B.cover('Institutional presentation',n,'Evidence for the decisions that matter.'),
+   B.cards('What we deliver','Six practices. It runs, and it pays.',[['Modelling','Predict the when.'],['Credit cycle','Acquisition to recovery.'],['Deployment','Live in production.']])];}},
+ {id:'thesis',kind:'doc',cat:'Writing',name:'Dissertation chapter',desc:'Long-form text with sections, advisor comments and versions',slides:function(n){return DOC(n,'Chapter 2 · Literature review',[
+   ['2.1 Why time-to-event models',['Credit risk is usually modelled as a yes-or-no outcome within a fixed window. That framing discards when the default happens, which is often the information a lender needs most.','Survival analysis keeps the timing. It handles customers still observed at the end of the study, so recent cohorts contribute evidence instead of being dropped.']],
+   ['2.2 Main model families',['The Cox proportional hazards model remains the reference, because it estimates the effect of covariates without assuming a baseline shape.','Parametric alternatives, such as Weibull and log-logistic models, trade that flexibility for direct estimates of the time distribution.']],
+   ['2.3 Gaps this work addresses',['Few studies compare these families on the same retail portfolio with a business metric. This chapter sets up that comparison.']]]);}},
+ {id:'article',kind:'doc',cat:'Writing',name:'Research article',desc:'Abstract, introduction, method and results',slides:function(n){return DOC(n,'Working paper · draft',[
+   ['Abstract',['We compare decision rules built from predicted probabilities with rules built from predicted time to event, on the same portfolio.']],
+   ['1. Introduction',['Most AI pilots never reach the P&amp;L. We argue that the missing link is the decision the prediction is meant to change.']],
+   ['2. Method',['Two models are trained on identical data. Each feeds a policy, and the policies are compared on profit and loss.']]]);}},
+ {id:'memo',kind:'doc',cat:'Writing',name:'Executive memo',desc:'One-page recommendation with context and decision',slides:function(n){return DOC(n,'Memo · for the partners',[
+   ['Context',['The health-plan prospect wants dashboards for each branch CEO.']],
+   ['Recommendation',['Sell the diagnosis first, then one data structure for the whole network.']]]);}},
+ {id:'blank',cat:'Company',name:'Blank Meridiano deck',desc:'Brand fonts, colours and layouts only',slides:function(n){return [B.cover('Meridiano',n,'Subtitle'),B.statement('Section','A statement slide.')];}}
+];
 
 /* ---------- state ---------- */
-function clone(o){return JSON.parse(JSON.stringify(o));}
-function sha(){var c='0123456789abcdef',s='';for(var i=0;i<7;i++)s+=c[Math.floor(Math.random()*16)];return s;}
-function now(){return Date.now();}
+function makeDeck(tplId,name,owner,members,ai){var t=TEMPLATES.filter(function(x){return x.id===tplId})[0];var sl=t.slides(name),files={};sl.forEach(function(h,i){files['s'+(i+1)]=h;});
+ return {id:uid(),name:name,tpl:tplId,kind:t.kind||'slides',ai:ai||'all',owner:owner,members:members,files:files,order:Object.keys(files),proposals:[],comments:[],
+   versions:[{n:1,t:now()-864e5*3,by:owner,approvedBy:owner,msg:'Created from the “'+t.name+'” template',snap:clone(files),changed:Object.keys(files)}],presence:{},chat:[],created:now()};}
+var GUESTS={'ana.ribeiro':'Ana Ribeiro (client)','carlos.mena':'Carlos Mena (client)','luiza.prado':'Luiza Prado (client)','diego.vargas':'Diego Vargas (client)','marta.solis':'Marta Solís (client)'};
+function uname(u){return USERS[u]?USERS[u].name:(GUESTS[u]||u);}
+function seedEvents(){ /* 60 days of synthetic usage, labelled as demo data */
+ var ev=[],people=['jadson','gustavo','gabriel'].concat(Object.keys(GUESTS)),day=864e5,t0=now()-60*day,rnd=mulberry(7);
+ var prob={jadson:.92,gustavo:.8,gabriel:.65,'ana.ribeiro':.35,'carlos.mena':.25,'luiza.prado':.3,'diego.vargas':.15,'marta.solis':.2};
+ for(var dd=0;dd<60;dd++){var wk=new Date(t0+dd*day).getDay();var f=(wk===0||wk===6)?.25:1;var g=Math.min(1,.55+dd/80);
+  people.forEach(function(u){var guest=!!GUESTS[u];if(guest&&dd<20+people.indexOf(u)*3)return;if(rnd()>prob[u]*f*g)return;
+   var t=t0+dd*day+(8+rnd()*10)*36e5;ev.push({id:uid(),ts:t,type:'login',user:u,deck:null,meta:{method:'email_link'}});
+   var n=guest?1+Math.floor(rnd()*2):2+Math.floor(rnd()*5);
+   for(var i=0;i<n;i++){t+=rnd()*36e5/2;var r=rnd(),ty;
+    if(guest)ty=r<.6?'view_published':r<.85?'room_join':'comment';
+    else ty=r<.18?'room_join':r<.4?'proposal':r<.52?'ai_request':r<.64?'comment':r<.74?'view_published':r<.86&&u==='jadson'?'approve':'proposal';
+    ev.push({id:uid(),ts:t,type:ty,user:u,deck:null,meta:{}});}
+  });}
+ return ev;}
+function mulberry(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
 function seed(){
-  var files=clone(SLIDES), t=now()-1000*60*60*26;
-  return {
-    v:1, signedIn:false,
-    project:null,
-    files:files, base:clone(files), live:clone(files),
-    commits:[], comments:[], invites:[], members:[], presence:{}, activity:[],
-    deploy:{state:'idle', sha:null, at:null, steps:[]}, liveSha:null
-  };
+ var d1=makeDeck('course','Data Strategy for Leaders','jadson',['jadson','gustavo','gabriel']);
+ d1.versions.push({n:2,t:now()-864e5,by:'gustavo',approvedBy:'jadson',msg:'Sharper wording on the AI paradox',snap:clone(d1.files),changed:['s2']});
+ d1.comments.push({id:uid(),path:'s3',key:'title',author:'gabriel',text:'Could we add a real client example to “Many versions of the truth”?',t:now()-36e5*5,replies:[{author:'jadson',text:'Yes, use the anonymised retail case.',t:now()-36e5*4}],resolved:false});
+ var d2=makeDeck('disc','Health-plan prospect','jadson',['jadson','gustavo']);
+ var d3=makeDeck('proposal','Retail credit proposal','gustavo',['gustavo','jadson','gabriel']);
+ var d4=makeDeck('thesis','Survival models for credit risk','jadson',['jadson','gustavo'],'owner');
+ d4.comments.push({id:uid(),path:'s1',key:'p1',author:'gustavo',text:'@Jadson the opening paragraph is too long. Make it more concise, one idea only.',t:now()-36e5*2,replies:[],resolved:false});
+ return {v:2,decks:[d1,d4,d2,d3]};
 }
-var S;
-try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){S=null}
-if(!S||S.v!==1)S=seed();
-var bc=null; try{bc=new BroadcastChannel('meridiano-studio')}catch(e){}
-function persist(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){} if(bc){try{bc.postMessage({t:'state',from:TAB,s:S})}catch(e){}}}
-if(bc)bc.onmessage=function(e){if(!e.data||e.data.from===TAB)return; if(e.data.t==='state'){var prev=S;S=e.data.s;onShared(null,{remote:true,prev:prev});} if(e.data.t==='toast')toast(e.data.msg,e.data.who);};
-
-var SES={user:'jadson'}; // per-tab session
-try{var u=sessionStorage.getItem('ms-user'); if(u&&USERS[u])SES.user=u;}catch(e){}
-function setUser(u){SES.user=u; try{sessionStorage.setItem('ms-user',u)}catch(e){} }
-
-function ago(t){if(!t)return'';var s=Math.round((now()-t)/1000);if(s<10)return'just now';if(s<60)return s+'s ago';var m=Math.round(s/60);if(m<60)return m+' min ago';var h=Math.round(m/60);if(h<24)return h+' h ago';return Math.round(h/24)+' d ago';}
-function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function av(id,cls){var u=USERS[id];return '<span class="av '+(cls||'')+'" style="background:'+u.color+'" title="'+esc(u.name)+'">'+u.ini+'</span>';}
-function log(who,txt){S.activity.unshift({who:who,txt:txt,t:now()}); S.activity=S.activity.slice(0,40);}
-function toast(msg,who,local){var w=document.getElementById('toasts');var d=document.createElement('div');d.className='toast';d.innerHTML=(who?av(who,'sm'):'')+'<span>'+msg+'</span>';w.appendChild(d);setTimeout(function(){d.style.opacity='0';d.style.transition='opacity .4s'},3800);setTimeout(function(){d.remove()},4300);
-  if(!local&&bc){try{bc.postMessage({t:'toast',from:TAB,msg:msg,who:who})}catch(e){}}}
-
-/* ---------- project creation (shared helpers) ---------- */
-function slug(s){return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');}
-function createProject(o){
-  S.project={name:o.name, repo:o.repo, owner:'jads-Marcelino', visibility:o.visibility, template:o.template, created:now()};
-  S.files=clone(SLIDES); S.base=clone(SLIDES); S.live=clone(SLIDES);
-  var c={sha:sha(), msg:'Create project from template “'+o.templateName+'”', author:'jadson', t:now(), files:Object.keys(SLIDES).length, snap:clone(SLIDES), changed:Object.keys(SLIDES)};
-  S.commits=[c]; S.liveSha=c.sha; S.deploy={state:'live',sha:c.sha,at:now(),steps:[]};
-  S.members=[{id:'jadson',role:'Owner',joined:now()}];
-  S.comments=[]; S.invites=[];
-  log('jadson','created '+o.name+' and published '+siteUrl());
-}
-function siteUrl(){return S.project?('https://jads-marcelino.github.io/'+S.project.repo+'/'):'';}
-function ensureProject(){ if(!S.project){createProject({name:'Data Strategy for Leaders',repo:'data-strategy-for-leaders',visibility:'Public',template:'course',templateName:'Executive course deck'}); S.signedIn=true;} }
-function isMember(id){return S.members.some(function(m){return m.id===id});}
-function ensureGuest(){ ensureProject(); if(!S.invites.length){S.invites.push({email:USERS.gustavo.email,role:'Editor',status:'pending',t:now(),by:'jadson'});}
-  if(!isMember('gustavo')){S.invites.forEach(function(i){if(i.email===USERS.gustavo.email)i.status='accepted'}); S.members.push({id:'gustavo',role:'Editor',joined:now()}); log('gustavo','joined and connected GitHub @'+USERS.gustavo.gh);} }
+var S;try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){S=null}if(!S||S.v!==2)S=seed();
+if(!S.events)S.events=seedEvents();
+function track(type,user,deckId,meta){S.events.push({id:uid(),ts:now(),type:type,user:user,deck:deckId||null,meta:meta||{}});if(S.events.length>6000)S.events=S.events.slice(-6000);}
+var bc=null;try{bc=new BroadcastChannel('meridiano-studio-2')}catch(e){}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}if(bc){try{bc.postMessage({t:'s',from:TAB,s:S})}catch(e){}}}
+if(bc)bc.onmessage=function(e){if(!e.data||e.data.from===TAB)return;if(e.data.t==='s'){S=e.data.s;refresh({remote:true});}if(e.data.t==='toast')toast(e.data.m,e.data.w,true);};
+var ME='jadson';try{var u=sessionStorage.getItem('ms2-user');if(u&&USERS[u])ME=u;}catch(e){}
+function setMe(u){ME=u;try{sessionStorage.setItem('ms2-user',u)}catch(e){}}
+function mainDeck(){return S.decks.filter(function(d){return d.tpl==='course'&&d.name==='Data Strategy for Leaders'})[0]||S.decks[0];}
+function deck(id){return S.decks.filter(function(d){return d.id===id})[0];}
+function toast(m,w,local){var el=document.getElementById('toasts'),d=document.createElement('div');d.className='toast';d.innerHTML=(w?av(w,'sm'):'')+'<span>'+m+'</span>';el.appendChild(d);setTimeout(function(){d.style.transition='opacity .4s';d.style.opacity='0'},4200);setTimeout(function(){d.remove()},4700);if(!local&&bc){try{bc.postMessage({t:'toast',from:TAB,m:m,w:w})}catch(e){}}}
+function online(d){return Object.keys(d.presence).filter(function(k){return now()-d.presence[k].t<45000;});}
+function openProps(d){return d.proposals.filter(function(p){return p.status==='open';});}
+/* draft = approved files + all open proposals (latest wins) */
+function draftFiles(d){var f=clone(d.files);openProps(d).sort(function(a,b){return a.t-b.t}).forEach(function(p){Object.keys(p.files).forEach(function(k){f[k]=p.files[k];});});return f;}
+function texts(html){var m={},r=/data-edit="([^"]+)"[^>]*>([\s\S]*?)<\/(?:p|h1|h2)>/g,x;while((x=r.exec(html)))m[x[1]]=x[2];return m;}
+function plain(h){var d=document.createElement('div');d.innerHTML=h;return d.textContent;}
 
 /* ---------- routing ---------- */
-var routes={};
-function go(h){ if(location.hash===h)render(); else location.hash=h; }
+var routes={},R={deck:null};
 window.addEventListener('hashchange',render);
-function route(){return (location.hash||'#/').replace(/\?.*/,'');}
-function render(){
-  stopSiteWatch(); panes=[];
-  var r=route(); var fn=routes[r]||routes['#/'];
-  renderNav(r); document.getElementById('view').innerHTML=''; fn(document.getElementById('view'));
-  window.scrollTo(0,0);
-}
-function renderNav(r){
-  var links=[['#/','Tour'],['#/dashboard','Dashboard'],['#/studio','Studio'],['#/together','Two-person demo'],['#/site','Live site'],['#/how','How it works']];
-  var opts=Object.keys(USERS).map(function(k){return '<option value="'+k+'" '+(SES.user===k?'selected':'')+'>'+USERS[k].short+(k==='jadson'?' · owner':' · guest')+'</option>'}).join('');
-  document.getElementById('nav').innerHTML='<a class="logo" href="#/">'+LOGO(30)+'<b>Meridiano Studio</b><i>prototype</i></a><div class="links">'+links.map(function(l){return '<a href="'+l[0]+'" class="'+(r===l[0]?'on':'')+'">'+l[1]+'</a>'}).join('')+'</div><div class="sp"></div>'+
-   '<div class="persona" title="Who you are in this tab">'+av(SES.user)+'<select id="who">'+opts+'</select></div>';
-  document.getElementById('who').onchange=function(e){
-    var u=e.target.value;
-    if(u==='gustavo'&&!isMember('gustavo')){ if(!confirm('Gustavo has not joined yet. Skip the invite flow and join him now?')){e.target.value=SES.user;return;} ensureGuest(); persist(); }
-    setUser(u); render();
-  };
-}
+function go(h){if(location.hash===h)render();else location.hash=h;}
+function route(){var h=(location.hash||'#/').split('/');return {name:'#/'+(h[1]||''),arg:h[2]};}
+function render(){stopTimers();var r=route();var fn=routes[r.name]||routes['#/'];nav(r.name);var v=document.getElementById('view');v.innerHTML='';fn(v,r.arg);window.scrollTo(0,0);}
+function nav(r){var L=[['#/','Home'],['#/shared','Shared with me'],['#/templates','Templates'],['#/analytics','Analytics'],['#/mcp','MCP'],['#/how','How it works']];
+ document.getElementById('nav').innerHTML='<a class="logo" href="#/">'+LOGO(30)+'<b>Meridiano Studio</b></a><div class="links">'+L.map(function(l){return '<a href="'+l[0]+'" class="'+(r===l[0]?'on':'')+'">'+l[1]+'</a>'}).join('')+'</div><div class="sp"></div><div class="persona" title="Who you are in this tab (demo)">'+av(ME)+'<select id="who">'+['jadson','gustavo','gabriel'].map(function(k){return '<option value="'+k+'" '+(ME===k?'selected':'')+'>'+USERS[k].short+' · '+(k==='jadson'?'owner':'editor')+'</option>'}).join('')+'</select></div>';
+ document.getElementById('who').onchange=function(e){setMe(e.target.value);track('login',ME,null,{method:'email_link'});persist();render();};}
+var timers=[];function stopTimers(){timers.forEach(clearInterval);timers=[];}
+function mount(el,html,kind){if(kind==='doc'){el.innerHTML='<div class="docpage">'+html+'</div>';return;}el.innerHTML='<div class="slide">'+html+'</div>';var s=el.querySelector('.slide');function f(){if(el.clientWidth)s.style.transform='scale('+(el.clientWidth/1920)+')';}f();if(window.ResizeObserver)new ResizeObserver(f).observe(el);}
+function thumb(el,html,kind){if(kind==='doc'){el.style.background='#fff';el.insertAdjacentHTML('beforeend','<div class="mini" style="width:820px;height:461px;padding:50px 64px;background:#fff"><div class="docpage">'+html+'</div></div>');var m=el.querySelector('.mini');m.style.transform='scale('+((el.clientWidth||200)/820)+')';return;}el.insertAdjacentHTML('beforeend','<div class="mini">'+html+'</div>');var m=el.querySelector('.mini');m.style.transform='scale('+((el.clientWidth||200)/1920)+')';}
 
-/* ---------- TOUR ---------- */
+/* ---------- HOME ---------- */
 routes['#/']=function(v){
-  v.innerHTML='<div class="wrap">'+
-  '<div class="hero"><div><span class="chip">Prototype · navigable</span><h1 class="big" style="margin-top:16px">Build, review and publish Meridiano decks <i style="color:var(--brass2)">together</i>.</h1>'+
-  '<p class="lead" style="margin-top:16px">Everything we did by hand in these sessions, as one product. The owner creates a project, which becomes a GitHub repository and a <b>.io</b> site. They invite a partner by e-mail. The partner signs up, connects GitHub and both edit the same deck: live in the studio, versioned with commits and comments, published to the <b>.io</b> on every commit.</p>'+
-  '<div style="display:flex;gap:10px;margin-top:22px;flex-wrap:wrap"><button class="btn pri" data-go="#/signin">Start the story as owner</button><button class="btn br" data-act="demoTogether">See two people editing live</button><button class="btn ghost" data-act="reset">Reset demo</button></div></div>'+
-  '<div class="card" style="padding:14px"><div class="stage" id="heroStage"></div><div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px"><span class="small">'+(S.project?esc(siteUrl()):'jads-marcelino.github.io/data-strategy-for-leaders/')+'</span><span class="pill ok">Live</span></div></div></div>'+
-  '<div class="grid3" style="margin-top:44px">'+
-   stepCard('1','Owner creates and shares','Sign in with GitHub, pick a Meridiano template and create the project. The repository and the GitHub Pages site are created for you. Then invite a partner by e-mail, as Editor, Commenter or Viewer.',[['Sign in as owner','#/signin'],['Invite screen','act:openShare']])+
-   stepCard('2','Guest joins and connects GitHub','The partner gets an e-mail, accepts, creates an account and authorises GitHub. They become a collaborator on the repository, so their commits carry their own name.',[['Open the invite e-mail','#/inbox']])+
-   stepCard('3','Both work on the same file','Edits appear live for everyone in the studio, with presence and comments. A commit records the version on GitHub and republishes the .io: whoever refreshes the site sees it.',[['Open the studio','#/studio'],['Two-person demo','act:demoTogether']])+
-  '</div>'+
-  '<div class="card" style="padding:22px;margin-top:22px;display:flex;gap:20px;align-items:center;flex-wrap:wrap"><div style="flex:1;min-width:260px"><h3 class="t">Try it in two tabs</h3><p class="muted" style="margin-top:6px;line-height:1.5">Open this page in a second tab, choose <b>Gustavo</b> at the top right and open the Studio in both. What you type in one appears in the other. On an iPad, use the <b>Two-person demo</b>, which shows both people side by side.</p></div><button class="btn" data-go="#/how">How it would work for real →</button></div>'+
-  '</div>';
-  mountStage(document.getElementById('heroStage'),S.live['slides/01-cover.html']);
+ var liveN=S.decks.filter(function(d){return online(d).length>0||d===mainDeck()}).length;
+ v.innerHTML='<div class="wrap"><div class="hero"><div><span class="chip">Present together · from anywhere</span>'+
+ '<h1 class="big" style="margin-top:18px">Everyone on the same slide. <i>Nothing final</i> until you approve.</h1>'+
+ '<p class="lead" style="margin-top:18px">Presentations and long texts, from a deck to a dissertation. Partners in different cities see what each other is showing, live. Ask the AI for a change and watch it write. Comments are open to all; the owner approves what becomes the official version.</p>'+
+ '<div class="cta"><button class="btn br xl" data-go="#/shared">▶ Follow shared presentations <span class="live" style="margin-left:6px">'+liveN+' live</span></button>'+
+ '<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" data-go="#/templates">Start from a template</button><button class="btn" data-act="openMain">Jump into the live room</button></div></div></div>'+
+ '<div class="demo" id="demo"><div class="bar"><span class="live">Live</span><span class="small" style="margin-left:4px">Data Strategy for Leaders</span><div style="flex:1"></div><div class="faces" id="dFaces">'+av('jadson')+av('gustavo')+av('gabriel')+av('claude')+'</div></div>'+
+ '<div class="stage" id="dStage"></div><div class="cap"><span class="n" id="dN">1</span><p id="dCap"></p></div><div class="dots" id="dDots"><i></i><i></i><i></i><i></i></div></div></div>'+
+ '<div class="steps4">'+[
+  ['👥','#E2EEE8','Join from anywhere','Open the link, sign in with e-mail. No Git, no install. Works on iPad.'],
+  ['👁','#DEECF1','Follow who is presenting','See the slide the presenter is on, live, with their cursor and proposals.'],
+  ['✦','#F5ECD3','Ask the AI, watch it write','“Tighten this slide”, “translate to Spanish”: the change appears as it is generated.'],
+  ['✓','#E2F3E9','Owner approves','Every change is a proposal. Approval fixes it as a new version and publishes it.']].map(function(s){return '<div class="card s4"><div class="ic" style="background:'+s[1]+'">'+s[0]+'</div><h3 class="t">'+s[2]+'</h3><p class="muted" style="margin-top:6px;line-height:1.5">'+s[3]+'</p></div>'}).join('')+'</div>'+
+ '<div class="sec-h"><div><h2 class="t">Shared with you</h2><p class="muted">Pick up where the team is right now.</p></div><button class="btn" data-go="#/shared">See all</button></div><div class="grid3" id="hShared"></div>'+
+ '<div class="sec-h"><div><h2 class="t">Template library</h2><p class="muted">Every template carries the Meridiano look, presenter and interactions.</p></div><button class="btn" data-go="#/templates">Browse templates</button></div><div class="grid4" id="hTpl"></div></div>';
+ deckCards(document.getElementById('hShared'),S.decks.slice(0,3));
+ tplCards(document.getElementById('hTpl'),TEMPLATES.slice(0,4));
+ demoLoop();
 };
-function stepCard(n,t,b,btns){return '<div class="card stepcard"><p class="n">'+n+'</p><h3 class="t">'+t+'</h3><p class="muted" style="line-height:1.5">'+b+'</p><div class="btns">'+btns.map(function(x,i){return x[1].indexOf('act:')===0?'<button class="btn sm '+(i?'':'pri')+'" data-act="'+x[1].slice(4)+'">'+x[0]+'</button>':'<button class="btn sm '+(i?'':'pri')+'" data-go="'+x[1]+'">'+x[0]+'</button>'}).join('')+'</div></div>';}
-
-/* ---------- SIGN IN (owner) ---------- */
-routes['#/signin']=function(v){
-  setUser('jadson'); renderNav(route());
-  v.innerHTML='<div class="wrap" style="max-width:480px;text-align:center"><div style="display:flex;justify-content:center">'+LOGO(64)+'</div><h1 class="big" style="font-size:40px;margin-top:14px">Welcome to Meridiano Studio</h1><p class="lead" style="margin:12px auto 26px">Sign in with the GitHub account that will own the projects.</p>'+
-  '<button class="btn pri" style="width:100%;justify-content:center;padding:13px" data-act="ghOwner">'+GHICON+' Continue with GitHub</button><p class="small" style="margin-top:14px">We ask for access to create repositories and publish GitHub Pages on your account.</p></div>';
-};
-var GHICON='<svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>';
-routes['#/gh-owner']=function(v){
-  v.innerHTML='<div class="gh"><div style="text-align:center">'+GHICON.replace('18','40').replace('18','40')+'<h2 style="font-weight:400;font-size:22px;margin:12px 0 4px">Authorize Meridiano Studio</h2><p style="color:#59636E">by Meridiano Consulting</p></div>'+
-  '<ul style="margin:18px 0"><li>✓ <span><b>Repositories</b>: create repositories and push commits</span></li><li>✓ <span><b>Pages</b>: publish and update GitHub Pages sites</span></li><li>✓ <span><b>Administration</b>: invite collaborators to repositories you own</span></li><li>✓ <span><b>E-mail address</b> (read-only)</span></li></ul>'+
-  '<p style="font-size:13px;color:#59636E;margin-bottom:14px">Signed in as <b>@jads-Marcelino</b></p><button class="btngh" data-act="ghOwnerOk">Authorize</button><p style="font-size:12px;color:#59636E;margin-top:10px;text-align:center">Simulated GitHub screen · nothing is sent</p></div>';
-};
-
-/* ---------- DASHBOARD ---------- */
-routes['#/dashboard']=function(v){
-  if(!S.signedIn){go('#/signin');return;}
-  var mine=S.project?'<div class="proj"><div class="thumbS" id="dashThumb"></div><div style="flex:1;min-width:0"><h3 class="t">'+esc(S.project.name)+'</h3><p class="small" style="margin-top:3px">'+S.project.owner+'/'+S.project.repo+' · '+S.project.visibility+' · '+S.members.length+' member'+(S.members.length>1?'s':'')+'</p><p class="small"><a href="#/site">'+esc(siteUrl())+'</a></p></div><div style="display:flex;gap:6px">'+S.members.map(function(m){return av(m.id)}).join('')+'</div><button class="btn sm" data-go="#/project">Open</button><button class="btn sm pri" data-go="#/studio">Studio</button></div>':'';
-  v.innerHTML='<div class="wrap"><div style="display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap"><div style="flex:1"><span class="chip">'+(SES.user==='jadson'?'@jads-Marcelino':'@'+USERS[SES.user].gh)+'</span><h1 class="big" style="margin-top:12px">Projects</h1></div>'+(SES.user==='jadson'?'<button class="btn pri" data-go="#/new">+ New project</button>':'')+'</div>'+
-  '<div class="card" style="margin-top:24px">'+mine+
-  '<div class="proj"><div class="thumbS" style="background:linear-gradient(135deg,#0F2420,#1D3A34)"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center">'+LOGO(30,true)+'</div></div><div style="flex:1"><h3 class="t">GJG · presentations hub</h3><p class="small" style="margin-top:3px">jads-Marcelino/GJG · Public · imported</p><p class="small">https://jads-marcelino.github.io/GJG/</p></div><span class="pill">read-only import</span></div>'+
-  '<div class="proj"><div class="thumbS" style="background:#F8F6F1;border:1px solid var(--line)"><div style="position:absolute;inset:10px;border-top:3px solid #1F5A4C"></div></div><div style="flex:1"><h3 class="t">Meridiano · private sources</h3><p class="small" style="margin-top:3px">jads-Marcelino/Meridiano · Private · imported</p></div><span class="pill">read-only import</span></div>'+
-  '</div>'+(S.project?'':'<p class="muted" style="margin-top:18px">No studio project yet. Create one from a Meridiano template.</p>')+'</div>';
-  if(S.project)mountStage(document.getElementById('dashThumb'),S.live['slides/01-cover.html']);
-};
-
-/* ---------- NEW PROJECT ---------- */
-var NP={step:1,template:'course',name:'Data Strategy for Leaders',repo:'data-strategy-for-leaders',visibility:'Public'};
-var TEMPLATES=[['course','Executive course deck','Chapters, polls, quizzes, myth-or-fact and speaker notes'],['inst','Institutional deck','Point of view, partners, practices, method'],['disc','Discovery guide','Triage and stage guides, exported to PDF in three languages'],['blank','Blank Meridiano deck','Brand fonts, colours and slide layouts only']];
-routes['#/new']=function(v){
-  if(!S.signedIn){go('#/signin');return;}
-  var body='';
-  if(NP.step===1){body='<h2 class="t">Choose a template</h2><p class="muted" style="margin:6px 0 18px">Templates carry the Meridiano look, the presenter and the build script.</p><div class="grid2">'+TEMPLATES.map(function(t){return '<button class="card" data-act="tpl" data-v="'+t[0]+'" style="text-align:left;padding:18px;'+(NP.template===t[0]?'border-color:var(--brass);box-shadow:inset 0 3px 0 var(--brass)':'')+'"><h3 class="t">'+t[1]+'</h3><p class="small" style="margin-top:6px">'+t[2]+'</p></button>'}).join('')+'</div><div style="margin-top:22px;text-align:right"><button class="btn pri" data-act="npNext">Continue</button></div>';}
-  else if(NP.step===2){body='<h2 class="t">Name it</h2><p class="muted" style="margin:6px 0 18px">This becomes the repository and the address of the site.</p>'+
-    '<div class="field"><label>Project name</label><input id="npName" value="'+esc(NP.name)+'"></div>'+
-    '<div class="field"><label>Repository</label><input id="npRepo" value="'+esc(NP.repo)+'"></div>'+
-    '<div class="field"><label>Visibility</label><select id="npVis"><option '+(NP.visibility==='Public'?'selected':'')+'>Public</option><option '+(NP.visibility==='Private'?'selected':'')+'>Private</option></select></div>'+
-    '<p class="small" id="npNote">'+visNote(NP.visibility)+'</p>'+
-    '<div class="card" style="padding:14px;margin-top:14px;background:#FCFBF8"><p class="small">Site address</p><p style="font:14px ui-monospace,Menlo,monospace;margin-top:4px" id="npUrl">https://jads-marcelino.github.io/'+esc(NP.repo)+'/</p></div>'+
-    '<div style="margin-top:22px;display:flex;justify-content:space-between"><button class="btn" data-act="npBack">Back</button><button class="btn pri" data-act="npCreate">Create project</button></div>';}
-  else {body='<h2 class="t">Creating '+esc(NP.name)+'</h2><p class="muted" style="margin:6px 0 14px">This is what happens on GitHub, in order.</p><div id="npSteps"></div><div id="npDone" class="hidden" style="margin-top:20px;display:flex;gap:10px"><button class="btn pri" data-go="#/project">Go to project</button><button class="btn br" data-act="openShare">Invite someone</button></div>';}
-  v.innerHTML='<div class="wrap" style="max-width:720px"><p class="small" style="margin-bottom:12px">New project · step '+Math.min(NP.step,3)+' of 3</p><div class="card" style="padding:26px">'+body+'</div></div>';
-  if(NP.step===2){
-    var n=document.getElementById('npName'),r=document.getElementById('npRepo'),vv=document.getElementById('npVis');
-    n.oninput=function(){NP.name=n.value;NP.repo=slug(n.value);r.value=NP.repo;document.getElementById('npUrl').textContent='https://jads-marcelino.github.io/'+NP.repo+'/';};
-    r.oninput=function(){NP.repo=slug(r.value)||'';document.getElementById('npUrl').textContent='https://jads-marcelino.github.io/'+NP.repo+'/';};
-    vv.onchange=function(){NP.visibility=vv.value;document.getElementById('npNote').innerHTML=visNote(vv.value);};
-  }
-  if(NP.step===3)runSteps('npSteps',[
-    'Create repository jads-Marcelino/'+NP.repo+' ('+NP.visibility.toLowerCase()+')',
-    'Push template: slides/, deck.json, build.py, presenter, fonts',
-    'Add GitHub Actions workflow: build on every commit',
-    'Enable GitHub Pages from the workflow',
-    'First build and deploy',
-    'Live at https://jads-marcelino.github.io/'+NP.repo+'/'
-  ],function(){
-    var t=TEMPLATES.filter(function(x){return x[0]===NP.template})[0];
-    createProject({name:NP.name,repo:NP.repo||'project',visibility:NP.visibility,template:NP.template,templateName:t[1]}); persist(); NP.step=1;
-    document.getElementById('npDone').classList.remove('hidden'); toast('Project created and published','jadson',true);
-  });
-};
-function visNote(v){return v==='Public'?'Anyone with the link can open the .io site and see the repository. Only invited people can edit.':'Code stays private. GitHub Pages on a private repository needs a paid GitHub plan; the site itself is still reachable by link.';}
-function runSteps(id,steps,done){
-  var el=document.getElementById(id),i=0;
-  function draw(){el.innerHTML=steps.map(function(s,k){return '<div class="step '+(k<i?'done':k===i?'run':'')+'"><span class="dot">'+(k<i?'✓':'')+'</span><span style="padding-top:3px;'+(k>i?'color:var(--sub)':'')+'">'+esc(s)+'</span></div>'}).join('');}
-  draw(); var tm=setInterval(function(){i++;draw();if(i>=steps.length){clearInterval(tm);done&&done();}},650);
+function demoLoop(){
+ var st=document.getElementById('dStage');var base=TEMPLATES[0].slides('Data Strategy for Leaders')[1];mount(st,base);
+ var caps=['Jadson, Gustavo and Gabriel join from three cities. Everyone sees the same slide.','Gustavo edits the headline. Everyone sees his proposal as he types.','Gabriel asks the AI to translate the note. It writes live, as a proposal.','Jadson approves. Version 13 is fixed and published.'];
+ var k=0,stepT=null;
+ function frame(){
+  var faces=document.querySelectorAll('#dFaces .av');if(!faces.length)return;
+  var dots=document.querySelectorAll('#dDots i');dots.forEach(function(d,i){d.classList.toggle('on',i===k)});
+  document.getElementById('dN').textContent=k+1;document.getElementById('dCap').textContent=caps[k];
+  st.querySelectorAll('.ov,.stamp,.aibox').forEach(function(e){e.remove()});clearInterval(stepT);
+  var sl=st.querySelector('.slide');
+  if(k===0){sl.innerHTML=base;faces.forEach(function(f,i){f.classList.remove('in');setTimeout(function(){f.classList.toggle('in',i<3)},250+i*300);});}
+  if(k===1){var t=sl.querySelector('[data-edit="title"]'),full='Most AI pilots never reach the P&L — yet',i=t.textContent.length;ovl(st,t,'#2E8070','Gustavo · proposing');stepT=setInterval(function(){i++;t.textContent=full.slice(0,i);if(i>=full.length)clearInterval(stepT);},70);}
+  if(k===2){faces[3].classList.add('in');var n=sl.querySelector('[data-edit="note"]'),es='La brecha rara vez es el modelo. Es la distancia entre una predicción y una decisión con dueño.',j=0;ovl(st,n,'#C9A94E','✦ Claude · for Gabriel');var a=document.createElement('div');a.className='aibox';a.innerHTML=av('claude','sm')+'<span><b>Claude</b> is writing…</span>';st.appendChild(a);setTimeout(function(){a.classList.add('in')},50);stepT=setInterval(function(){j+=3;n.textContent=es.slice(0,j);if(j>=es.length)clearInterval(stepT);},45);}
+  if(k===3){var s=document.createElement('div');s.className='stamp';s.textContent='✓ Approved by Jadson · v13';st.appendChild(s);setTimeout(function(){s.classList.add('in')},60);}
+  k=(k+1)%4;
+ }
+ frame();timers.push(setInterval(frame,3400));
+}
+function ovl(stage,el,color,label){var a=stage.getBoundingClientRect(),b=el.getBoundingClientRect();var o=document.createElement('div');o.className='ov';o.style.cssText='left:'+(b.left-a.left-4)+'px;top:'+(b.top-a.top-4)+'px;width:'+(b.width+8)+'px;height:'+(b.height+8)+'px;border:2px solid '+color;o.innerHTML='<span style="background:'+color+'">'+label+'</span>';stage.appendChild(o);return o;}
+function deckCards(el,list){
+ el.innerHTML=list.map(function(d){var on=online(d),pr=openProps(d).length,live=on.length>0||d===mainDeck();
+  return '<div class="card deckcard" data-act="open" data-v="'+d.id+'"><div class="th">'+(live?'<span class="live">Live · '+Math.max(on.length,1)+' here</span>':'')+'</div><div class="bd"><h3 class="t">'+esc(d.name)+'</h3><div style="display:flex;align-items:center;gap:8px;margin-top:8px"><div class="faces">'+d.members.map(function(m){return av(m,'sm'+(on.indexOf(m)>=0?' on':''))}).join('')+'</div><span class="small">owner '+USERS[d.owner].short+' · v'+d.versions.length+'</span><div style="flex:1"></div>'+(pr?'<span class="pill warn">'+pr+' to approve</span>':'<span class="pill ok">Up to date</span>')+'</div></div></div>';}).join('');
+ el.querySelectorAll('.th').forEach(function(t,i){thumb(t,list[i].files[list[i].order[0]],list[i].kind);if(list[i].kind==='doc')t.insertAdjacentHTML('beforeend','<span class="kind">Text</span>');});
+}
+function tplCards(el,list){
+ el.innerHTML=list.map(function(t){return '<div class="card deckcard tpl" data-act="useTpl" data-v="'+t.id+'"><div class="th"></div><div class="bd"><p class="small" style="font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--brass2)">'+t.cat+'</p><h3 class="t" style="margin-top:4px">'+t.name+'</h3><p class="small" style="margin-top:4px">'+t.desc+'</p></div></div>'}).join('');
+ el.querySelectorAll('.th').forEach(function(th,i){thumb(th,list[i].slides(list[i].name)[0],list[i].kind);if(list[i].kind==='doc')th.insertAdjacentHTML('beforeend','<span class="kind">Text</span>');});
 }
 
-/* ---------- PROJECT ---------- */
-routes['#/project']=function(v){
-  if(!S.project){go('#/dashboard');return;}
-  var mem=S.members.map(function(m){var u=USERS[m.id];return '<div style="display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)">'+av(m.id)+'<div style="flex:1"><b>'+esc(u.name)+'</b><p class="small">'+u.email+' · @'+u.gh+'</p></div><span class="pill '+(m.role==='Owner'?'warn':'blue')+'">'+m.role+'</span></div>'}).join('')+
-    S.invites.filter(function(i){return i.status==='pending'}).map(function(i){return '<div style="display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)"><span class="av" style="background:#C9D3CE">?</span><div style="flex:1"><b>'+esc(i.email)+'</b><p class="small">invited '+ago(i.t)+' · waiting to sign up</p></div><span class="pill">'+i.role+' · pending</span></div>'}).join('');
-  var act=S.activity.slice(0,10).map(function(a){return '<div style="display:flex;gap:10px;padding:8px 0;align-items:flex-start">'+av(a.who,'sm')+'<p style="flex:1;line-height:1.45"><b>'+USERS[a.who].short+'</b> '+a.txt+'</p><span class="small">'+ago(a.t)+'</span></div>'}).join('');
-  v.innerHTML='<div class="wrap"><div style="display:flex;gap:16px;align-items:flex-end;flex-wrap:wrap"><div style="flex:1"><span class="chip">'+S.project.owner+'/'+S.project.repo+'</span><h1 class="big" style="margin-top:12px">'+esc(S.project.name)+'</h1><p style="margin-top:8px"><a href="#/site">'+esc(siteUrl())+'</a> <span class="pill ok" style="margin-left:6px">'+(S.deploy.state==='live'?'Live':'Deploying')+' · '+(S.liveSha||'')+'</span></p></div><button class="btn" data-act="openShare">Share</button><button class="btn pri" data-go="#/studio">Open studio</button></div>'+
-  '<div class="grid2" style="margin-top:26px;grid-template-columns:1.2fr .8fr"><div class="card" style="padding:14px"><div class="stage" id="projStage"></div></div>'+
-  '<div class="card" style="padding:20px"><h3 class="t">People</h3>'+mem+'<button class="btn sm" style="margin-top:12px" data-act="openShare">+ Invite by e-mail</button></div></div>'+
-  '<div class="grid2" style="margin-top:18px"><div class="card" style="padding:20px"><h3 class="t">Activity</h3>'+(act||'<p class="muted">Nothing yet.</p>')+'</div>'+
-  '<div class="card" style="padding:20px"><h3 class="t">Versions</h3>'+S.commits.slice(0,6).map(function(c){return '<div class="commit">'+av(c.author,'sm')+'<div style="flex:1"><b>'+esc(c.msg)+'</b><p class="small">'+USERS[c.author].short+' · '+ago(c.t)+'</p></div><span class="sha">'+c.sha+'</span></div>'}).join('')+'</div></div></div>';
-  mountStage(document.getElementById('projStage'),S.live['slides/01-cover.html']);
+/* ---------- SHARED ---------- */
+routes['#/shared']=function(v){
+ v.innerHTML='<div class="wrap"><span class="chip">'+USERS[ME].name+'</span><h1 class="big" style="margin-top:14px;font-size:46px">Shared presentations</h1><p class="lead" style="margin-top:10px">Join a live room to follow whoever is presenting, comment, or propose changes. Only the owner approves.</p><div class="grid3" style="margin-top:28px" id="sList"></div></div>';
+ deckCards(document.getElementById('sList'),S.decks);
 };
-
-/* ---------- SHARE MODAL ---------- */
-function openShare(){
-  if(!S.project){ensureProject();persist();}
-  var bg=document.createElement('div');bg.className='modal-bg';
-  bg.innerHTML='<div class="modal"><h2 class="t">Share “'+esc(S.project.name)+'”</h2><p class="muted" style="margin:6px 0 18px">They will get an e-mail, create an account and connect GitHub. Editors are added as collaborators on the repository.</p>'+
-  '<div class="field"><label>E-mail</label><input id="shEmail" value="'+USERS.gustavo.email+'"></div>'+
-  '<div class="field"><label>Role</label><select id="shRole"><option>Editor</option><option>Commenter</option><option>Viewer</option></select></div>'+
-  '<p class="small" style="margin:-4px 0 14px">Editor: edits and commits · Commenter: comments only · Viewer: sees the studio and the site</p>'+
-  '<div class="field"><label>Message (optional)</label><textarea id="shMsg" rows="2">Can you review the course deck before Monday?</textarea></div>'+
-  '<div style="display:flex;justify-content:space-between;align-items:center"><button class="btn ghost" data-act="closeModal">Cancel</button><button class="btn pri" data-act="sendInvite">Send invite</button></div></div>';
-  bg.addEventListener('click',function(e){if(e.target===bg)bg.remove();});
-  document.body.appendChild(bg);
-}
-function sendInvite(){
-  var em=document.getElementById('shEmail').value.trim(),role=document.getElementById('shRole').value,msg=document.getElementById('shMsg').value;
-  if(!/@/.test(em)){alert('Enter an e-mail');return;}
-  S.invites=S.invites.filter(function(i){return i.email!==em});
-  S.invites.push({email:em,role:role,status:isMember('gustavo')&&em===USERS.gustavo.email?'accepted':'pending',t:now(),by:'jadson',msg:msg});
-  log('jadson','invited '+em+' as '+role); persist();
-  var m=document.querySelector('.modal'); m.innerHTML='<h2 class="t">Invite sent</h2><p class="muted" style="margin:8px 0 18px">'+esc(em)+' will receive an e-mail with a link to join. The invite is valid for 7 days.</p><div class="card" style="padding:14px;background:#FCFBF8"><p class="small">Invite link</p><p style="font:13px ui-monospace,Menlo,monospace;margin-top:4px;word-break:break-all">https://studio.meridiano-consulting.com/join/'+sha()+sha()+'</p></div><div style="display:flex;justify-content:space-between;margin-top:18px"><button class="btn" data-act="closeModal">Done</button><button class="btn br" data-act="toInbox">See the e-mail they receive →</button></div>';
-  if(route()==='#/project')render();
-}
-
-/* ---------- INBOX (guest) ---------- */
-routes['#/inbox']=function(v){
-  setUser('gustavo'); renderNav(route()); ensureProject(); if(!S.invites.length){S.invites.push({email:USERS.gustavo.email,role:'Editor',status:'pending',t:now(),by:'jadson',msg:'Can you review the course deck before Monday?'});log('jadson','invited '+USERS.gustavo.email+' as Editor');persist();}
-  var inv=S.invites[S.invites.length-1];
-  v.innerHTML='<div class="wrap"><p class="small" style="margin-bottom:10px">Simulated mailbox of <b>'+esc(inv.email)+'</b></p><div class="card mailbox" style="overflow:hidden"><div class="list"><div class="mail sel"><b>Meridiano Studio</b><p class="small" style="margin-top:3px">Jadson invited you to “'+esc(S.project.name)+'”</p></div><div class="mail"><b class="muted">Calendar</b><p class="small">Health-plan prospect · Tue 10:00</p></div></div>'+
-  '<div style="padding:34px;max-width:620px"><div style="display:flex;align-items:center;gap:10px">'+LOGO(34)+'<b class="serif" style="font-size:20px">Meridiano Studio</b></div>'+
-  '<h2 class="t" style="margin-top:22px">Jadson Marcelino invited you to edit<br><i style="color:var(--brass2)">'+esc(S.project.name)+'</i></h2>'+
-  (inv.msg?'<p style="margin-top:16px;padding:14px;border-left:3px solid var(--brass);background:#FCFBF8;line-height:1.5">“'+esc(inv.msg)+'”</p>':'')+
-  '<p class="muted" style="margin-top:16px;line-height:1.55">Role: <b>'+inv.role+'</b>. You will create a Meridiano Studio account and connect your GitHub, so your changes are saved as commits under your name.</p>'+
-  '<button class="btn pri" style="margin-top:20px" data-go="#/join">Accept invitation</button><p class="small" style="margin-top:20px">Site: '+esc(siteUrl())+'</p></div></div></div>';
+/* ---------- TEMPLATES ---------- */
+var TF='All';
+routes['#/templates']=function(v){
+ var cats=['All'].concat(TEMPLATES.map(function(t){return t.cat}).filter(function(c,i,a){return a.indexOf(c)===i}));
+ v.innerHTML='<div class="wrap"><span class="chip">Template library</span><h1 class="big" style="margin-top:14px;font-size:46px">Start from what already works</h1><p class="lead" style="margin-top:10px">Templates are built from the decks we already use: courses, prospect meetings, proposals, reviews. Choose one, name it and invite people.</p>'+
+ '<div class="filters" style="margin-top:22px">'+cats.map(function(c){return '<button data-act="tf" data-v="'+c+'" class="'+(TF===c?'on':'')+'">'+c+'</button>'}).join('')+'</div><div class="grid3" style="margin-top:20px" id="tList"></div></div>';
+ tplCards(document.getElementById('tList'),TEMPLATES.filter(function(t){return TF==='All'||t.cat===TF}));
 };
+function useTpl(id){
+ var t=TEMPLATES.filter(function(x){return x.id===id})[0];
+ var bg=document.createElement('div');bg.className='modal-bg';
+ bg.innerHTML='<div class="modal"><p class="small" style="font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--brass2)">'+t.cat+' template</p><h2 class="t" style="margin-top:4px">'+t.name+'</h2><div class="stage" id="mPrev" style="margin:14px 0"></div>'+
+ '<div class="field"><label>Presentation name</label><input class="in" id="mName" value="'+(t.id==='disc'?'Prospect · ':'New ')+t.name+'"></div>'+
+ '<div class="field"><label>Invite by e-mail (comma separated)</label><input class="in" id="mInv" value="gustavo@meridiano-consulting.com, gabriel@meridiano-consulting.com"></div>'+
+ '<div class="field"><label>AI drafting</label><select class="in" id="mAI"><option value="all">Everyone can ask the AI</option><option value="owner">Only me: I apply comments with the AI</option></select></div><p class="small" style="margin:-4px 0 16px">You are the owner: everyone can propose and comment, only you approve. The result is always an HTML page.</p><div style="display:flex;justify-content:space-between"><button class="btn" data-act="close">Cancel</button><button class="btn pri" data-act="create" data-v="'+id+'">Create and open the room</button></div></div>';
+ bg.onclick=function(e){if(e.target===bg)bg.remove();};document.body.appendChild(bg);var mp=document.getElementById('mPrev');if(t.kind==='doc'){mp.className='paper';mp.style.cssText='margin:14px 0;max-height:220px;overflow:hidden;padding:28px 34px';}mount(mp,t.slides(t.name)[0],t.kind);
+}
 
-/* ---------- JOIN (guest) ---------- */
-var JN={step:1};
-routes['#/join']=function(v){
-  setUser('gustavo'); renderNav(route()); ensureProject(); var inv=S.invites[S.invites.length-1]||{email:USERS.gustavo.email,role:'Editor'};
-  var b='';
-  if(JN.step===1)b='<h2 class="t">Create your account</h2><p class="muted" style="margin:6px 0 18px">You were invited to <b>'+esc(S.project.name)+'</b> as '+inv.role+'.</p>'+
-    '<div class="field"><label>Name</label><input id="jnName" value="'+USERS.gustavo.name+'"></div><div class="field"><label>E-mail</label><input value="'+esc(inv.email)+'" readonly></div><div class="field"><label>Password</label><input type="password" value="••••••••••"></div>'+
-    '<button class="btn pri" style="width:100%;justify-content:center" data-act="jnNext">Create account</button>';
-  else if(JN.step===2)b='<h2 class="t">Connect GitHub</h2><p class="muted" style="margin:6px 0 18px;line-height:1.5">Meridiano Studio saves every version on GitHub. Connecting your account adds you as a collaborator on <b>'+S.project.owner+'/'+S.project.repo+'</b> and signs your commits with your name.</p><button class="btn pri" style="width:100%;justify-content:center;padding:12px" data-act="jnGh">'+GHICON+' Connect GitHub</button><p class="small" style="margin-top:12px">No GitHub account? You can create one on the next screen.</p>';
-  else if(JN.step===3)b='<div class="gh" style="margin:0;border:0;padding:0"><div style="text-align:center">'+GHICON.replace('18','36').replace('18','36')+'<h2 style="font-weight:400;font-size:21px;margin:10px 0 4px">Authorize Meridiano Studio</h2><p style="color:#59636E">to act on your behalf</p></div><ul style="margin:16px 0"><li>✓ <span>Push commits to repositories you are invited to</span></li><li>✓ <span>Read and write pull request and commit comments</span></li><li>✓ <span>E-mail address (read-only)</span></li></ul><div class="field"><label>Signed in as</label><input value="@'+USERS.gustavo.gh+'" readonly></div><button class="btngh" data-act="jnAuth">Authorize</button></div>';
-  else b='<h2 class="t">You’re in</h2><div id="jnSteps" style="margin-top:12px"></div><div id="jnDone" class="hidden" style="margin-top:18px;display:flex;gap:10px"><button class="btn pri" data-act="jnStudio">Open the studio</button></div>';
-  v.innerHTML='<div class="wrap" style="max-width:520px"><p class="small" style="margin-bottom:10px">Join · step '+Math.min(JN.step,4)+' of 4</p><div class="card" style="padding:26px">'+b+'</div></div>';
-  if(JN.step===4)runSteps('jnSteps',['Account created for '+inv.email,'GitHub connected as @'+USERS.gustavo.gh,'Added as collaborator on '+S.project.owner+'/'+S.project.repo+' ('+inv.role+')','Studio access granted'],function(){
-    ensureGuestAccept(inv); document.getElementById('jnDone').classList.remove('hidden');});
+/* ============================ ROOM ============================ */
+var RM=null; // room session
+routes['#/room']=function(v,id){
+ var d=deck(id)||S.decks[0];if(!d){go('#/');return;}
+ RM={id:d.id,path:(RM&&RM.id===d.id)?RM.path:d.order[0],tab:(RM&&RM.id===d.id)?RM.tab:'ai',view:'draft',follow:null,editing:null,draft:'',ask:''};
+ d.presence[ME]={path:RM.path,t:now(),presenting:false};track('room_join',ME,d.id);persist();
+ v.innerHTML='<div id="room"><div class="rtop"></div><div class="rleft"></div><div class="rcenter"></div><div class="rright"></div></div>';
+ drawAll();timers.push(setInterval(function(){var dd=cur();if(dd){dd.presence[ME]=Object.assign(dd.presence[ME]||{},{t:now()});persist();drawTop();drawOverlays();}},8000));
 };
-function ensureGuestAccept(inv){ inv.status='accepted'; if(!isMember('gustavo')){S.members.push({id:'gustavo',role:inv.role,joined:now()}); log('gustavo','accepted the invite and connected GitHub @'+USERS.gustavo.gh);} persist(); toast('Gustavo joined '+esc(S.project.name),'gustavo'); }
-
-/* ============================================================
-   STUDIO
-   ============================================================ */
-var panes=[];
-function newPane(user,compact){return {id:panes.length,user:user,compact:!!compact,path:Object.keys(S.files)[0],mode:'visual',tab:'comments',draft:'',msg:'',el:null,editing:null};}
-routes['#/studio']=function(v){
-  ensureProject(); if(SES.user==='gustavo')ensureGuest(); persist();
-  v.innerHTML='<div id="studio"></div>'; panes=[newPane(SES.user,false)]; mountPanes();
-};
-routes['#/together']=function(v){
-  ensureGuest(); persist();
-  v.innerHTML='<div style="display:flex;align-items:center;gap:12px;padding:10px 14px 0;flex-wrap:wrap"><span class="chip">Two people · same document</span><span class="small">Left is Jadson, right is Gustavo. Click a text on either slide and type: it changes on both sides as you type. Commit from either side and open the Live site.</span></div><div id="studio" style="height:calc(100vh - 100px)"></div>';
-  panes=[newPane('jadson',true),newPane('gustavo',true)]; panes[1].tab='changes'; mountPanes();
-};
-function mountPanes(){var st=document.getElementById('studio');st.innerHTML='';panes.forEach(function(p,i){p.id=i;var d=document.createElement('div');d.className='pane'+(p.compact?' compact':'');p.el=d;st.appendChild(d);renderPane(p);});}
-function paths(){return Object.keys(S.files);}
-function dirtyPaths(){return paths().filter(function(k){return S.files[k]!==S.base[k]});}
-function slideTitle(src){var m=/data-edit="title"[^>]*>([\s\S]*?)<\/h[12]>/.exec(src);var d=document.createElement('div');d.innerHTML=m?m[1]:'';return d.textContent;}
-
-function renderPane(p){
-  p.el.innerHTML='<div class="ptop"></div><div class="pbody"><div class="pleft"></div><div class="pcenter"></div><div class="pright"></div></div>';
-  renderTop(p);renderLeft(p);renderCenter(p);renderRight(p);
+function cur(){return RM?deck(RM.id):null;}
+function isOwner(d){return d.owner===ME;}
+function el(s){return document.querySelector('#room '+s);}
+function drawAll(){drawTop();drawLeft();drawCenter();drawRight();}
+function drawTop(){
+ var d=cur(),T=el('.rtop');if(!T)return;var on=online(d);var presenter=on.filter(function(u){return d.presence[u].presenting})[0];
+ T.innerHTML='<button class="btn sm" data-go="#/shared">←</button><span class="ttl">'+esc(d.name)+'</span><span class="pill">v'+d.versions.length+'</span><span class="live">Live</span>'+
+ '<div class="faces" style="margin-left:6px">'+d.members.concat(on.indexOf('claude')>=0?['claude']:[]).map(function(m){return '<span data-act="follow" data-v="'+m+'" title="Follow '+USERS[m].short+'">'+av(m,on.indexOf(m)>=0?'on':'')+'</span>'}).join('')+'</div>'+
+ '<div style="flex:1"></div>'+(isOwner(d)?'<label class="aiset" title="Who can ask the AI">✦ AI <select id="aiSel"><option value="all" '+(d.ai==='all'?'selected':'')+'>everyone</option><option value="owner" '+(d.ai==='owner'?'selected':'')+'>owner only</option></select></label>':'<span class="aiset">✦ AI: '+(d.ai==='all'?'everyone':USERS[d.owner].short+' only')+'</span>')+(ME===d.owner&&!d.simRan&&d.kind!=='doc'?'<button class="btn sm br" data-act="sim" title="Simulates partners joining remotely">▶ Bring in the remote team</button>':'')+
+ '<button class="btn sm '+(d.presence[ME]&&d.presence[ME].presenting?'pri':'')+'" data-act="present">'+(d.presence[ME]&&d.presence[ME].presenting?'■ Stop presenting':'◉ Present to everyone')+'</button>'+
+ '<button class="btn sm" data-act="share">Invite</button><button class="btn sm" data-act="export" title="Download the approved version as a standalone HTML file">⤓ HTML</button><button class="btn sm pri" data-go="#/view/'+d.id+'">Published ↗</button>';
+ var sel=document.getElementById('aiSel');if(sel)sel.onchange=function(){d.ai=sel.value;track('setting',ME,d.id,{ai:d.ai});share({all:true});toast('AI drafting: '+(d.ai==='all'?'everyone':'owner only'),ME);};
+ var B=el('.rcenter .bn');if(B){var h='';
+  if(RM.follow&&on.indexOf(RM.follow)>=0)h='<div class="banner follow">'+av(RM.follow,'sm')+' Following '+USERS[RM.follow].short+' · you see what they see<div style="flex:1"></div><button class="btn sm" data-act="unfollow">Stop following</button></div>';
+  else if(presenter&&presenter!==ME)h='<div class="banner follow">'+av(presenter,'sm')+' '+USERS[presenter].short+' is presenting<div style="flex:1"></div><button class="btn sm br" data-act="follow" data-v="'+presenter+'">Follow</button></div>';
+  var op=openProps(d).length;if(op)h+='<div class="banner prop">✎ '+op+' proposal'+(op>1?'s':'')+' waiting for '+(isOwner(d)?'your':USERS[d.owner].short+'’s')+' approval · shown highlighted<div style="flex:1"></div><button class="btn sm" data-act="tab" data-v="props">Review</button></div>';
+  B.innerHTML=h;}
 }
-function q(p,s){return p.el.querySelector(s);}
-function renderTop(p){
-  var d=dirtyPaths().length, u=USERS[p.user];
-  var online=onlineUsers();
-  q(p,'.ptop').innerHTML='<span class="ttl">'+esc(S.project.name)+'</span><span class="brn">⎇ main</span>'+
-  '<div class="faces">'+S.members.map(function(m){return av(m.id,(online.indexOf(m.id)>=0?'on ':'')+'sm')}).join('')+'</div><div style="flex:1"></div>'+
-  (p.compact?'<span class="small" style="display:flex;align-items:center;gap:6px">'+av(p.user,'sm')+u.short+'</span>':(p.user==='jadson'?'<button class="btn sm br" data-act="bot" title="Watch a collaborator edit, comment and commit">▶ Simulate Gustavo</button>':'')+'<button class="btn sm" data-act="openShare">Share</button>')+
-  '<button class="btn sm" data-p="'+p.id+'" data-act="toChanges">'+(d?'<span style="width:8px;height:8px;border-radius:50%;background:var(--brass)"></span>':'')+'Commit'+(d?' ('+d+')':'')+'</button>'+
-  '<button class="btn sm pri" data-go="#/site">Live site ↗</button>';
+function drawLeft(){
+ var d=cur(),L=el('.rleft');if(!L)return;var df=draftFiles(d),on=online(d);
+if(d.kind==='doc'){L.innerHTML='<p class="small" style="font-weight:700;letter-spacing:1px;text-transform:uppercase">Outline</p>'+d.order.map(function(k,i){var pr=openProps(d).filter(function(p){return p.files[k]}).length;var T=texts(df[k]);var who=on.filter(function(u){return u!==ME&&d.presence[u].path===k});return '<div class="outl '+(RM.path===k?'sel':'')+'" data-act="pick" data-v="'+k+'">'+plain(T.h||'')+(pr?'<span class="pr">✎ '+pr+'</span>':'')+'<div class="faces" style="margin-top:4px">'+who.map(function(u){return av(u,'sm')}).join('')+'</div></div>'}).join('');return;}
+ L.innerHTML=d.order.map(function(k,i){var pr=openProps(d).filter(function(p){return p.files[k]}).length;var who=on.filter(function(u){return u!==ME&&d.presence[u].path===k});
+  return '<div class="th2 '+(RM.path===k?'sel':'')+'" data-act="pick" data-v="'+k+'"><span class="num">'+(i+1)+'</span>'+(pr?'<span class="pr">✎ '+pr+'</span>':'')+'<span class="who">'+who.map(function(u){return av(u)}).join('')+'</span></div>';}).join('');
+ L.querySelectorAll('.th2').forEach(function(t,i){thumb(t,(RM.view==='draft'?df:d.files)[d.order[i]]);});
 }
-function onlineUsers(){var o=[SES.user];panes.forEach(function(p){if(o.indexOf(p.user)<0)o.push(p.user)});Object.keys(S.presence).forEach(function(k){if(now()-S.presence[k].t<60000&&o.indexOf(k)<0)o.push(k)});return o;}
-function renderLeft(p){
-  var L=q(p,'.pleft');
-  L.innerHTML=paths().map(function(k,i){var cm=S.comments.filter(function(c){return c.path===k&&!c.resolved}).length;
-    var who=Object.keys(S.presence).filter(function(u){return u!==p.user&&S.presence[u].path===k&&now()-S.presence[u].t<60000});
-    return '<div class="th '+(p.path===k?'sel':'')+'" data-p="'+p.id+'" data-act="pick" data-v="'+k+'"><span class="num">'+(i+1)+'</span>'+(cm?'<span class="cm">'+cm+'</span>':'')+(S.files[k]!==S.base[k]?'<span class="dirty" title="uncommitted changes"></span>':'')+'<span class="who">'+who.map(function(u){return av(u,'sm')}).join('')+'</span><div class="mini">'+S.files[k]+'</div></div>'}).join('');
-  L.querySelectorAll('.th').forEach(function(t){var w=t.clientWidth||130;t.querySelector('.mini').style.transform='scale('+(w/1920)+')';});
+function drawCenter(){
+ var d=cur(),C=el('.rcenter');if(!C)return;
+ var isDoc=d.kind==='doc';C.innerHTML='<div class="bn"></div><div class="ctool"><div class="seg"><button data-act="view" data-v="draft" class="'+(RM.view==='draft'?'on':'')+'">Live draft</button><button data-act="view" data-v="approved" class="'+(RM.view==='approved'?'on':'')+'">Approved v'+d.versions.length+'</button></div><span class="small">'+(isDoc?'Section':'Slide')+' '+(d.order.indexOf(RM.path)+1)+' of '+d.order.length+(RM.view==='draft'?' · click any text to propose a change':' · read-only')+'</span><div style="flex:1"></div><button class="btn sm" data-act="tab" data-v="comments">💬 Comment</button><button class="btn sm br" data-act="tab" data-v="ai">✦ Ask AI</button></div><div class="cwrap">'+(isDoc?'<div class="paper '+(RM.view==='draft'?'editing':'')+'" id="rStage"></div>':'<div class="stage '+(RM.view==='draft'?'editing':'')+'" id="rStage"></div>')+'</div>';
+ drawTop();fillStage();
 }
-function renderCenter(p){
-  var C=q(p,'.pcenter');
-  C.innerHTML='<div class="ctool"><div class="seg"><button data-p="'+p.id+'" data-act="mode" data-v="visual" class="'+(p.mode==='visual'?'on':'')+'">Visual</button><button data-p="'+p.id+'" data-act="mode" data-v="code" class="'+(p.mode==='code'?'on':'')+'">Code</button></div><span class="path">'+p.path+'</span><div style="flex:1"></div><button class="btn sm" data-p="'+p.id+'" data-act="addCommentHere" title="Comment on this slide">💬 Comment</button></div>'+
-   (p.mode==='visual'?'<div class="cwrap"><div class="stage editing"><div class="slide"></div></div></div>':'<textarea class="code" spellcheck="false"></textarea>');
-  if(p.mode==='visual'){fillCanvas(p);}
-  else{var ta=C.querySelector('textarea');ta.value=S.files[p.path];ta.oninput=function(){applyEdit(p,p.path,ta.value,'code');};ta.onfocus=function(){setPresence(p,p.path,'code');};}
+function fillStage(){
+ var d=cur(),st=document.getElementById('rStage');if(!st)return;var html=(RM.view==='draft'?draftFiles(d):d.files)[RM.path];mount(st,html,d.kind);
+ if(RM.view==='draft'){st.querySelectorAll('.slide [data-edit],.docpage [data-edit]').forEach(function(e){e.setAttribute('contenteditable','true');e.setAttribute('spellcheck','false');
+  e.addEventListener('focus',function(){RM.editing=e.getAttribute('data-edit');pres({key:RM.editing});});
+  e.addEventListener('blur',function(){RM.editing=null;});
+  e.addEventListener('input',function(){propose(ME,'human',RM.path,serialize(st.querySelector('.slide,.docpage')),null);});
+  e.addEventListener('keydown',function(ev){if(ev.key==='Enter'&&!ev.shiftKey){ev.preventDefault();e.blur();}});});}
+ drawOverlays();
 }
-function fitStage(stage){var sl=stage.querySelector('.slide');function f(){var w=stage.clientWidth;if(w)sl.style.transform='scale('+(w/1920)+')';}f();if(window.ResizeObserver){new ResizeObserver(f).observe(stage);}else window.addEventListener('resize',f);}
-function mountStage(stage,html){stage.innerHTML='<div class="slide">'+html+'</div>';fitStage(stage);}
-function fillCanvas(p){
-  var stage=q(p,'.stage'), sl=stage.querySelector('.slide');
-  sl.innerHTML=S.files[p.path]; fitStage(stage);
-  sl.querySelectorAll('[data-edit]').forEach(function(el){
-    el.setAttribute('contenteditable','true'); el.setAttribute('spellcheck','false');
-    el.addEventListener('focus',function(){p.editing=el.getAttribute('data-edit');setPresence(p,p.path,p.editing);});
-    el.addEventListener('blur',function(){p.editing=null;});
-    el.addEventListener('input',function(){applyEdit(p,p.path,serialize(sl),'visual');});
-    el.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();el.blur();}});
-  });
-  drawPresence(p);
+function serialize(s){var c=s.cloneNode(true);c.querySelectorAll('[contenteditable]').forEach(function(e){e.removeAttribute('contenteditable');e.removeAttribute('spellcheck')});return c.innerHTML;}
+function drawOverlays(){
+ var d=cur(),st=document.getElementById('rStage');if(!st)return;st.querySelectorAll('.ov').forEach(function(e){e.remove()});
+ if(RM.view==='draft'){var A=texts(d.files[RM.path]);openProps(d).forEach(function(p){if(!p.files[RM.path])return;var P=texts(p.files[RM.path]);Object.keys(P).forEach(function(k){if(P[k]!==A[k]){var e=st.querySelector('[data-edit="'+k+'"]');if(e){var c=p.via==='ai'?'#C9A94E':USERS[p.author].color;ovl(st,e,c,(p.via==='ai'?'✦ Claude for '+USERS[p.author].short:USERS[p.author].short)+' · proposed').style.borderStyle='dashed';}}});});}
+ online(d).forEach(function(u){var pr=d.presence[u];if(u===ME||pr.path!==RM.path||!pr.key)return;var e=st.querySelector('[data-edit="'+pr.key+'"]');if(e){var o=ovl(st,e,USERS[u].color,USERS[u].short+(pr.typing&&now()-pr.typing<1600?' is typing…':''));o.style.borderWidth='3px';}});
 }
-function serialize(sl){var c=sl.cloneNode(true);c.querySelectorAll('[contenteditable]').forEach(function(e){e.removeAttribute('contenteditable');e.removeAttribute('spellcheck');});return c.innerHTML;}
-function drawPresence(p){
-  if(p.mode!=='visual')return; var stage=q(p,'.stage'); if(!stage)return;
-  stage.querySelectorAll('.pres').forEach(function(e){e.remove()});
-  Object.keys(S.presence).forEach(function(u){
-    var pr=S.presence[u]; if(u===p.user||pr.path!==p.path||!pr.key||now()-pr.t>60000)return;
-    var el=stage.querySelector('[data-edit="'+pr.key+'"]'); if(!el)return;
-    var a=stage.getBoundingClientRect(),b=el.getBoundingClientRect();
-    var box=document.createElement('div');box.className='pres';box.style.borderColor=USERS[u].color;
-    box.style.left=(b.left-a.left-5)+'px';box.style.top=(b.top-a.top-5)+'px';box.style.width=(b.width+10)+'px';box.style.height=(b.height+10)+'px';
-    box.innerHTML='<span style="background:'+USERS[u].color+'">'+USERS[u].short+(pr.typing&&now()-pr.typing<1500?' is typing…':'')+'</span>';stage.appendChild(box);
-  });
+function pres(o){var d=cur();d.presence[ME]=Object.assign(d.presence[ME]||{},{path:RM.path,t:now()},o||{});share({presence:true});}
+/* a proposal per author (+ one per AI request) holds the live change */
+function propose(author,via,path,html,prompt,pid){
+ var d=cur()||S.decks[0];var p=pid?d.proposals.filter(function(x){return x.id===pid})[0]:openProps(d).filter(function(x){return x.author===author&&x.via===via&&via==='human'})[0];
+ if(!p){p={id:pid||uid(),author:author,via:via,prompt:prompt||null,files:{},status:'open',t:now()};d.proposals.push(p);track('proposal',author,d.id,{via:via,slide:d.order.indexOf(path)+1});}
+ p.files[path]=html;p.t=now();
+ if(html===d.files[path])delete p.files[path];
+ if(!Object.keys(p.files).length&&via==='human'){d.proposals=d.proposals.filter(function(x){return x!==p});}
+ if(via==='human')d.presence[author]=Object.assign(d.presence[author]||{},{path:path,key:RM&&RM.editing,t:now(),typing:now()});
+ share({edit:path,src:author===ME&&via==='human'});return p;
 }
-function setPresence(p,path,key,typing){S.presence[p.user]={path:path,key:key,t:now(),typing:typing?now():(S.presence[p.user]&&S.presence[p.user].typing)};share(p,{presence:true});}
-
-/* shared-state change propagation */
-var thumbTimer=null;
-function applyEdit(src,path,html,how){
-  S.files[path]=html; S.presence[src?src.user:'gustavo']={path:path,key:src?src.editing||how:'title',t:now(),typing:now()};
-  share(src,{edit:path});
+function share(w){persist();refresh(w||{});}
+var thT=null;
+function refresh(w){
+ var r=route();
+ if(r.name==='#/room'&&cur()){
+  var st=document.getElementById('rStage');var focused=st&&st.contains(document.activeElement);
+  if(RM.follow){var fp=cur().presence[RM.follow];if(fp&&fp.path!==RM.path){RM.path=fp.path;drawCenter();drawRight();}}
+  if(!(w.src)&&!focused&&(w.edit===RM.path||w.remote||w.all))fillStage();else drawOverlays();
+  drawTop();
+  var R=el('.rright');if(R&&!R.contains(document.activeElement))drawRight();else RM.pendingRight=true;
+  clearTimeout(thT);thT=setTimeout(drawLeft,300);
+ } else if(r.name==='#/view'){viewCheck();}
+ else if(w.remote&&(r.name==='#/shared'))render();
 }
-function share(src,what){persist();onShared(src,what);}
-function onShared(src,what){
-  var r=route();
-  if(r==='#/studio'||r==='#/together'){
-    panes.forEach(function(p){
-      var isSrc=(p===src);
-      renderTop(p);
-      if(!isSrc&&(!what||what.edit===p.path||what.remote||what.all)){
-        if(p.mode==='visual'){ var stage=q(p,'.stage'); var active=stage&&stage.contains(document.activeElement); if(!active)fillCanvas(p); else drawPresence(p);}
-        else { var ta=q(p,'textarea.code'); if(ta&&document.activeElement!==ta)ta.value=S.files[p.path]; }
-      } else drawPresence(p);
-      if(!(p.el.querySelector('.pright').contains(document.activeElement))) renderRight(p); else p.pendingRight=true;
-    });
-    clearTimeout(thumbTimer);thumbTimer=setTimeout(function(){panes.forEach(renderLeft)},250);
-  } else if(r==='#/site'){ siteCheck(); }
-  else if(what&&what.remote&&(r==='#/project'||r==='#/dashboard')) render();
-}
-document.addEventListener('focusout',function(){setTimeout(function(){panes.forEach(function(p){if(p.pendingRight&&!p.el.querySelector('.pright').contains(document.activeElement)){p.pendingRight=false;renderRight(p);}})},0);});
+document.addEventListener('focusout',function(){setTimeout(function(){if(RM&&RM.pendingRight&&el('.rright')&&!el('.rright').contains(document.activeElement)){RM.pendingRight=false;drawRight();}},0);});
 
 /* right panel */
-function renderRight(p){
-  var R=q(p,'.pright'); if(!R)return;
-  var open=S.comments.filter(function(c){return !c.resolved}).length, d=dirtyPaths().length;
-  var tabs=[['comments','Comments',open],['changes','Changes',d],['history','History',0],['deploy','Deploy',0]];
-  R.innerHTML='<div class="tabs">'+tabs.map(function(t){return '<button data-p="'+p.id+'" data-act="tab" data-v="'+t[0]+'" class="'+(p.tab===t[0]?'on':'')+'">'+t[1]+(t[2]?'<span class="bd">'+t[2]+'</span>':'')+'</button>'}).join('')+'</div><div class="rbody"></div>';
-  var B=R.querySelector('.rbody');
-  if(p.tab==='comments')B.innerHTML=commentsHTML(p);
-  if(p.tab==='changes')B.innerHTML=changesHTML(p);
-  if(p.tab==='history')B.innerHTML=historyHTML(p);
-  if(p.tab==='deploy')B.innerHTML=deployHTML(p);
-  var ta=B.querySelector('[data-draft]'); if(ta){ta.value=p[ta.getAttribute('data-draft')]||'';ta.oninput=function(){p[ta.getAttribute('data-draft')]=ta.value;};}
-  B.querySelectorAll('[data-reply]').forEach(function(i){i.value=(p.replies||{})[i.getAttribute('data-reply')]||'';i.oninput=function(){p.replies=p.replies||{};p.replies[i.getAttribute('data-reply')]=i.value;};});
+function drawRight(){
+ var d=cur(),R=el('.rright');if(!R)return;var op=openProps(d).length,oc=d.comments.filter(function(c){return !c.resolved}).length;
+ var tabs=[['ai','✦ AI',0],['props','Proposals',op],['comments','Comments',oc],['history','Versions',0]];
+ R.innerHTML='<div class="tabs">'+tabs.map(function(t){return '<button data-act="tab" data-v="'+t[0]+'" class="'+(RM.tab===t[0]?'on':'')+'">'+t[1]+(t[2]?'<span class="bd2">'+t[2]+'</span>':'')+'</button>'}).join('')+'</div><div class="rbody"></div>';
+ var Bd=R.querySelector('.rbody');Bd.innerHTML=({ai:aiHTML,props:propsHTML,comments:commentsHTML,history:historyHTML})[RM.tab](d);
+ Bd.querySelectorAll('[data-model]').forEach(function(i){i.value=RM[i.getAttribute('data-model')]||'';i.oninput=function(){RM[i.getAttribute('data-model')]=i.value;};});
+ if(RM.tab==='ai')Bd.scrollTop=Bd.scrollHeight;
 }
-function mention(t){return esc(t).replace(/@(Jadson|Gustavo)/g,'<span class="ment">@$1</span>');}
-function commentsHTML(p){
-  var here=S.comments.filter(function(c){return c.path===p.path}), others=S.comments.filter(function(c){return c.path!==p.path&&!c.resolved});
-  var form='<div style="margin-bottom:14px"><textarea class="in" rows="2" data-draft="draft" placeholder="Comment on slide '+(paths().indexOf(p.path)+1)+'… use @'+(p.user==='jadson'?'Gustavo':'Jadson')+' to notify"></textarea><div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px"><span class="small">'+(p.editing?'On “'+p.editing+'”':'On this slide')+'</span><button class="btn sm pri" data-p="'+p.id+'" data-act="comment">Comment</button></div></div>';
-  function one(c){return '<div class="cmt '+(c.resolved?'res':'')+'"><div class="h">'+av(c.author,'sm')+'<b>'+USERS[c.author].short+'</b><span class="small">'+ago(c.t)+'</span></div>'+(c.key?'<p class="anc">on “'+c.key+'” · slide '+(paths().indexOf(c.path)+1)+'</p>':'<p class="anc">slide '+(paths().indexOf(c.path)+1)+'</p>')+'<p>'+mention(c.text)+'</p>'+
-    c.replies.map(function(r){return '<div class="rep"><div class="h">'+av(r.author,'sm')+'<b>'+USERS[r.author].short+'</b><span class="small">'+ago(r.t)+'</span></div><p>'+mention(r.text)+'</p></div>'}).join('')+
-    (c.resolved?'<p class="small" style="margin-top:6px">Resolved by '+USERS[c.resolvedBy].short+'</p>':'<div style="display:flex;gap:6px;margin-top:8px"><input class="in" style="padding:6px 9px" data-reply="'+c.id+'" placeholder="Reply…"><button class="btn sm" data-p="'+p.id+'" data-act="reply" data-v="'+c.id+'">↵</button><button class="btn sm" data-p="'+p.id+'" data-act="resolve" data-v="'+c.id+'" title="Resolve">✓</button></div>')+'</div>';}
-  return form+(here.length?here.slice().reverse().map(one).join(''):'<p class="small" style="margin-bottom:12px">No comments on this slide yet.</p>')+
-    (others.length?'<p class="small" style="margin:14px 0 8px;font-weight:700;letter-spacing:1px;text-transform:uppercase">Other slides</p>'+others.slice().reverse().map(one).join(''):'')+
-    '<p class="small" style="margin-top:12px;line-height:1.45">Comments are stored with the project and mirrored to the commit on GitHub, so they survive outside the studio.</p>';
+function canAI(d){return d.ai==='all'||ME===d.owner;}
+function aiHTML(d){
+ var n=d.order.indexOf(RM.path)+1;var unit=d.kind==='doc'?'section':'slide';
+ if(!canAI(d))return '<div style="text-align:center;padding:30px 10px"><p style="font:400 22px Newsreader;color:var(--g)">AI is set to owner only</p><p class="small" style="margin-top:8px;line-height:1.5">Leave a comment with what you would change. '+USERS[d.owner].short+' applies comments with the AI and approves the result.</p><button class="btn sm pri" style="margin-top:14px" data-act="tab" data-v="comments">Write a comment</button></div>';
+ var PR=d.kind==='doc'?AIPD:AIP;
+ var chat=d.chat.map(function(m){return '<div class="msg '+(m.who==='claude'?'ai':(m.who===ME?'me':''))+'">'+av(m.who,'sm')+'<div class="bub"><p class="small" style="margin-bottom:3px"><b>'+(m.prov?AIDEF[m.prov].label:(m.who==='claude'?'Demo AI':USERS[m.who].short))+'</b> · '+ago(m.t)+'</p>'+m.html+'</div></div>'}).join('');
+ return connBadge()+'<p class="small" style="margin-bottom:10px;line-height:1.5">The AI is connected to this deck. It edits the slides directly and every result arrives as a <b>proposal</b>, visible to everyone while it is written.</p>'+(chat||'')+
+ '<p class="small" style="font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-top:6px">Try on '+unit+' '+n+'</p><div class="prompts">'+PR.map(function(p,i){return '<button data-act="ai" data-v="'+i+'">'+p[0]+'</button>'}).join('')+'</div>'+
+ '<textarea class="in" rows="2" data-model="ask" placeholder="Ask anything about '+unit+' '+n+'…"></textarea><div style="display:flex;justify-content:flex-end;margin-top:8px"><button class="btn sm br" data-act="aiFree">✦ Generate</button></div>';
 }
-function diffLines(a,b){var A=a.split('\n'),B=b.split('\n'),n=A.length,m=B.length,dp=[],i,j;for(i=0;i<=n;i++){dp[i]=new Array(m+1).fill(0);}
-  for(i=n-1;i>=0;i--)for(j=m-1;j>=0;j--)dp[i][j]=A[i]===B[j]?dp[i+1][j+1]+1:Math.max(dp[i+1][j],dp[i][j+1]);
-  var out=[];i=0;j=0;while(i<n&&j<m){if(A[i]===B[j]){i++;j++;}else if(dp[i+1][j]>=dp[i][j+1]){out.push(['d',A[i++]]);}else out.push(['a',B[j++]]);}
-  while(i<n)out.push(['d',A[i++]]);while(j<m)out.push(['a',B[j++]]);return out;}
-function textOf(line){var d=document.createElement('div');d.innerHTML=line;var t=d.textContent.trim();return t||line.replace(/\s+/g,' ').slice(0,90);}
-function diffHTML(path,a,b){var ops=diffLines(a||'',b||'');if(!ops.length)return '';return '<div class="diff"><div class="fh">'+path+'</div>'+ops.map(function(o){return '<div class="'+o[0]+'">'+(o[0]==='a'?'+ ':'− ')+esc(textOf(o[1]))+'</div>'}).join('')+'</div>';}
-function changesHTML(p){
-  var d=dirtyPaths(); var lastBy={};Object.keys(S.presence).forEach(function(u){lastBy[S.presence[u].path]=u;});
-  if(!d.length)return '<div style="text-align:center;padding:30px 10px"><p class="serif" style="font-size:22px;color:var(--g)">Everything is committed</p><p class="small" style="margin-top:6px;line-height:1.5">Edit any text on a slide. Changes are shared live with everyone in the studio, and become a version when someone commits.</p></div>';
-  var users=[];d.forEach(function(k){var u=lastBy[k];if(u&&users.indexOf(u)<0)users.push(u)});
-  return '<p class="small" style="margin-bottom:8px">'+d.length+' file'+(d.length>1?'s':'')+' changed since '+(S.commits[0]?'<span class="sha">'+S.commits[0].sha+'</span>':'')+' · shared draft'+(users.length?' · edited by '+users.map(function(u){return USERS[u].short}).join(' & '):'')+'</p>'+
-    d.map(function(k){return diffHTML(k,S.base[k],S.files[k])}).join('')+
-    '<div style="position:sticky;bottom:-14px;background:#fff;padding:10px 0 4px;border-top:1px solid var(--line)"><textarea class="in" rows="2" data-draft="msg" placeholder="Describe the change (commit message)"></textarea><div style="display:flex;gap:8px;margin-top:8px"><button class="btn sm" data-p="'+p.id+'" data-act="discard">Discard</button><button class="btn sm pri" style="flex:1;justify-content:center" data-p="'+p.id+'" data-act="commit">Commit &amp; publish as '+USERS[p.user].short+'</button></div><p class="small" style="margin-top:6px">Creates a commit on <b>main</b> signed by @'+USERS[p.user].gh+' and redeploys '+esc(siteUrl())+'</p></div>';
+function mention(t){return esc(t).replace(/@(Jadson|Gustavo|Gabriel)/g,'<span class="ment">@$1</span>');}
+function propsHTML(d){
+ var op=openProps(d);var own=isOwner(d);
+ var h=own?'<p class="small" style="margin-bottom:12px">You are the owner. Approving fixes the change as a new version and publishes it.</p>':'<p class="small" style="margin-bottom:12px">Only <b>'+USERS[d.owner].short+'</b> can approve. Your edits stay as a proposal everyone can see.</p>';
+ if(!op.length)h+='<div style="text-align:center;padding:26px 6px"><p style="font:400 22px Newsreader;color:var(--g)">Nothing waiting</p><p class="small" style="margin-top:6px;line-height:1.5">Click any text on the slide or ask the AI. Changes appear here, live.</p></div>';
+ h+=op.slice().reverse().map(function(p){var parts=Object.keys(p.files).map(function(k){var A=texts(d.files[k]),P=texts(p.files[k]);return Object.keys(P).filter(function(x){return P[x]!==A[x]}).map(function(x){return '<div class="diff"><div class="k">Slide '+(d.order.indexOf(k)+1)+' · '+x+'</div><div class="d">'+esc(plain(A[x]||''))+'</div><div class="a">'+esc(plain(P[x]))+'</div></div>'}).join('');}).join('');
+  return '<div class="prop open"><div class="h">'+(p.via==='ai'?av('claude','sm')+'<b>Claude</b><span class="small">for '+USERS[p.author].short+'</span>':av(p.author,'sm')+'<b>'+USERS[p.author].short+'</b>')+'<span class="small" style="margin-left:auto">'+ago(p.t)+'</span></div>'+(p.prompt?'<p class="small" style="margin-bottom:4px">“'+esc(p.prompt)+'”</p>':'')+(parts||'<p class="small">Writing…</p>')+
+   (own?'<div style="display:flex;gap:8px;margin-top:8px"><button class="btn sm no" data-act="reject" data-v="'+p.id+'">Reject</button><button class="btn sm ok" style="flex:1" data-act="approve" data-v="'+p.id+'">✓ Approve as v'+(d.versions.length+1)+'</button></div>':'<div class="waiting">⏳ Waiting for '+USERS[d.owner].short+'’s approval'+(p.author===ME?'<button class="btn sm" style="margin-left:auto" data-act="reject" data-v="'+p.id+'">Withdraw</button>':'')+'</div>')+'</div>';}).join('');
+ return h;
 }
-function historyHTML(p){
-  return S.commits.map(function(c,i){return '<div class="commit">'+av(c.author,'sm')+'<div style="flex:1;min-width:0"><b>'+esc(c.msg)+'</b><p class="small">'+USERS[c.author].short+' · '+ago(c.t)+' · '+c.changed.length+' file'+(c.changed.length>1?'s':'')+(S.liveSha===c.sha?' · <span class="pill ok">live</span>':'')+'</p>'+
-   '<div style="display:flex;gap:6px;margin-top:6px"><span class="sha">'+c.sha+'</span><button class="btn sm" style="padding:2px 8px" data-p="'+p.id+'" data-act="showCommit" data-v="'+c.sha+'">'+(p.openSha===c.sha?'Hide':'View')+' changes</button>'+(i>0?'<button class="btn sm" style="padding:2px 8px" data-p="'+p.id+'" data-act="restore" data-v="'+c.sha+'">Restore</button>':'')+'</div>'+
-   (p.openSha===c.sha?c.changed.map(function(k){var prev=S.commits[i+1];return diffHTML(k,prev?prev.snap[k]:'',c.snap[k])}).join('')||'<p class="small">Initial version</p>':'')+'</div></div>'}).join('');
+function commentsHTML(d){
+ var form='<textarea class="in" rows="2" data-model="draft" placeholder="Comment for everyone on slide '+(d.order.indexOf(RM.path)+1)+'… @Jadson @Gustavo @Gabriel"></textarea><div style="display:flex;justify-content:space-between;align-items:center;margin:6px 0 14px"><span class="small">Visible to all '+d.members.length+' members</span><button class="btn sm pri" data-act="comment">Comment</button></div>';
+ var list=d.comments.slice().sort(function(a,b){return (a.path===RM.path?0:1)-(b.path===RM.path?0:1)||b.t-a.t});
+ return form+list.map(function(c){return '<div class="cmt" style="'+(c.resolved?'opacity:.5':'')+'"><div class="h">'+av(c.author,'sm')+'<b>'+USERS[c.author].short+'</b><span class="small">'+ago(c.t)+'</span></div><p class="anc">Slide '+(d.order.indexOf(c.path)+1)+(c.key?' · '+c.key:'')+'</p><p style="line-height:1.45">'+mention(c.text)+'</p>'+
+  c.replies.map(function(r){return '<div style="border-left:2px solid var(--tint);margin:8px 0 0 4px;padding-left:9px"><div class="h">'+av(r.author,'sm')+'<b>'+USERS[r.author].short+'</b><span class="small">'+ago(r.t)+'</span></div><p>'+mention(r.text)+'</p></div>'}).join('')+
+  (isOwner(d)&&!c.resolved?'<button class="btn sm br" style="margin-top:8px" data-act="applyAI" data-v="'+c.id+'">✦ Apply with AI</button>'+(c.applied?' <span class="small">applied as a proposal</span>':''):'')+(c.resolved?'<p class="small" style="margin-top:6px">Resolved</p>':'<div style="display:flex;gap:6px;margin-top:8px"><input class="in" style="padding:6px 9px" data-model="r_'+c.id+'" placeholder="Reply…"><button class="btn sm" data-act="reply" data-v="'+c.id+'">↵</button>'+(isOwner(d)?'<button class="btn sm" data-act="resolve" data-v="'+c.id+'" title="Resolve">✓</button>':'')+'</div>')+'</div>'}).join('');
 }
-function deployHTML(p){
-  var dp=S.deploy, st=dp.state;
-  var steps=dp.steps&&dp.steps.length?dp.steps:['Checkout '+(dp.sha||''),'Build: python build.py','Upload Pages artifact','Deploy to GitHub Pages'];
-  var k=st==='live'?steps.length:(dp.k||0);
-  return '<div class="card" style="padding:14px;box-shadow:none"><p class="small">Site</p><p style="font:13px ui-monospace,Menlo,monospace;margin:4px 0 10px;word-break:break-all"><a href="#/site">'+esc(siteUrl())+'</a></p>'+
-   '<p>'+(st==='live'?'<span class="pill ok">Live</span>':'<span class="pill warn">Deploying</span>')+' <span class="sha" style="margin-left:6px">'+(st==='live'?S.liveSha:dp.sha)+'</span> <span class="small">'+ago(dp.at)+'</span></p></div>'+
-   '<p class="small" style="margin:14px 0 6px;font-weight:700;letter-spacing:1px;text-transform:uppercase">GitHub Actions · pages-build</p><div class="log">'+steps.map(function(s,i){return '<div><span class="dot" style="width:16px;height:16px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:10px;color:#fff;background:'+(i<k?'var(--g2)':'#D3D9D5')+'">'+(i<k?'✓':'')+'</span>'+esc(s)+'</div>'}).join('')+'</div>'+
-   '<p class="small" style="margin-top:12px;line-height:1.5">The studio is live; the site is versioned. Visitors see a new version of the .io when they refresh after a commit.</p>';
+function historyHTML(d){
+ return '<p class="small" style="margin-bottom:8px;line-height:1.5">Every approved change becomes a version: who proposed it, who approved it and what changed. Restore any version as a new proposal.</p>'+d.versions.slice().reverse().map(function(v){var last=v.n===d.versions.length;return '<div class="ver"><span class="vn">v'+v.n+'</span><div style="flex:1;min-width:0"><b>'+esc(v.msg)+'</b><p class="small" style="margin-top:2px">'+(v.via==='ai'?'✦ Claude for ':'')+USERS[v.by].short+' proposed · '+USERS[v.approvedBy].short+' approved · '+ago(v.t)+'</p><p class="small">'+v.changed.length+' slide'+(v.changed.length>1?'s':'')+(last?' · <span class="pill ok">published</span>':'')+'</p>'+(!last?'<button class="btn sm" style="margin-top:6px;padding:3px 9px" data-act="restore" data-v="'+v.n+'">Restore as proposal</button>':'')+'</div></div>'}).join('');
 }
 
-/* actions */
-function paneById(id){return panes[+id];}
-function doCommit(p){
-  var d=dirtyPaths(); if(!d.length)return;
-  var msg=(p.msg||'').trim()||('Update '+d.map(function(k){return k.replace('slides/','').replace('.html','')}).join(', '));
-  var c={sha:sha(),msg:msg,author:p.user,t:now(),changed:d,snap:clone(S.files)};
-  S.commits.unshift(c); S.base=clone(S.files); p.msg='';
-  log(p.user,'committed “'+msg+'” ('+c.sha+')');
-  startDeploy(c); share(p,{all:true});
-  toast(USERS[p.user].short+' committed “'+esc(msg)+'” · deploying',p.user);
+/* ---------- AI connection: the person's own Claude or ChatGPT, same e-mail ---------- */
+var AIDEF={claude:{label:'Claude',model:'claude-sonnet-5-5',keyHint:'sk-ant-…',where:'console.anthropic.com → API keys'},openai:{label:'ChatGPT',model:'gpt-5.5',keyHint:'sk-…',where:'platform.openai.com → API keys'}};
+function aiConn(u){try{var c=JSON.parse(localStorage.getItem('ms2-ai-'+(u||ME)));return c&&c.key&&c.email===USERS[u||ME].email?c:null;}catch(e){return null;}}
+function saveConn(c){try{if(c)localStorage.setItem('ms2-ai-'+ME,JSON.stringify(c));else localStorage.removeItem('ms2-ai-'+ME);}catch(e){alert('This browser blocks local storage; the key cannot be kept.');}}
+function connBadge(){var c=aiConn();return c?'<div class="waiting" style="background:#EEF6F1;border:1px solid #CFE6D8;color:#1F6B42;margin:0 0 12px">✓ '+AIDEF[c.provider].label+' · '+esc(c.model)+' · '+esc(c.email)+'<button class="btn sm" style="margin-left:auto" data-act="aiConnect">Change</button></div>':'<div class="waiting" style="margin:0 0 12px">Demo AI is answering. Connect <b>&nbsp;your&nbsp;</b> Claude or ChatGPT for real generation.<button class="btn sm br" style="margin-left:auto" data-act="aiConnect">Connect</button></div>';}
+function openConnect(){
+ var c=aiConn()||{provider:'claude',model:AIDEF.claude.model,key:''};var u=USERS[ME];
+ var bg=document.createElement('div');bg.className='modal-bg';
+ bg.innerHTML='<div class="modal"><h2 class="t">Connect your AI</h2><p class="muted" style="margin:6px 0 16px;line-height:1.5">Use the Claude or ChatGPT account that has the same e-mail you use here. Your key stays on this device; it is not shared with the room.</p>'+
+ '<div class="seg" style="margin-bottom:14px"><button data-act="cp" data-v="claude" class="'+(c.provider==='claude'?'on':'')+'">Claude</button><button data-act="cp" data-v="openai" class="'+(c.provider==='openai'?'on':'')+'">ChatGPT</button></div>'+
+ '<div class="field"><label>Account e-mail (must match your sign-in)</label><input class="in" value="'+esc(u.email)+'" readonly style="background:#F4F5F2"></div>'+
+ '<div class="field"><label>API key</label><input class="in" id="cKey" type="password" placeholder="'+AIDEF[c.provider].keyHint+'" value="'+esc(c.key||'')+'"><span class="small" id="cWhere">Create it at '+AIDEF[c.provider].where+', signed in as '+esc(u.email)+'.</span></div>'+
+ '<div class="field"><label>Model</label><input class="in" id="cModel" value="'+esc(c.model)+'"></div>'+
+ '<label style="display:flex;gap:8px;align-items:flex-start;margin-bottom:14px;line-height:1.4"><input type="checkbox" id="cOk" '+(c.key?'checked':'')+'> <span>This key belongs to my '+(c.provider==='claude'?'Claude':'ChatGPT')+' account registered with <b>'+esc(u.email)+'</b>.</span></label>'+
+ '<p class="small" id="cMsg" style="min-height:18px;margin-bottom:10px"></p>'+
+ '<div style="display:flex;gap:8px;justify-content:space-between"><button class="btn no" data-act="cOff">Disconnect</button><div style="display:flex;gap:8px"><button class="btn" data-act="cTest">Test</button><button class="btn pri" data-act="cSave">Save</button></div></div></div>';
+ bg.onclick=function(e){if(e.target===bg)bg.remove();};bg.dataset.provider=c.provider;document.body.appendChild(bg);
 }
-var deployTimer=null;
-function startDeploy(c){
-  S.deploy={state:'building',sha:c.sha,at:now(),k:0,steps:['Checkout '+c.sha,'Build: python build.py','Upload Pages artifact','Deploy to GitHub Pages']};
-  clearInterval(deployTimer);
-  deployTimer=setInterval(function(){S.deploy.k++; if(S.deploy.k>=4){clearInterval(deployTimer);S.deploy.state='live';S.deploy.at=now();S.live=clone(c.snap);S.liveSha=c.sha;log(c.author,'published '+c.sha+' to '+siteUrl());toast('Live: '+c.sha+' is on the .io',c.author,true);} share(null,{all:true});},900);
+function readConn(){var bg=document.querySelector('.modal-bg');var p=bg.dataset.provider;return {provider:p,model:document.getElementById('cModel').value.trim()||AIDEF[p].model,key:document.getElementById('cKey').value.trim(),email:USERS[ME].email};}
+/* streaming call to the person's provider */
+function callAI(c,system,user,onText){
+ var body,url,headers;
+ if(c.provider==='claude'){url='https://api.anthropic.com/v1/messages';headers={'content-type':'application/json','x-api-key':c.key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'};body={model:c.model,max_tokens:1500,system:system,messages:[{role:'user',content:user}],stream:true};}
+ else{url='https://api.openai.com/v1/chat/completions';headers={'content-type':'application/json','authorization':'Bearer '+c.key};body={model:c.model,stream:true,messages:[{role:'system',content:system},{role:'user',content:user}]};}
+ return fetch(url,{method:'POST',headers:headers,body:JSON.stringify(body)}).then(function(r){
+  if(!r.ok)return r.text().then(function(t){var m=t;try{var j=JSON.parse(t);m=(j.error&&(j.error.message||j.error.type))||t;}catch(e){}throw new Error(r.status+' · '+m);});
+  var rd=r.body.getReader(),dec=new TextDecoder(),buf='',full='';
+  function pump(){return rd.read().then(function(x){if(x.done)return full;buf+=dec.decode(x.value,{stream:true});var lines=buf.split('\n');buf=lines.pop();
+   lines.forEach(function(l){l=l.trim();if(l.indexOf('data:')!==0)return;var data=l.slice(5).trim();if(!data||data==='[DONE]')return;try{var j=JSON.parse(data);var t=c.provider==='claude'?(j.type==='content_block_delta'&&j.delta&&j.delta.text):(j.choices&&j.choices[0]&&j.choices[0].delta&&j.choices[0].delta.content);if(t){full+=t;onText(full);}}catch(e){}});return pump();});}
+  return pump();
+ });
 }
-function addComment(p){
-  var t=(p.draft||'').trim(); if(!t)return;
-  S.comments.push({id:sha(),path:p.path,key:p.editing,author:p.user,text:t,t:now(),replies:[],resolved:false}); p.draft='';
-  log(p.user,'commented on slide '+(paths().indexOf(p.path)+1));
-  share(p,{all:true});
-  var other=p.user==='jadson'?'Gustavo':'Jadson'; if(t.indexOf('@'+other)>=0)toast(USERS[p.user].short+' mentioned '+other+': “'+esc(t.slice(0,60))+'”',p.user);
-  renderRight(p);
+var SYS='You are the writing assistant inside Meridiano Studio, used by Meridiano Consulting (statistics, data and AI; strongest in the credit cycle). You edit exactly one slide or text section. You receive its editable fields as JSON {"field":"current text"} and an instruction from a team member. Apply the instruction. Keep the Meridiano voice: precise, calm, no hype, no exclamation marks; keep the language of the text unless asked to translate. Never invent numbers or sources; if a number is needed and not given, write [number] for the team to fill. Reply with ONLY a JSON object, no code fences: {"changes":{"field":"new plain text"},"reply":"one short sentence to the team about what you changed"}. Include only the fields you change. Plain text only.';
+function realAI(d,path,label,asker,c){
+ var base=draftFiles(d)[path],A=texts(base),F={};Object.keys(A).forEach(function(k){F[k]=plain(A[k]);});
+ var unit=d.kind==='doc'?'text section':'slide';
+ var user='Document: '+d.name+' ('+(d.kind==='doc'?'long-form text':'presentation')+')\n'+unit+' '+(d.order.indexOf(path)+1)+' of '+d.order.length+'\nFields:\n'+JSON.stringify(F,null,1)+'\n\nInstruction from '+USERS[asker].name+': '+label;
+ var pid=uid();d.chat.push({who:asker,html:esc(label),t:now()});var msg={who:'claude',html:'<i>'+AIDEF[c.provider].label+' is writing…</i>',t:now(),id:pid,prov:c.provider};d.chat.push(msg);
+ d.presence.claude={path:path,t:now(),typing:now()};track('ai_request',asker,d.id,{prompt:label,provider:c.provider,model:c.model,email:c.email,real:true});share({all:true});
+ if(RM){RM.tab='ai';drawRight();}
+ callAI(c,SYS,user,function(full){msg.html='<pre style="white-space:pre-wrap;font:12px/1.45 ui-monospace,Menlo,monospace;margin:0">'+esc(full.slice(-600))+'</pre>';msg.t=now();d.presence.claude.t=now();d.presence.claude.typing=now();var R=el('.rright .rbody');if(R&&RM.tab==='ai'){var b=R.querySelectorAll('.msg.ai .bub');var last=b[b.length-1];if(last)last.innerHTML='<p class="small" style="margin-bottom:3px"><b>'+AIDEF[c.provider].label+'</b> · writing</p>'+msg.html;R.scrollTop=R.scrollHeight;}})
+ .then(function(full){
+  var j;try{j=JSON.parse(full.replace(/^```(json)?/,'').replace(/```$/,'').trim());}catch(e){var m=full.match(/\{[\s\S]*\}/);j=m?JSON.parse(m[0]):null;}
+  if(!j||!j.changes){throw new Error('The answer was not in the expected format.');}
+  var keys=Object.keys(j.changes).filter(function(k){return k in A;});
+  msg.html=esc(j.reply||'Done.')+(keys.length?'<div class="waiting" style="margin-top:8px">Proposal ready · waiting for '+USERS[d.owner].short+'’s approval</div>':'');msg.t=now();
+  var html=base,ki=0,ci=0;if(!keys.length){share({all:true});return;}
+  var T=setInterval(function(){var k=keys[ki],target=esc(String(j.changes[k]));ci+=6;var part=target.slice(0,ci);
+   html=html.replace(new RegExp('(data-edit="'+k+'"[^>]*>)([\\s\\S]*?)(</(?:p|h1|h2)>)'),function(m0,a,b,c2){return a+part+c2;});
+   d.presence.claude={path:path,key:k,t:now(),typing:now()};propose(asker,'ai',path,html,label+' · '+AIDEF[c.provider].label,pid);
+   if(ci>=target.length){ki++;ci=0;if(ki>=keys.length){clearInterval(T);share({all:true});toast('✦ '+AIDEF[c.provider].label+' finished a proposal for '+USERS[asker].short,'claude');}}},30);
+ }).catch(function(err){msg.html='<b>Could not reach '+AIDEF[c.provider].label+'.</b> '+esc(err.message||String(err))+'<br><span class="small">Check the key and model in Connect. Some networks block direct calls from the browser.</span>';msg.t=now();share({all:true});});
+}
+/* ---------- AI (demo generation when no account is connected) ---------- */
+var AIP=[['Tighten this slide','tighten'],['Translate to Spanish','es'],['More provocative title','provoke'],['Add a speaker note','note']];
+var AIPD=[['Make it more concise','tighten'],['More academic tone','academic'],['Add a citation placeholder','cite'],['Translate to Spanish','es']];
+var ES={'Credit risk is usually modelled as a yes-or-no outcome within a fixed window. That framing discards when the default happens, which is often the information a lender needs most.':'El riesgo de crédito suele modelarse como un resultado sí o no dentro de una ventana fija. Ese enfoque descarta cuándo ocurre el incumplimiento, que a menudo es lo que el prestamista más necesita saber.','2.1 Why time-to-event models':'2.1 Por qué modelos de tiempo hasta el evento','Survival analysis keeps the timing. It handles customers still observed at the end of the study, so recent cohorts contribute evidence instead of being dropped.':'El análisis de supervivencia conserva el tiempo. Maneja clientes aún observados al final del estudio, de modo que las cohortes recientes aportan evidencia en lugar de descartarse.','Most AI pilots never reach the P&amp;L':'La mayoría de los pilotos de IA nunca llega al P&amp;L','of enterprise GenAI pilots show no measurable P&amp;L impact':'de los pilotos de IA generativa no muestra impacto medible en resultados','The gap is rarely the model. It is the distance between a prediction and a decision someone owns.':'La brecha rara vez es el modelo. Es la distancia entre una predicción y una decisión con dueño.','If you recognise these, the problem is not technical':'Si reconoce esto, el problema no es técnico','Each area keeps its own data, with overlaps, gaps and inconsistencies.':'Cada área guarda sus propios datos, con solapamientos, vacíos e inconsistencias.','Many versions of the truth':'Muchas versiones de la verdad','The same KPI arrives with a different number in every meeting.':'El mismo KPI llega con un número distinto a cada reunión.','Pick one decision. Measure it before and after.':'Elija una decisión. Mídala antes y después.','Turning data from a cost line into better decisions.':'Convertir los datos de un costo en mejores decisiones.','If your company’s data were a vehicle, which one?':'Si los datos de su empresa fueran un vehículo, ¿cuál sería?','Your next step':'Su próximo paso','Silos':'Silos','HiPPO decisions':'Decisiones HiPPO'};
+function aiPlan(kind,A){
+ var out={},reply='';
+ if(kind==='tighten'){var k=A.p1?'p1':A.note?'note':(A.sub?'sub':(A.c1b?'c1b':'title'));var t=plain(A[k]);out[k]=esc(t.split(/[.:—]/)[0].trim().replace(/,.*$/,''))+'.';reply='I shortened <b>'+k+'</b> to one idea.';}
+ else if(kind==='academic'){var ka=A.p1?'p1':'title';var ta=plain(A[ka]);out[ka]=esc('Prior work indicates that '+ta.charAt(0).toLowerCase()+ta.slice(1));reply='Rewrote <b>'+ka+'</b> in a more academic register.';}
+ else if(kind==='cite'){var kc=A.p2?'p2':(A.p1?'p1':'title');out[kc]=A[kc].replace(/\.?$/,'')+' (Author, Year).';reply='Added a citation placeholder to <b>'+kc+'</b>. Replace it with the reference.';}
+ else if(kind==='es'){Object.keys(A).forEach(function(k){if(ES[A[k]])out[k]=ES[A[k]];});reply=Object.keys(out).length?'Translated '+Object.keys(out).length+' text block'+(Object.keys(out).length>1?'s':'')+' to Spanish, keeping the Meridiano tone.':'This slide has no text I can translate yet.';}
+ else if(kind==='provoke'){var t2=plain(A.title||'');out.title=esc(t2.indexOf('?')>0?t2:'What if '+t2.charAt(0).toLowerCase()+t2.slice(1).replace(/\.$/,'')+'?');reply='Turned the title into a question, a classic way to open the floor.';}
+ else {var k2=A.note?'note':(A.sub?'sub':'title');out[k2]=A[k2].replace(/\.?$/,'')+'. Ask the room for one example before moving on.';reply='Added a facilitation cue to the <b>'+k2+'</b>.';}
+ return {out:out,reply:reply};
+}
+function runAI(kind,label,asker){
+ var d=cur();asker=asker||ME;var path=RM?RM.path:d.order[0];
+ var c=asker===ME?aiConn():null;if(c){realAI(d,path,label,asker,c);return;}var base=draftFiles(d)[path];var A=texts(base);var plan=aiPlan(kind,A);
+ d.chat.push({who:asker,html:esc(label),t:now()});track('ai_request',asker,d.id,{prompt:label});d.presence.claude={path:path,t:now()};
+ var pid=uid();var keys=Object.keys(plan.out);var html=base;var ki=0,ci=0;
+ d.chat.push({who:'claude',html:'<i>Writing on slide '+(d.order.indexOf(path)+1)+'…</i>',t:now(),id:pid});share({all:true});
+ if(RM&&asker===ME){RM.tab='ai';drawRight();}
+ if(!keys.length){finish();return;}
+ var T=setInterval(function(){
+  var k=keys[ki],target=plan.out[k];ci+=4;var part=target.slice(0,ci);
+  html=html.replace(new RegExp('(data-edit="'+k+'"[^>]*>)([\\s\\S]*?)(</(?:p|h1|h2)>)'),function(m,a,b,c){return a+part+c;});
+  d.presence.claude={path:path,key:k,t:now(),typing:now()};
+  propose(asker,'ai',path,html,label,pid);
+  if(ci>=target.length){ki++;ci=0;if(ki>=keys.length){clearInterval(T);finish();}}
+ },55);
+ function finish(){var m=d.chat.filter(function(x){return x.id===pid})[0];if(m){m.html=plan.reply+(keys.length?'<div class="waiting" style="margin-top:8px">Proposal ready · waiting for '+USERS[d.owner].short+'’s approval</div>':'');m.t=now();}share({all:true});
+  if(keys.length)toast('✦ Claude finished a proposal for '+USERS[asker].short,'claude');}
 }
 
-/* ---------- LIVE SITE (.io) ---------- */
-var SITE={i:0,shown:null,watch:null};
-routes['#/site']=function(v){
-  ensureProject(); SITE.shown=S.liveSha; SITE.snap=clone(S.live);
-  v.innerHTML='<div style="padding:0 16px"><div class="browser"><div class="bbar"><span class="dots"><i></i><i></i><i></i></span><button class="btn sm ghost" data-act="siteReload" title="Refresh">⟳</button><div class="url">🔒 <b>'+esc(siteUrl().replace('https://',''))+'</b></div><span class="small" id="siteVer"></span></div><div class="sitebody" id="siteBody"><div class="stage" id="siteStage"></div></div>'+
-  '<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-top:1px solid var(--line)"><button class="btn sm" data-act="sitePrev">‹</button><span id="siteN" class="small"></span><button class="btn sm" data-act="siteNext">›</button><div style="flex:1"></div><span class="small">Public page on GitHub Pages · anyone with the link</span></div></div>'+
-  '<p class="small" style="text-align:center;margin-bottom:30px">This is what a client sees. It changes only after a commit is deployed: keep this open, commit in the studio, then refresh.</p></div>';
-  drawSite(); SITE.watch=setInterval(siteCheck,1000);
+/* ---------- approve / reject ---------- */
+function approve(pid){
+ var d=cur(),p=d.proposals.filter(function(x){return x.id===pid})[0];if(!p)return;
+ var changed=Object.keys(p.files);changed.forEach(function(k){d.files[k]=p.files[k];});p.status='approved';
+ var msg=p.via==='ai'?(p.prompt||'AI change'):('Edits on slide '+changed.map(function(k){return d.order.indexOf(k)+1}).join(', '));
+ d.versions.push({n:d.versions.length+1,t:now(),by:p.author,via:p.via,approvedBy:ME,msg:msg,snap:clone(d.files),changed:changed});
+ track('approve',ME,d.id,{version:d.versions.length,proposal:p.id,minutes_open:Math.round((now()-p.t)/6e4)});share({all:true});toast('✓ '+USERS[ME].short+' approved v'+d.versions.length+' · published',ME);
+}
+
+/* ---------- remote team simulation ---------- */
+function simulate(){
+ var d=cur();if(d.simRan)return;d.simRan=true;share({all:true});
+ var s3=d.order[2],s2=d.order[1];
+ var steps=[
+  [600,function(){d.presence.gustavo={path:s3,t:now()};toast('Gustavo joined the room','gustavo');share({all:true});}],
+  [1600,function(){d.presence.gabriel={path:d.order[0],t:now()};toast('Gabriel joined the room','gabriel');share({all:true});}],
+  [2600,function(){d.presence.gustavo={path:s3,t:now(),presenting:true};toast('Gustavo is presenting slide 3 · Follow him from the banner','gustavo');share({all:true});}],
+  [4200,function(){typeAs('gustavo',s3,'title',' (and how to fix it)');}],
+  [9200,function(){d.comments.push({id:uid(),path:s3,key:'title',author:'gabriel',text:'@Jadson I like Gustavo’s title. Can we also have this deck in Spanish for Panama?',t:now(),replies:[],resolved:false});toast('Gabriel commented: “…have this deck in Spanish for Panama?”','gabriel');share({all:true});}],
+  [11200,function(){if(d.ai!=='all'){toast('Gabriel can’t use the AI here: AI is owner-only. His comment waits for you to apply it.','gabriel');return;}var keep=RM.path;RM.path=s2;d.presence.gabriel={path:s2,t:now()};runAI('es','Translate slide 2 to Spanish','gabriel');RM.path=keep;drawCenter();}],
+ ];
+ steps.forEach(function(s){setTimeout(function(){if(route().name==='#/room')s[1]();},s[0]);});
+ timers.push(setInterval(function(){var dd=cur();if(!dd)return;['gustavo','gabriel'].forEach(function(u){if(dd.presence[u])dd.presence[u].t=now();});persist();},5000));
+}
+function typeAs(who,path,key,add){
+ var d=cur(),i=0;var T=setInterval(function(){i++;var base=draftFiles(d)[path];var A=texts(d.files[path]);var html=base.replace(new RegExp('(data-edit="'+key+'"[^>]*>)([\\s\\S]*?)(</(?:p|h1|h2)>)'),function(m,a,b,c){return a+A[key]+add.slice(0,i)+c;});
+  var p=openProps(d).filter(function(x){return x.author===who&&x.via==='human'})[0];if(!p){p={id:uid(),author:who,via:'human',files:{},status:'open',t:now()};d.proposals.push(p);}p.files[path]=html;p.t=now();
+  d.presence[who]=Object.assign(d.presence[who]||{},{path:path,key:key,t:now(),typing:now()});share({edit:path});if(i>=add.length)clearInterval(T);},90);
+}
+
+/* ---------- published view ---------- */
+var VW={i:0,n:0};
+routes['#/view']=function(v,id){var d=deck(id)||S.decks[0];track('view_published',ME,d.id,{version:d.versions.length});persist();VW={id:d.id,i:0,n:d.versions.length,snap:clone(d.files)};
+ v.innerHTML='<div class="viewer"><div style="width:100%;max-width:1240px;display:flex;align-items:center;gap:10px;color:#EDEDE7;margin-bottom:12px"><span style="font:400 20px Newsreader">'+esc(d.name)+'</span><span class="pill ok" id="vVer"></span><div style="flex:1"></div><span class="small" style="color:#8FA79F">studio.meridiano-consulting.com/p/'+d.id+'</span></div><div class="stage" id="vStage"></div><div style="display:flex;gap:10px;align-items:center;margin-top:12px;color:#AFC1BA"><button class="btn sm" data-act="vp">‹</button><span id="vN"></span><button class="btn sm" data-act="vn">›</button></div><p class="small" style="color:#8FA79F;margin-top:14px;text-align:center;max-width:620px">The published page shows only approved versions. Proposals in the room never reach it until the owner approves.</p><div id="vNew"></div></div>';
+ vDraw();timers.push(setInterval(viewCheck,1000));};
+function vDraw(){var d=deck(VW.id);var o=d.order;if(d.kind==='doc'){var vs=document.getElementById('vStage');vs.className='paper';vs.innerHTML='<div class="docpage">'+o.map(function(k){return VW.snap[k]}).join('\n')+'</div>';document.getElementById('vN').textContent=o.length+' sections';document.getElementById('vVer').textContent='v'+VW.n+' · approved';return;}VW.i=Math.max(0,Math.min(VW.i,o.length-1));mount(document.getElementById('vStage'),VW.snap[o[VW.i]]);document.getElementById('vN').textContent=(VW.i+1)+' / '+o.length;document.getElementById('vVer').textContent='v'+VW.n+' · approved';}
+function viewCheck(){var d=deck(VW.id);var b=document.getElementById('vNew');if(!b||!d)return;b.innerHTML=d.versions.length!==VW.n?'<button class="btn br" style="margin-top:14px" data-act="vreload">New version v'+d.versions.length+' approved · refresh</button>':'';}
+
+/* ---------- export: the result is always an HTML file ---------- */
+function exportHTML(d){
+ var css=(document.querySelector('style').textContent.match(/@font-face\{[^}]*\}/g)||[]).join('\n');
+ var body,js='';
+ if(d.kind==='doc'){body='<main style="max-width:760px;margin:0 auto;padding:72px 28px 96px"><div class="docpage">'+d.order.map(function(k){return d.files[k]}).join('\n')+'</div></main>';
+  css+='body{margin:0;background:#F8F6F1}.docpage{font-family:Newsreader,Georgia,serif;color:#14211D}.docpage h1{font-weight:400;font-size:40px;line-height:1.1;color:#0F2420;margin:0 0 6px}.docpage .meta{font:600 13px Karla,Arial;letter-spacing:1px;text-transform:uppercase;color:#A8832C;margin:0 0 26px}.docpage h2{font-weight:400;font-size:26px;color:#0F2420;margin:28px 0 10px}.docpage p{font-size:18px;line-height:1.7;margin:0 0 12px}';}
+ else{body='<div id="st">'+d.order.map(function(k,i){return '<div class="sl" style="display:'+(i?'none':'block')+'">'+d.files[k]+'</div>'}).join('')+'</div>';
+  css+='html,body{margin:0;height:100%;background:#0B1C19;overflow:hidden}p,h1,h2{margin:0}#st{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0}.sl{position:absolute;inset:0}';
+  js='<script>var s=document.getElementById("st"),sl=[].slice.call(document.querySelectorAll(".sl")),i=0;function fit(){var k=Math.min(innerWidth/1920,innerHeight/1080);s.style.transform="translate("+((innerWidth-1920*k)/2)+"px,"+((innerHeight-1080*k)/2)+"px) scale("+k+")"}function show(){sl.forEach(function(x,j){x.style.display=j===i?"block":"none"})}addEventListener("resize",fit);fit();addEventListener("keydown",function(e){if(e.key==="ArrowRight"||e.key===" ")i=Math.min(sl.length-1,i+1);if(e.key==="ArrowLeft")i=Math.max(0,i-1);show()});addEventListener("click",function(e){i=e.clientX<innerWidth*.3?Math.max(0,i-1):Math.min(sl.length-1,i+1);show()});<\/script>';}
+ var html='<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+esc(d.name)+' · v'+d.versions.length+'</title><style>'+css+'</style></head><body>'+body+js+'</body></html>';
+ var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([html],{type:'text/html'}));a.download=d.name.replace(/[^\w\- ]+/g,'').replace(/\s+/g,'-')+'-v'+d.versions.length+'.html';document.body.appendChild(a);a.click();a.remove();
+ track('export_html',ME,d.id,{version:d.versions.length});persist();toast('Downloaded v'+d.versions.length+' as HTML',ME,true);
+}
+/* ---------- metrics (also served by the MCP tools) ---------- */
+var DAY=864e5;
+function dayKey(t){var d=new Date(t);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function activeUsers(from,to){var u={};S.events.forEach(function(e){if(e.ts>=from&&e.ts<to)u[e.user]=1;});return Object.keys(u);}
+function metrics(days){
+ days=days||30;var end=now(),out={generated_at:new Date(end).toISOString(),window_days:days};
+ out.dau=activeUsers(end-DAY,end).length;out.wau=activeUsers(end-7*DAY,end).length;out.mau=activeUsers(end-30*DAY,end).length;
+ out.stickiness_dau_mau=out.mau?+(out.dau/out.mau).toFixed(2):0;
+ var series=[];for(var i=days-1;i>=0;i--){var a=end-(i+1)*DAY,b=end-i*DAY;series.push({date:dayKey(a+1),dau:activeUsers(a,b).length});}out.dau_series=series;
+ var by={};S.events.filter(function(e){return e.ts>=end-days*DAY}).forEach(function(e){by[e.type]=(by[e.type]||0)+1;});out.events_by_type=by;
+ var appr=S.events.filter(function(e){return e.type==='approve'&&e.meta&&e.meta.minutes_open!=null}).map(function(e){return e.meta.minutes_open});
+ out.proposals={created:by.proposal||0,approved:by.approve||0,rejected:by.reject||0,approval_rate:(by.proposal?+((by.approve||0)/by.proposal).toFixed(2):0)};
+ out.ai={requests:by.ai_request||0,share_of_proposals:(by.proposal?+((by.ai_request||0)/by.proposal).toFixed(2):0)};
+ var top={};S.events.filter(function(e){return e.ts>=end-30*DAY}).forEach(function(e){top[e.user]=(top[e.user]||0)+1;});
+ out.top_users=Object.keys(top).sort(function(a,b){return top[b]-top[a]}).slice(0,8).map(function(u){return {user:u,name:uname(u),events:top[u],internal:!!USERS[u]}});
+ return out;}
+routes['#/analytics']=function(v){
+ var m=metrics(30);var mx=Math.max.apply(null,m.dau_series.map(function(x){return x.dau}))||1;
+ var bars=m.dau_series.map(function(x){return '<div title="'+x.date+': '+x.dau+'" style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%"><div style="height:'+Math.max(3,x.dau/mx*100)+'%;background:linear-gradient(180deg,#C9A94E,#1F5A4C);border-radius:4px 4px 0 0"></div></div>'}).join('');
+ var tiles=[['DAU',m.dau,'active in the last 24 h'],['WAU',m.wau,'last 7 days'],['MAU',m.mau,'last 30 days'],['DAU / MAU',Math.round(m.stickiness_dau_mau*100)+'%','stickiness']];
+ var et=Object.keys(m.events_by_type).sort(function(a,b){return m.events_by_type[b]-m.events_by_type[a]});var emx=m.events_by_type[et[0]]||1;
+ v.innerHTML='<div class="wrap"><div style="display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap"><div style="flex:1"><span class="chip">Usage analytics</span><h1 class="big" style="margin-top:14px;font-size:46px">Who uses the studio, and how</h1><p class="lead" style="margin-top:10px">Every sign-in, view, proposal, approval, comment and AI request is recorded as an event. The same numbers are available to other apps through the MCP server.</p></div><button class="btn" data-go="#/mcp">Query through MCP →</button></div>'+
+ '<p class="small" style="margin-top:14px"><span class="pill warn">Demo data</span> 60 days of synthetic history plus everything you do in this prototype.</p>'+
+ '<div class="grid4" style="margin-top:18px">'+tiles.map(function(t){return '<div class="card" style="padding:18px"><p class="small" style="font-weight:700;letter-spacing:1.5px;text-transform:uppercase">'+t[0]+'</p><p style="font:400 52px/1 Newsreader;color:var(--g);margin-top:8px">'+t[1]+'</p><p class="small" style="margin-top:6px">'+t[2]+'</p></div>'}).join('')+'</div>'+
+ '<div class="card" style="padding:20px;margin-top:16px"><h3 class="t">Daily active users · last 30 days</h3><div style="display:flex;gap:3px;height:160px;margin-top:14px;align-items:flex-end">'+bars+'</div><div style="display:flex;justify-content:space-between" class="small"><span>'+m.dau_series[0].date+'</span><span>today</span></div></div>'+
+ '<div class="grid3" style="margin-top:16px;grid-template-columns:1fr 1fr 1fr">'+
+ '<div class="card" style="padding:20px"><h3 class="t">Events · 30 days</h3>'+et.map(function(k){return '<div style="margin-top:10px"><div style="display:flex;justify-content:space-between"><span>'+k.replace('_',' ')+'</span><b>'+m.events_by_type[k]+'</b></div><div style="height:6px;background:#EEF0EC;border-radius:3px;margin-top:4px"><div style="height:6px;width:'+(m.events_by_type[k]/emx*100)+'%;background:var(--g2);border-radius:3px"></div></div></div>'}).join('')+'</div>'+
+ '<div class="card" style="padding:20px"><h3 class="t">Proposals and AI</h3><p style="font:400 40px/1 Newsreader;color:var(--g);margin-top:12px">'+Math.round(m.proposals.approval_rate*100)+'%</p><p class="small">of proposals approved ('+m.proposals.approved+' of '+m.proposals.created+')</p><p style="font:400 40px/1 Newsreader;color:var(--brass2);margin-top:16px">'+m.ai.requests+'</p><p class="small">AI requests · '+Math.round(m.ai.share_of_proposals*100)+'% of the proposal volume</p></div>'+
+ '<div class="card" style="padding:20px"><h3 class="t">Most active · 30 days</h3>'+m.top_users.map(function(u){return '<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--line)"><span>'+esc(u.name)+(u.internal?'':' <span class="pill">guest</span>')+'</span><b>'+u.events+'</b></div>'}).join('')+'</div></div>'+
+ '<div class="card" style="padding:20px;margin-top:16px"><h3 class="t">Latest events</h3><table style="width:100%;border-collapse:collapse;margin-top:10px;font-size:13px"><tr style="text-align:left;color:var(--mut)"><th style="padding:6px">When</th><th>User</th><th>Event</th><th>Presentation</th><th>Details</th></tr>'+S.events.slice(-12).reverse().map(function(e){var d=e.deck&&deck(e.deck);return '<tr style="border-top:1px solid var(--line)"><td style="padding:7px 6px">'+new Date(e.ts).toLocaleString()+'</td><td>'+esc(uname(e.user))+'</td><td><span class="pill">'+e.type+'</span></td><td>'+(d?esc(d.name):'—')+'</td><td class="small">'+esc(JSON.stringify(e.meta))+'</td></tr>'}).join('')+'</table></div></div>';
 };
-function drawSite(){var ks=Object.keys(SITE.snap);SITE.i=Math.max(0,Math.min(SITE.i,ks.length-1));mountStage(document.getElementById('siteStage'),SITE.snap[ks[SITE.i]]);
-  document.getElementById('siteN').textContent=(SITE.i+1)+' / '+ks.length;var c=S.commits.filter(function(x){return x.sha===SITE.shown})[0];
-  document.getElementById('siteVer').innerHTML='version <span class="sha">'+SITE.shown+'</span>'+(c?' · '+USERS[c.author].short:'');}
-function siteCheck(){var b=document.getElementById('siteBody');if(!b)return;var n=b.querySelector('.newver');
-  if(S.liveSha!==SITE.shown){if(!n){n=document.createElement('div');n.className='newver';n.setAttribute('data-act','siteReload');b.appendChild(n);}n.textContent='New version '+S.liveSha+' published · refresh';}
-  else if(n)n.remove();}
-function stopSiteWatch(){if(SITE.watch){clearInterval(SITE.watch);SITE.watch=null;}}
-
-/* ---------- HOW IT WORKS ---------- */
+/* ---------- embedded MCP server (JSON-RPC 2.0, MCP tool schema) ---------- */
+var MCP_TOOLS=[
+ {name:'list_presentations',description:'Presentations the caller can see, with owner, members, version and open proposals.',inputSchema:{type:'object',properties:{}}},
+ {name:'get_presentation',description:'One presentation: slides as text, approved version, open proposals.',inputSchema:{type:'object',properties:{id:{type:'string'}},required:['id']}},
+ {name:'list_versions',description:'Approved versions: who proposed, who approved, when, what changed.',inputSchema:{type:'object',properties:{id:{type:'string'}},required:['id']}},
+ {name:'list_proposals',description:'Proposals by status (open, approved, rejected), human or AI.',inputSchema:{type:'object',properties:{id:{type:'string'},status:{type:'string',enum:['open','approved','rejected']}},required:['id']}},
+ {name:'get_activity_events',description:'Audit log: logins, room joins, views, proposals, approvals, comments, AI requests.',inputSchema:{type:'object',properties:{since:{type:'string',description:'ISO date'},user:{type:'string'},type:{type:'string'},limit:{type:'integer',default:50}}}},
+ {name:'get_usage_metrics',description:'DAU, WAU, MAU, stickiness, events by type, approval rate, AI usage, top users.',inputSchema:{type:'object',properties:{window_days:{type:'integer',default:30}}}},
+ {name:'list_users',description:'Members and guests with role and last activity.',inputSchema:{type:'object',properties:{}}},
+ {name:'add_comment',description:'Add a comment to a slide (visible to everyone).',inputSchema:{type:'object',properties:{id:{type:'string'},slide:{type:'integer'},text:{type:'string'}},required:['id','slide','text']}},
+ {name:'create_proposal',description:'Propose a text change on a slide. Never applied until the owner approves.',inputSchema:{type:'object',properties:{id:{type:'string'},slide:{type:'integer'},field:{type:'string'},text:{type:'string'}},required:['id','slide','field','text']}}
+];
+function mcpCall(name,a){
+ a=a||{};var d=a.id?deck(a.id):null;
+ function need(){if(!d)throw new Error('Unknown presentation id');}
+ switch(name){
+  case 'list_presentations':return S.decks.map(function(x){return {id:x.id,name:x.name,owner:x.owner,members:x.members,version:x.versions.length,open_proposals:openProps(x).length,template:x.tpl}});
+  case 'get_presentation':need();return {id:d.id,name:d.name,owner:d.owner,version:d.versions.length,slides:d.order.map(function(k,i){var T=texts(d.files[k]),o={};Object.keys(T).forEach(function(f){o[f]=plain(T[f])});return {n:i+1,fields:o}}),open_proposals:openProps(d).length};
+  case 'list_versions':need();return d.versions.map(function(v){return {version:v.n,message:v.msg,proposed_by:v.by,via:v.via||'human',approved_by:v.approvedBy,at:new Date(v.t).toISOString(),slides_changed:v.changed.map(function(k){return d.order.indexOf(k)+1})}});
+  case 'list_proposals':need();return d.proposals.filter(function(p){return !a.status||p.status===a.status}).map(function(p){return {id:p.id,author:p.author,via:p.via,prompt:p.prompt,status:p.status,updated_at:new Date(p.t).toISOString(),slides:Object.keys(p.files).map(function(k){return d.order.indexOf(k)+1})}});
+  case 'get_activity_events':var since=a.since?Date.parse(a.since):0;return S.events.filter(function(e){return e.ts>=since&&(!a.user||e.user===a.user)&&(!a.type||e.type===a.type)}).slice(-(a.limit||50)).reverse().map(function(e){return {at:new Date(e.ts).toISOString(),user:e.user,type:e.type,presentation:e.deck,meta:e.meta}});
+  case 'get_usage_metrics':var m=metrics(a.window_days||30);m.dau_series=m.dau_series.slice(-7);return m;
+  case 'list_users':var last={};S.events.forEach(function(e){last[e.user]=Math.max(last[e.user]||0,e.ts)});return Object.keys(last).map(function(u){return {user:u,name:uname(u),role:USERS[u]?USERS[u].role:'Viewer (guest)',last_active:new Date(last[u]).toISOString()}});
+  case 'add_comment':need();var k=d.order[(a.slide||1)-1];if(!k)throw new Error('No such slide');var c={id:uid(),path:k,key:null,author:'claude',text:String(a.text),t:now(),replies:[],resolved:false};d.comments.push(c);track('comment',ME,d.id,{via:'mcp'});share({all:true});return {ok:true,comment_id:c.id};
+  case 'create_proposal':need();var k2=d.order[(a.slide||1)-1];if(!k2)throw new Error('No such slide');var html=draftFiles(d)[k2];if(html.indexOf('data-edit="'+a.field+'"')<0)throw new Error('Field not on slide: '+a.field);
+   html=html.replace(new RegExp('(data-edit="'+a.field+'"[^>]*>)([\\s\\S]*?)(</(?:p|h1|h2)>)'),function(m0,x,y,z){return x+esc(a.text)+z});
+   var p={id:uid(),author:ME,via:'ai',prompt:'via MCP: '+a.field+' on slide '+a.slide,files:{},status:'open',t:now()};p.files[k2]=html;d.proposals.push(p);track('proposal',ME,d.id,{via:'mcp',slide:a.slide});share({all:true});return {ok:true,proposal_id:p.id,status:'open',note:'Waiting for owner approval'};
+ }
+ throw new Error('Unknown tool: '+name);
+}
+function mcpHandle(req){ /* JSON-RPC 2.0 */
+ try{
+  if(req.method==='initialize')return {jsonrpc:'2.0',id:req.id,result:{protocolVersion:'2025-06-18',serverInfo:{name:'meridiano-studio',version:'0.1.0'},capabilities:{tools:{}}}};
+  if(req.method==='tools/list')return {jsonrpc:'2.0',id:req.id,result:{tools:MCP_TOOLS}};
+  if(req.method==='tools/call'){var r=mcpCall(req.params.name,req.params.arguments);track('mcp_call',ME,null,{tool:req.params.name});persist();return {jsonrpc:'2.0',id:req.id,result:{content:[{type:'text',text:JSON.stringify(r,null,2)}],structuredContent:r}};}
+  return {jsonrpc:'2.0',id:req.id,error:{code:-32601,message:'Method not found'}};
+ }catch(err){return {jsonrpc:'2.0',id:req.id,result:{isError:true,content:[{type:'text',text:String(err.message)}]}};}
+}
+var MC={tool:'get_usage_metrics',args:'{\n  "window_days": 30\n}',out:''};
+routes['#/mcp']=function(v){
+ var d0=mainDeck();
+ var ex={list_presentations:{},get_presentation:{id:d0.id},list_versions:{id:d0.id},list_proposals:{id:d0.id,status:'open'},get_activity_events:{limit:10},get_usage_metrics:{window_days:30},list_users:{},add_comment:{id:d0.id,slide:2,text:'Checked the source: still current.'},create_proposal:{id:d0.id,slide:5,field:'title',text:'Pick one decision. Prove it in 90 days.'}};
+ v.innerHTML='<div class="wrap"><span class="chip">Built-in MCP server</span><h1 class="big" style="margin-top:14px;font-size:46px">Connect any app or AI to the studio</h1><p class="lead" style="margin-top:10px">Meridiano Studio exposes an MCP server. Claude, internal dashboards or other apps can read presentations, versions, proposals and the activity log, compute DAU and MAU, and even comment or propose changes. Proposals made through MCP still wait for the owner.</p>'+
+ '<div class="grid3" style="margin-top:24px;grid-template-columns:1fr 1fr 1fr">'+
+ '<div class="card" style="padding:18px"><p class="small" style="font-weight:700;letter-spacing:1.5px;text-transform:uppercase">Endpoint</p><p style="font:13px ui-monospace,Menlo,monospace;margin-top:6px;word-break:break-all">https://studio.meridiano-consulting.com/mcp</p><p class="small" style="margin-top:6px">Streamable HTTP · JSON-RPC 2.0</p></div>'+
+ '<div class="card" style="padding:18px"><p class="small" style="font-weight:700;letter-spacing:1.5px;text-transform:uppercase">Authentication</p><p style="margin-top:6px;line-height:1.45">OAuth 2.1 for people · scoped API keys for services (read-only analytics keys by default)</p></div>'+
+ '<div class="card" style="padding:18px"><p class="small" style="font-weight:700;letter-spacing:1.5px;text-transform:uppercase">Add to Claude</p><p style="margin-top:6px;line-height:1.45">Settings → Connectors → Add custom connector → paste the endpoint</p></div></div>'+
+ '<div class="grid3" style="margin-top:18px;grid-template-columns:1fr 1.3fr">'+
+ '<div class="card" style="padding:18px"><h3 class="t">Tools</h3>'+MCP_TOOLS.map(function(t){return '<button data-act="mcpPick" data-v="'+t.name+'" data-ex=\''+esc(JSON.stringify(ex[t.name]))+'\' style="display:block;text-align:left;width:100%;padding:10px;border-radius:10px;margin-top:6px;border:1px solid '+(MC.tool===t.name?'var(--brass)':'var(--line)')+';background:'+(MC.tool===t.name?'#FFFCF3':'#fff')+'"><b style="font:600 13px ui-monospace,Menlo,monospace;color:var(--g)">'+t.name+'</b><p class="small" style="margin-top:3px">'+t.description+'</p></button>'}).join('')+'</div>'+
+ '<div class="card" style="padding:18px;display:flex;flex-direction:column"><h3 class="t">Console</h3><p class="small" style="margin:4px 0 10px">Runs against this prototype’s data, exactly as an MCP client would.</p>'+
+ '<p class="small" style="font-weight:700">tools/call · <span style="font-family:ui-monospace,Menlo,monospace">'+MC.tool+'</span></p><textarea class="in" id="mcpArgs" rows="6" style="font:12.5px ui-monospace,Menlo,monospace;margin-top:6px">'+esc(MC.args)+'</textarea>'+
+ '<div style="display:flex;gap:8px;margin-top:8px"><button class="btn pri" data-act="mcpRun">Run</button><button class="btn" data-act="mcpList">tools/list</button></div>'+
+ '<pre id="mcpOut" style="margin-top:12px;flex:1;min-height:260px;max-height:520px;overflow:auto;background:#0F2420;color:#D8E3DE;border-radius:12px;padding:14px;font:12px/1.5 ui-monospace,Menlo,monospace;white-space:pre-wrap">'+esc(MC.out||'// Response appears here')+'</pre></div></div>'+
+ '<div class="card" style="padding:18px;margin-top:18px"><h3 class="t">Example: monthly report from Claude</h3><p class="muted" style="margin-top:6px;line-height:1.55">With the connector added, ask Claude: <i>“Use Meridiano Studio to give me DAU and MAU for November, which clients opened the published decks, and how long proposals waited for approval.”</i> Claude calls <code>get_usage_metrics</code> and <code>get_activity_events</code> and answers with the numbers.</p></div></div>';
+ document.getElementById('mcpArgs').oninput=function(e){MC.args=e.target.value;};
+};
+/* ---------- how it works ---------- */
 routes['#/how']=function(v){
-  v.innerHTML='<div class="wrap"><span class="chip">Architecture</span><h1 class="big" style="margin-top:12px">How it would work for real</h1><p class="lead" style="margin-top:12px">The same process we followed by hand in these sessions, automated: a Meridiano template in a GitHub repository, a build script, GitHub Pages for the .io and people working on the files. The studio adds live editing, comments and a safe way for non-developers to commit.</p>'+
-  '<div class="flowrow"><span class="f">Owner signs in with GitHub</span><span class="ar">→</span><span class="f">Repo + Pages created from template</span><span class="ar">→</span><span class="f">Invite by e-mail</span><span class="ar">→</span><span class="f">Guest signs up + connects GitHub</span><span class="ar">→</span><span class="f">Live co-editing</span><span class="ar">→</span><span class="f">Commit</span><span class="ar">→</span><span class="f">Actions build → .io updated</span></div>'+
-  '<div class="arch" style="margin-top:10px">'+
-  node('Studio (web app)',['Next.js or SvelteKit, runs in any browser, iPad included','Visual and code editing of slides','Comments, mentions, history, restore','Deployed on Vercel or Cloudflare'])+
-  node('Real-time layer',['Yjs (CRDT) over WebSocket, or Liveblocks','Merges simultaneous typing without conflicts','Presence: who is where, who is typing','Draft state persisted every few seconds'])+
-  node('Backend',['Auth: GitHub OAuth through a GitHub App','Invites: signed links, e-mail via Resend or SES','Postgres: users, projects, roles, comments','Commits through the GitHub API, as the user'])+
-  node('GitHub',['One repository per project, from a Meridiano template','Collaborators added on invite acceptance','Actions: python build.py on every push','Pages publishes the .io; history lives in Git'])+
-  '</div>'+
-  '<h2 class="t" style="margin:34px 0 12px">The three steps, mapped</h2><table class="t"><tr><th>Step</th><th>What the person does</th><th>What happens behind</th></tr>'+
-  '<tr><td><b>1 · Owner creates and shares</b></td><td>Signs in with GitHub, picks a template, names the project, types an e-mail and a role</td><td>GitHub App creates the repo from the template, enables Pages, runs the first build. The invite is a signed token stored in Postgres and sent by e-mail</td></tr>'+
-  '<tr><td><b>2 · Guest joins</b></td><td>Opens the e-mail, creates an account, clicks Connect GitHub</td><td>OAuth links the GitHub user; the App adds them as collaborator with the right permission (write for Editors)</td></tr>'+
-  '<tr><td><b>3 · Both work</b></td><td>Edit text visually or in code, comment, commit</td><td>Edits sync live through Yjs. A commit writes the files with the GitHub API under the author’s name; Actions rebuilds; the .io serves the new version on refresh</td></tr></table>'+
-  '<h2 class="t" style="margin:34px 0 12px">What is simulated in this prototype</h2><table class="t"><tr><th>Real here</th><th>Simulated here</th></tr><tr><td>Live editing between the two panes and between browser tabs on the same device · comments, replies and resolve · diffs, commits, history and restore · the published site changing only after a commit</td><td>GitHub sign-in, repositories, collaborators, Actions and Pages · e-mail delivery · accounts and passwords · sync between different devices (needs the real-time server)</td></tr></table>'+
-  '<h2 class="t" style="margin:34px 0 12px">Rough cost to run</h2><table class="t"><tr><th>Item</th><th>Starting cost</th></tr><tr><td>GitHub (Pages, Actions, repos)</td><td>Free for public repos; Team plan for private repos with Pages</td></tr><tr><td>Hosting the studio</td><td>Free tier to ~US$20/month</td></tr><tr><td>Real-time (Liveblocks or self-hosted Yjs)</td><td>Free tier for a small team; self-hosted on a small server</td></tr><tr><td>Postgres + e-mail</td><td>Free tiers cover the first projects</td></tr></table>'+
-  '<p class="small" style="margin-top:12px">Indicative; vendor prices change and should be checked before building.</p></div>';
+ v.innerHTML='<div class="wrap"><span class="chip">How it works</span><h1 class="big" style="margin-top:14px;font-size:46px">Live like a shared document. Controlled like a release.</h1><p class="lead" style="margin-top:12px">Think of collaborative editors such as Overleaf, with a full AI assistant connected, plus the version control of Git, without anyone needing Git.</p>'+
+ '<div class="grid4" style="margin-top:28px">'+
+ hn('Live room',['Real-time sync (Yjs CRDT over WebSocket, or Liveblocks)','Presence, follow and “present to everyone”','Works in any browser, iPad included'])+
+ hn('Proposals and approval',['Every edit, human or AI, is a proposal','Visible to all while it is written','Only the owner turns a proposal into a version'])+
+ hn('Your own AI',['Each person connects Claude or ChatGPT with the same e-mail they sign in with','Streams its change into the room as a proposal','Owner-only mode: the owner applies comments with their AI'])+
+ hn('Versions and publishing',['Append-only version store (Postgres plus snapshots)','Restore any version as a new proposal','Published page shows only approved versions, optionally behind login'])+'</div><div class="grid3" style="margin-top:16px;grid-template-columns:1fr 1fr">'+hn('Embedded MCP server',['Same data other apps need: presentations, versions, proposals','Activity log for DAU, MAU and adoption metrics','OAuth for people, scoped keys for services'])+hn('Event tracking',['Every login, view, proposal, approval, comment and AI request','Stored with user, time and presentation','Feeds the analytics page and the MCP tools'])+
+ '</div><h2 class="t" style="margin:36px 0 12px">Roles</h2><div class="grid3">'+
+ '<div class="card" style="padding:18px"><h3 class="t">Owner</h3><p class="muted" style="margin-top:6px;line-height:1.5">Creates from a template, invites, approves or rejects proposals, resolves comments, restores versions.</p></div>'+
+ '<div class="card" style="padding:18px"><h3 class="t">Editor</h3><p class="muted" style="margin-top:6px;line-height:1.5">Proposes changes by typing or by asking the AI, presents, comments. Cannot fix a version.</p></div>'+
+ '<div class="card" style="padding:18px"><h3 class="t">Viewer</h3><p class="muted" style="margin-top:6px;line-height:1.5">Follows live presentations and comments. Sees only what is shared with them.</p></div></div>'+
+ '<h2 class="t" style="margin:36px 0 12px">What is simulated here</h2><p class="muted" style="line-height:1.6;max-width:780px">The room, proposals, approvals, comments, versions and the published page work in this prototype, and sync between browser tabs on the same device. The AI is real when you connect your own Claude or ChatGPT key (calls go straight from your browser to the provider); otherwise a demo AI answers. The remote team is scripted. Sync across devices, e-mail sign-in and the real AI connection need the backend described above.</p></div>';
 };
-function node(t,items){return '<div class="node"><h4>'+t+'</h4><ul>'+items.map(function(i){return '<li>'+i+'</li>'}).join('')+'</ul></div>';}
+function hn(t,i){return '<div class="how-node"><h4>'+t+'</h4><ul>'+i.map(function(x){return '<li>'+x+'</li>'}).join('')+'</ul></div>';}
 
-/* ---------- simulated collaborator ---------- */
-var botOn=false;
-function runBot(){
-  if(botOn)return; ensureGuest(); persist(); botOn=true;
-  var path='slides/06-next-step.html', p=null;
-  var target='Pick one decision. Measure it before and after. Then scale.';
-  var cur=S.files[path], m=/(data-edit="title"[^>]*>)([\s\S]*?)(<\/h2>)/.exec(cur), start=m[2];
-  toast('Gustavo opened the studio','gustavo',true);
-  panes.forEach(function(pp){if(!pp.compact&&pp.user!=='gustavo'){pp.path=path;pp.tab='comments';renderLeft(pp);renderCenter(pp);renderRight(pp);}});
-  S.presence.gustavo={path:path,key:'title',t:now()}; share(null,{all:true});
-  var base=start.indexOf('Then scale')>=0?start.replace(/ Then scale\.?/,''):start; var add=target.slice(base.length); if(target.indexOf(base)!==0){add=' Then scale.';}
-  var i=0;
-  setTimeout(function step(){
-    if(i<=add.length){var t=base+add.slice(0,i);S.files[path]=S.files[path].replace(/(data-edit="title"[^>]*>)([\s\S]*?)(<\/h2>)/,'$1'+t+'$3');S.presence.gustavo={path:path,key:'title',t:now(),typing:now()};share(null,{edit:path});i++;setTimeout(step,110);}
-    else setTimeout(function(){
-      S.comments.push({id:sha(),path:path,key:'title',author:'gustavo',text:'@Jadson I added “Then scale.” to the closing line. OK to use this version in the health-plan meeting?',t:now(),replies:[],resolved:false});
-      log('gustavo','commented on slide 6'); share(null,{all:true}); toast('Gustavo mentioned you: “I added Then scale. to the closing line…”','gustavo',true);
-      setTimeout(function(){var gp={user:'gustavo',msg:'Tighten closing line'};doCommit(gp);botOn=false;},2600);
-    },700);
-  },1200);
-}
-
-/* ---------- global click delegation ---------- */
+/* ---------- events ---------- */
 document.addEventListener('click',function(e){
-  var g=e.target.closest('[data-go]'); if(g){e.preventDefault();var m=document.querySelector('.modal-bg');if(m)m.remove();go(g.getAttribute('data-go'));return;}
-  var a=e.target.closest('[data-act]'); if(!a)return;
-  var act=a.getAttribute('data-act'), v=a.getAttribute('data-v'), p=a.hasAttribute('data-p')?paneById(a.getAttribute('data-p')):null;
-  switch(act){
-    case 'reset': if(confirm('Reset the demo to the beginning?')){S=seed();persist();setUser('jadson');NP.step=1;JN.step=1;go('#/');}break;
-    case 'demoTogether': go('#/together'); break;
-    case 'ghOwner': go('#/gh-owner'); break;
-    case 'ghOwnerOk': S.signedIn=true; persist(); go(S.project?'#/dashboard':'#/new'); break;
-    case 'tpl': NP.template=v; var t=TEMPLATES.filter(function(x){return x[0]===v})[0]; if(v==='course'){NP.name='Data Strategy for Leaders';} else NP.name=t[1].replace(' deck','').replace('Blank Meridiano','New Meridiano deck'); NP.repo=slug(NP.name); render(); break;
-    case 'npNext': NP.step=2; render(); break;
-    case 'npBack': NP.step=1; render(); break;
-    case 'npCreate': if(!NP.repo){alert('Choose a repository name');break;} NP.step=3; render(); break;
-    case 'openShare': if(!S.signedIn){S.signedIn=true;} openShare(); break;
-    case 'closeModal': var mb=document.querySelector('.modal-bg'); if(mb)mb.remove(); break;
-    case 'sendInvite': sendInvite(); break;
-    case 'toInbox': document.querySelector('.modal-bg').remove(); go('#/inbox'); break;
-    case 'jnNext': JN.step=2; render(); break;
-    case 'jnGh': JN.step=3; render(); break;
-    case 'jnAuth': JN.step=4; render(); break;
-    case 'jnStudio': setUser('gustavo'); JN.step=1; go('#/studio'); break;
-    case 'pick': p.path=v; p.editing=null; S.presence[p.user]={path:v,key:null,t:now()}; renderLeft(p); renderCenter(p); renderRight(p); share(p,{presence:true}); break;
-    case 'mode': p.mode=v; renderCenter(p); break;
-    case 'tab': p.tab=v; renderRight(p); break;
-    case 'toChanges': p.tab='changes'; renderRight(p); break;
-    case 'addCommentHere': p.tab='comments'; renderRight(p); var ta=q(p,'.pright textarea'); if(ta)ta.focus(); break;
-    case 'comment': addComment(p); break;
-    case 'reply': var c=S.comments.filter(function(x){return x.id===v})[0]; var txt=((p.replies||{})[v]||'').trim(); if(c&&txt){c.replies.push({author:p.user,text:txt,t:now()});p.replies[v]='';log(p.user,'replied to a comment');share(p,{all:true});renderRight(p);} break;
-    case 'resolve': var c2=S.comments.filter(function(x){return x.id===v})[0]; if(c2){c2.resolved=true;c2.resolvedBy=p.user;share(p,{all:true});renderRight(p);} break;
-    case 'commit': doCommit(p); break;
-    case 'discard': if(confirm('Discard all uncommitted changes for everyone?')){S.files=clone(S.base);log(p.user,'discarded uncommitted changes');share(p,{all:true});panes.forEach(function(x){renderCenter(x);renderLeft(x);});} break;
-    case 'showCommit': p.openSha=p.openSha===v?null:v; renderRight(p); break;
-    case 'restore': var cc=S.commits.filter(function(x){return x.sha===v})[0]; if(cc&&confirm('Bring back version '+v+' as uncommitted changes?')){S.files=clone(cc.snap);log(p.user,'restored version '+v);share(p,{all:true});panes.forEach(function(x){renderCenter(x);renderLeft(x);});p.tab='changes';renderRight(p);} break;
-    case 'siteReload': SITE.shown=S.liveSha; SITE.snap=clone(S.live); drawSite(); siteCheck(); break;
-    case 'sitePrev': SITE.i--; drawSite(); break;
-    case 'siteNext': SITE.i++; drawSite(); break;
-    case 'bot': runBot(); break;
-  }
+ var g=e.target.closest('[data-go]');if(g){e.preventDefault();var m=document.querySelector('.modal-bg');if(m)m.remove();go(g.getAttribute('data-go'));return;}
+ var a=e.target.closest('[data-act]');if(!a)return;var act=a.getAttribute('data-act'),v=a.getAttribute('data-v'),d=cur();
+ switch(act){
+  case 'open':go('#/room/'+v);break;
+  case 'openMain':go('#/room/'+mainDeck().id);break;
+  case 'useTpl':useTpl(v);break;
+  case 'tf':TF=v;render();break;
+  case 'close':document.querySelector('.modal-bg').remove();break;
+  case 'create':var nm=document.getElementById('mName').value||'Untitled';var nd=makeDeck(v,nm,ME,[ME].concat(['jadson','gustavo','gabriel'].filter(function(x){return x!==ME}).slice(0,2)),document.getElementById('mAI').value);S.decks.unshift(nd);track('deck_created',ME,nd.id,{template:v});persist();document.querySelector('.modal-bg').remove();toast('Invites sent · '+nm+' is ready',ME,true);go('#/room/'+nd.id);break;
+  case 'pick':RM.path=v;RM.follow=null;pres({key:null});drawLeft();drawCenter();drawRight();break;
+  case 'view':RM.view=v;drawCenter();drawLeft();break;
+  case 'tab':RM.tab=v;drawRight();break;
+  case 'follow':if(v===ME)break;RM.follow=v;var fp=d.presence[v];if(fp&&fp.path)RM.path=fp.path;drawLeft();drawCenter();drawRight();toast('Following '+USERS[v].short,v,true);break;
+  case 'unfollow':RM.follow=null;drawTop();break;
+  case 'present':var on=!(d.presence[ME]&&d.presence[ME].presenting);pres({presenting:on});toast(on?'You are presenting · others see a Follow banner':'You stopped presenting',ME,true);break;
+  case 'share':alert('Invite by e-mail: they receive a link, sign in with their e-mail and land in this room. No Git needed.');break;
+  case 'sim':simulate();break;
+  case 'ai':var PRs=d.kind==='doc'?AIPD:AIP;runAI(PRs[+v][1],PRs[+v][0]+' ('+(d.kind==='doc'?'section':'slide')+' '+(d.order.indexOf(RM.path)+1)+')');break;
+  case 'aiFree':var q=(RM.ask||'').trim();if(!q)break;RM.ask='';if(aiConn()){realAI(d,RM.path,q,ME,aiConn());break;}var k=/span|espa/i.test(q)?'es':/short|tight|conc|curt/i.test(q)?'tighten':/academ|formal/i.test(q)?'academic':/cit|refer/i.test(q)?'cite':/question|provoc/i.test(q)?'provoke':(d.kind==='doc'?'tighten':'note');runAI(k,q);break;
+  case 'approve':approve(v);break;
+  case 'aiConnect':openConnect();break;
+  case 'cp':var bgm=document.querySelector('.modal-bg');bgm.dataset.provider=v;bgm.querySelectorAll('[data-act="cp"]').forEach(function(x){x.classList.toggle('on',x.getAttribute('data-v')===v)});document.getElementById('cModel').value=AIDEF[v].model;document.getElementById('cKey').placeholder=AIDEF[v].keyHint;document.getElementById('cKey').value='';document.getElementById('cWhere').textContent='Create it at '+AIDEF[v].where+', signed in as '+USERS[ME].email+'.';break;
+  case 'cTest':var ct=readConn();var cm=document.getElementById('cMsg');if(!ct.key){cm.textContent='Paste an API key first.';break;}cm.textContent='Testing…';callAI(ct,'Reply with the single word OK.','Test',function(){}).then(function(t){cm.innerHTML='<span style="color:#1F7A4A">✓ Connected: '+AIDEF[ct.provider].label+' answered “'+esc(t.trim().slice(0,20))+'”.</span>';}).catch(function(err){cm.innerHTML='<span style="color:#9A3B1B">✗ '+esc(err.message||String(err))+'</span>';});break;
+  case 'cSave':var cs=readConn();if(!cs.key){alert('Paste an API key.');break;}if(!document.getElementById('cOk').checked){alert('Confirm that the key belongs to your account with '+USERS[ME].email+'.');break;}saveConn(cs);track('ai_connect',ME,null,{provider:cs.provider,model:cs.model,email:cs.email});persist();document.querySelector('.modal-bg').remove();toast(AIDEF[cs.provider].label+' connected for '+USERS[ME].email,ME,true);if(RM)drawRight();break;
+  case 'cOff':saveConn(null);document.querySelector('.modal-bg').remove();toast('AI disconnected · demo AI will answer',ME,true);if(RM)drawRight();break;
+  case 'applyAI':var cc=d.comments.filter(function(x){return x.id===v})[0];if(cc){var kk=/span|espa/i.test(cc.text)?'es':/concis|short|long|tight|curt/i.test(cc.text)?'tighten':/academ|formal/i.test(cc.text)?'academic':/cit|refer/i.test(cc.text)?'cite':/question|provoc/i.test(cc.text)?'provoke':(d.kind==='doc'?'tighten':'note');RM.path=cc.path;drawLeft();drawCenter();cc.applied=true;if(aiConn()){realAI(d,cc.path,'Apply this comment from '+USERS[cc.author].name+': '+cc.text,ME,aiConn());}else runAI(kk,'Apply '+USERS[cc.author].short+'’s comment: “'+cc.text.slice(0,70)+'”');}break;
+  case 'export':exportHTML(d);break;
+  case 'reject':var p=d.proposals.filter(function(x){return x.id===v})[0];if(p){p.status='rejected';track('reject',ME,d.id,{proposal:p.id});share({all:true});toast((p.author===ME?'Proposal withdrawn':'Proposal rejected'),ME);}break;
+  case 'comment':var t=(RM.draft||'').trim();if(!t)break;d.comments.push({id:uid(),path:RM.path,key:RM.editing,author:ME,text:t,t:now(),replies:[],resolved:false});track('comment',ME,d.id,{slide:d.order.indexOf(RM.path)+1});RM.draft='';share({all:true});drawRight();break;
+  case 'reply':var c=d.comments.filter(function(x){return x.id===v})[0];var tx=(RM['r_'+v]||'').trim();if(c&&tx){c.replies.push({author:ME,text:tx,t:now()});RM['r_'+v]='';share({all:true});drawRight();}break;
+  case 'resolve':var c2=d.comments.filter(function(x){return x.id===v})[0];if(c2){c2.resolved=true;share({all:true});drawRight();}break;
+  case 'restore':var ver=d.versions.filter(function(x){return x.n===+v})[0];if(ver){var pr={id:uid(),author:ME,via:'human',prompt:'Restore v'+ver.n,files:{},status:'open',t:now()};Object.keys(ver.snap).forEach(function(k){if(ver.snap[k]!==d.files[k])pr.files[k]=ver.snap[k];});d.proposals.push(pr);RM.tab='props';share({all:true});toast('v'+ver.n+' restored as a proposal',ME,true);}break;
+  case 'mcpPick':MC.tool=v;MC.args=JSON.stringify(JSON.parse(a.getAttribute('data-ex')),null,2);MC.out='';render();break;
+  case 'mcpRun':var args;try{args=JSON.parse(MC.args||'{}')}catch(err){MC.out='// Invalid JSON: '+err.message;document.getElementById('mcpOut').textContent=MC.out;break;}
+   var req={jsonrpc:'2.0',id:Math.floor(Math.random()*1000),method:'tools/call',params:{name:MC.tool,arguments:args}};var res=mcpHandle(req);var shown=res.result&&res.result.structuredContent?{jsonrpc:'2.0',id:res.id,result:{structuredContent:res.result.structuredContent}}:res;MC.out='→ '+JSON.stringify(req)+'\n\n← '+JSON.stringify(shown,null,2);document.getElementById('mcpOut').textContent=MC.out;break;
+  case 'mcpList':var rq={jsonrpc:'2.0',id:1,method:'tools/list'};MC.out='→ '+JSON.stringify(rq)+'\n\n← '+JSON.stringify(mcpHandle(rq),null,2);document.getElementById('mcpOut').textContent=MC.out;break;
+  case 'vp':VW.i--;vDraw();break;case 'vn':VW.i++;vDraw();break;
+  case 'vreload':var dd=deck(VW.id);VW.n=dd.versions.length;VW.snap=clone(dd.files);vDraw();viewCheck();break;
+ }
 });
-document.addEventListener('keydown',function(e){if(route()==='#/site'){if(e.key==='ArrowRight'){SITE.i++;drawSite();}if(e.key==='ArrowLeft'){SITE.i--;drawSite();}}});
-setInterval(function(){ if(route()==='#/studio'||route()==='#/together'){panes.forEach(function(p){drawPresence(p);});} },1500);
+document.addEventListener('keydown',function(e){if(route().name==='#/view'){if(e.key==='ArrowRight'){VW.i++;vDraw();}if(e.key==='ArrowLeft'){VW.i--;vDraw();}}});
 render();
-</script>
-</body></html>
+</script></body></html>
