@@ -1,0 +1,5 @@
+-- Meridiano Studio v9 · assessments (applied as migration meridiano_studio_v9_assessments)
+-- table public.assessments: id, owner, guide_doc_id, title, source_name, source_kind, source_path,
+-- source_text, answers jsonb, stage, method, status (new|pending|filled|error), result_doc_id, note, timestamps
+-- RLS: owner full access; read for users the guide is shared with. Realtime enabled.
+-- Storage: private bucket 'assessments' (10 MB), objects under <owner uid>/<assessment id>/<file>.
