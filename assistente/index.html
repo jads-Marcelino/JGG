@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Meridiano · Acervo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Karla:wght@400;500;700&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0F2420; --panel:#1D3A34; --panel-2:#16302B; --line:#365C53;
+    --brass:#C9A94E; --brass-soft:rgba(201,169,78,.14);
+    --text:#EDEDE7; --muted:#AFC1BA; --muted-2:#8FA79F;
+    --ok:#7FB89A; --err:#D98C74;
+    --serif:'Newsreader',Georgia,serif; --sans:'Karla',Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow:hidden}
+  button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+  .app{display:grid;grid-template-columns:300px 1fr;height:100dvh}
+
+  /* ---------- Barra lateral ---------- */
+  aside{background:var(--panel-2);border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:0}
+  .brand{padding:28px 24px 22px;border-bottom:1px solid var(--line)}
+  .eyebrow{font-size:12px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--brass)}
+  .brand h1{font-family:var(--serif);font-weight:400;font-size:34px;letter-spacing:-.6px;line-height:1.1;margin-top:6px}
+  .brand p{color:var(--muted-2);font-size:14px;margin-top:6px}
+  .side-h{display:flex;justify-content:space-between;align-items:baseline;padding:20px 24px 10px}
+  .side-h span{font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+  .side-h em{font-style:normal;color:var(--muted-2);font-size:13px}
+  .filtro{margin:0 24px 10px;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px 12px;color:var(--text);font:inherit;font-size:14px;outline:none}
+  .filtro:focus{border-color:var(--brass)}
+  .docs{list-style:none;overflow-y:auto;padding:0 12px 16px;flex:1}
+  .docs li{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;font-size:14px;color:var(--muted);cursor:pointer}
+  .docs li:hover{background:var(--panel);color:var(--text)}
+  .docs li .ic{flex:none;width:28px;height:28px;border:1px solid var(--line);border-radius:6px;display:grid;place-items:center;font-size:10px;font-weight:700;color:var(--brass);letter-spacing:.5px}
+  .docs li .nm{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .docs li .ct{font-size:12px;color:var(--muted-2)}
+  .docs .vazio{color:var(--muted-2);font-size:14px;padding:12px;cursor:default}
+  .docs .vazio:hover{background:none;color:var(--muted-2)}
+  .side-foot{border-top:1px solid var(--line);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--muted-2)}
+  .status{display:flex;align-items:center;gap:8px}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--muted-2)}
+  .status.on .dot{background:var(--ok);box-shadow:0 0 0 4px rgba(127,184,154,.15)}
+  .status.off .dot{background:var(--err)}
+
+  /* ---------- Área principal ---------- */
+  main{display:flex;flex-direction:column;min-height:0;position:relative}
+  header.top{display:flex;align-items:center;justify-content:space-between;padding:18px 40px;border-bottom:1px solid var(--line)}
+  .top-l{display:flex;align-items:center;gap:14px}
+  .menu-btn{display:none;width:38px;height:38px;border:1px solid var(--line);border-radius:8px}
+  .top h2{font-family:var(--serif);font-weight:400;font-size:22px}
+  .top small{display:block;color:var(--muted-2);font-size:13px}
+  .acoes{display:flex;gap:10px}
+  .btn{border:1px solid var(--line);border-radius:999px;padding:8px 16px;font-size:14px;color:var(--muted);transition:.15s}
+  .btn:hover{border-color:var(--brass);color:var(--text)}
+  .btn.icone{width:38px;height:38px;padding:0;display:grid;place-items:center}
+  #novaBtnIc{display:none}
+
+  .fio{flex:1;overflow-y:auto;padding:40px 40px 24px;scroll-behavior:smooth}
+  .col{max-width:820px;margin:0 auto}
+
+  /* Boas-vindas */
+  .boas{padding-top:6vh}
+  .boas .eyebrow{margin-bottom:14px}
+  .boas h3{font-family:var(--serif);font-weight:400;font-size:clamp(34px,4.4vw,52px);line-height:1.08;letter-spacing:-1.2px;max-width:640px}
+  .boas h3 i{color:var(--brass);font-style:italic}
+  .boas p{color:var(--muted);font-size:17px;margin-top:16px;max-width:560px}
+  .sugestoes{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:36px}
+  .sug{text-align:left;background:var(--panel-2);border:1px solid var(--line);border-radius:12px;padding:18px 20px;transition:.15s}
+  .sug:hover{border-color:var(--brass);background:var(--panel);transform:translateY(-1px)}
+  .sug b{display:block;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--brass);margin-bottom:6px}
+  .sug span{color:var(--text);font-size:15px}
+
+  /* Mensagens */
+  .msg{margin-bottom:30px;animation:surge .25s ease}
+  @keyframes surge{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .msg .quem{font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted-2);margin-bottom:8px}
+  .msg.eu{display:flex;flex-direction:column;align-items:flex-end}
+  .msg.eu .balao{background:var(--panel);border:1px solid var(--line);border-radius:14px 14px 4px 14px;padding:12px 18px;max-width:78%;white-space:pre-wrap}
+  .msg.ia .quem{color:var(--brass)}
+  .msg.ia .corpo{border-left:2px solid var(--brass);padding-left:20px;font-size:16.5px}
+  .corpo p{margin-bottom:10px}
+  .corpo ul,.corpo ol{margin:4px 0 12px 20px}
+  .corpo li{margin-bottom:4px}
+  .corpo strong{color:#fff;font-weight:700}
+  .corpo h4{font-family:var(--serif);font-weight:500;font-size:20px;margin:14px 0 6px}
+  .corpo.erro{border-left-color:var(--err);color:var(--muted)}
+
+  .fontes{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 0 22px}
+  .chip{display:flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:13px;color:var(--muted);transition:.15s}
+  .chip:hover,.chip.ativo{border-color:var(--brass);color:var(--text);background:var(--brass-soft)}
+  .chip .sim{color:var(--brass);font-weight:700;font-size:12px}
+  .trecho{margin:10px 0 0 22px;background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:14px 16px;font-size:14px;color:var(--muted);display:none}
+  .trecho.aberto{display:block}
+  .trecho b{display:block;color:var(--brass);font-size:12px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px}
+  .tempos{margin:10px 0 0 22px;font-size:12px;color:var(--muted-2);letter-spacing:.3px}
+
+  .pensando{display:flex;gap:6px;padding:10px 0 4px 22px}
+  .pensando i{width:7px;height:7px;border-radius:50%;background:var(--brass);animation:pulsa 1.2s infinite ease-in-out}
+  .pensando i:nth-child(2){animation-delay:.15s}.pensando i:nth-child(3){animation-delay:.3s}
+  @keyframes pulsa{0%,80%,100%{opacity:.25;transform:scale(.8)}40%{opacity:1;transform:scale(1)}}
+
+  /* Caixa de escrita */
+  .compor{padding:16px 40px calc(22px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:var(--bg)}
+  .caixa{max-width:820px;margin:0 auto;display:flex;align-items:flex-end;gap:10px;background:var(--panel-2);border:1px solid var(--line);border-radius:16px;padding:10px 10px 10px 18px;transition:.15s}
+  .caixa:focus-within{border-color:var(--brass)}
+  .caixa textarea{flex:1;background:none;border:0;outline:none;resize:none;color:var(--text);font:inherit;font-size:16px;line-height:1.5;max-height:180px;padding:6px 0}
+  .caixa textarea::placeholder{color:var(--muted-2)}
+  .enviar{flex:none;width:42px;height:42px;border-radius:12px;background:var(--brass);color:var(--bg);display:grid;place-items:center;transition:.15s}
+  .enviar:disabled{opacity:.35;cursor:default}
+  .dica{max-width:820px;margin:8px auto 0;font-size:12px;color:var(--muted-2);text-align:center}
+
+  /* Configurações */
+  .modal{position:fixed;inset:0;background:rgba(6,16,14,.72);display:none;place-items:center;z-index:20;padding:20px}
+  .modal.aberto{display:grid}
+  .card{background:var(--panel-2);border:1px solid var(--line);border-radius:16px;padding:30px;width:min(480px,100%)}
+  .card h3{font-family:var(--serif);font-weight:400;font-size:28px;margin:6px 0 6px}
+  .card p{color:var(--muted);font-size:14px;margin-bottom:20px}
+  .card label{display:block;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin:14px 0 6px}
+  .card input{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:11px 12px;color:var(--text);font:inherit;outline:none}
+  .card input:focus{border-color:var(--brass)}
+  .card .linha{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:10px}
+  .card .res{font-size:13px;color:var(--muted-2)}
+  .primario{background:var(--brass);color:var(--bg);border-radius:999px;padding:10px 22px;font-weight:700;font-size:14px}
+
+  .veu{display:none}
+  @media (max-width:860px){
+    .app{grid-template-columns:1fr}
+    aside{position:fixed;inset:0 auto 0 0;width:300px;z-index:15;transform:translateX(-100%);transition:transform .25s}
+    aside.aberta{transform:none}
+    .veu.aberta{display:block;position:fixed;inset:0;background:rgba(6,16,14,.6);z-index:14}
+    .menu-btn{display:grid;place-items:center}
+    header.top,.fio,.compor{padding-left:20px;padding-right:20px}
+    .sugestoes{grid-template-columns:1fr}
+    .msg.eu .balao{max-width:90%}
+    .btn.txt{display:none}
+    #novaBtnIc{display:grid}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside id="lateral">
+    <div class="brand">
+      <div class="eyebrow">Meridiano</div>
+      <h1>Acervo</h1>
+      <p>Contratos, combinados, apresentações e modelos em um só lugar.</p>
+    </div>
+    <div class="side-h"><span>Documentos</span><em id="qtdDocs">–</em></div>
+    <input class="filtro" id="filtro" placeholder="Filtrar documentos" aria-label="Filtrar documentos">
+    <ul class="docs" id="docs"><li class="vazio">Conecte o assistente para ver a base.</li></ul>
+    <div class="side-foot">
+      <div class="status" id="status"><span class="dot"></span><span id="statusTxt">Desconectado</span></div>
+      <span id="modelo"></span>
+    </div>
+  </aside>
+  <div class="veu" id="veu"></div>
+
+  <main>
+    <header class="top">
+      <div class="top-l">
+        <button class="menu-btn" id="menuBtn" aria-label="Abrir documentos">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 4h14M2 9h14M2 14h14"/></svg>
+        </button>
+        <div><h2>Assistente</h2><small>Pergunte sobre qualquer documento da base</small></div>
+      </div>
+      <div class="acoes">
+        <button class="btn txt" id="novaBtn">Nova conversa</button>
+        <button class="btn icone" id="novaBtnIc" aria-label="Nova conversa" title="Nova conversa">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 3v10M3 8h10"/></svg>
+        </button>
+        <button class="btn icone" id="cfgBtn" aria-label="Configurações" title="Configurações">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="fio" id="fio">
+      <div class="col" id="col">
+        <section class="boas" id="boas">
+          <div class="eyebrow">Assistente Meridiano</div>
+          <h3>O que você precisa <i>encontrar</i> hoje?</h3>
+          <p>Faça perguntas em linguagem natural. As respostas vêm dos documentos da base, com a fonte de cada informação.</p>
+          <div class="sugestoes">
+            <button class="sug" data-q="Quais contratos estão na base e com quais clientes?"><b>Contratos</b><span>Quais contratos estão na base e com quais clientes?</span></button>
+            <button class="sug" data-q="Quais prazos e combinados aparecem nos documentos?"><b>Combinados</b><span>Quais prazos e combinados aparecem nos documentos?</span></button>
+            <button class="sug" data-q="Resuma os principais pontos dos documentos da base."><b>Resumo</b><span>Resuma os principais pontos dos documentos da base.</span></button>
+            <button class="sug" data-q="Com base nos modelos existentes, rascunhe a estrutura de uma nova proposta."><b>Criar</b><span>Rascunhe a estrutura de uma nova proposta a partir dos modelos.</span></button>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <div class="compor">
+      <div class="caixa">
+        <textarea id="entrada" rows="1" placeholder="Pergunte sobre um contrato, um combinado, um documento…"></textarea>
+        <button class="enviar" id="enviar" aria-label="Enviar" disabled>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+      <div class="dica">Enter envia · Shift + Enter quebra a linha · O assistente lembra desta conversa até você iniciar uma nova</div>
+    </div>
+  </main>
+</div>
+
+<div class="modal" id="modal">
+  <div class="card">
+    <div class="eyebrow">Configurações</div>
+    <h3>Conectar o assistente</h3>
+    <p>Cole o link gerado no notebook (célula 9) e a chave de acesso. Os dados ficam salvos só neste navegador.</p>
+    <label for="cfgUrl">URL da API</label>
+    <input id="cfgUrl" placeholder="https://exemplo.trycloudflare.com" autocomplete="off" autocapitalize="off" spellcheck="false">
+    <label for="cfgChave">Chave de acesso</label>
+    <input id="cfgChave" type="password" autocomplete="off">
+    <div class="linha">
+      <span class="res" id="cfgRes"></span>
+      <div style="display:flex;gap:10px">
+        <button class="btn" id="cfgFechar">Fechar</button>
+        <button class="primario" id="cfgSalvar">Salvar e testar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const $ = s => document.querySelector(s);
+
+  // ---------- Armazenamento local (protegido contra navegadores que bloqueiam) ----------
+  const guardar = (area, k, v) => { try { area.setItem(k, v); } catch (e) {} };
+  const ler = (area, k) => { try { return area.getItem(k) || ''; } catch (e) { return ''; } };
+  const LS = window.localStorage, SS = window.sessionStorage;
+
+  const cfg = {
+    get url() { return ler(LS, 'mer_url').trim().replace(/\/+$/, ''); },
+    get chave() { return ler(LS, 'mer_chave'); }
+  };
+
+  // Cada aba é uma sessão de conversa (memória própria no servidor)
+  const novoId = () => {
+    const id = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : 's' + Date.now() + Math.random().toString(16).slice(2);
+    guardar(SS, 'mer_sessao', id); return id;
+  };
+  let sessao = ler(SS, 'mer_sessao') || novoId();
+  let ocupado = false;
+  let documentos = [];
+
+  // ---------- Chamadas à API ----------
+  async function api(rota, corpo) {
+    if (!cfg.url) throw new Error('Assistente não configurado. Toque em ⚙️ e cole o link do notebook.');
+    const opcoes = { method: corpo ? 'POST' : 'GET', headers: { 'X-Chave': cfg.chave } };
+    if (corpo) { opcoes.headers['Content-Type'] = 'application/json'; opcoes.body = JSON.stringify(corpo); }
+    let r;
+    try { r = await fetch(cfg.url + rota, opcoes); }
+    catch (e) { throw new Error('Não foi possível alcançar o assistente. Verifique se o notebook está rodando e se o link está atualizado.'); }
+    if (r.status === 401) throw new Error('Chave de acesso inválida.');
+    if (!r.ok) throw new Error('O assistente respondeu com erro ' + r.status + '.');
+    return r.json();
+  }
+
+  // ---------- Status e documentos ----------
+  async function verificar() {
+    const st = $('#status'), tx = $('#statusTxt');
+    if (!cfg.url) { st.className = 'status'; tx.textContent = 'Desconectado'; return false; }
+    try {
+      const s = await api('/saude');
+      st.className = 'status on'; tx.textContent = 'Conectado';
+      $('#modelo').textContent = (s.modelo || '').split('/').pop().replace(/-Instruct.*/, '');
+      return true;
+    } catch (e) { st.className = 'status off'; tx.textContent = 'Fora do ar'; return false; }
+  }
+
+  async function carregarDocs() {
+    try { documentos = await api('/arquivos'); } catch (e) { documentos = []; }
+    desenharDocs();
+  }
+
+  function tipo(nome) { const m = nome.match(/\.([a-z0-9]+)$/i); return m ? m[1].toUpperCase().slice(0, 4) : 'DOC'; }
+
+  function desenharDocs() {
+    const f = $('#filtro').value.trim().toLowerCase();
+    const lista = documentos.filter(d => d.arquivo.toLowerCase().includes(f));
+    $('#qtdDocs').textContent = documentos.length ? documentos.length + ' arquivos' : '–';
+    const ul = $('#docs'); ul.innerHTML = '';
+    if (!lista.length) {
+      ul.innerHTML = '<li class="vazio">' + (documentos.length ? 'Nenhum documento com esse nome.' : 'Conecte o assistente para ver a base.') + '</li>';
+      return;
+    }
+    lista.forEach(d => {
+      const li = document.createElement('li');
+      li.title = 'Perguntar sobre ' + d.arquivo;
+      li.innerHTML = '<span class="ic">' + esc(tipo(d.arquivo)) + '</span><span class="nm">' + esc(d.arquivo.replace(/\.[^.]+$/, '')) + '</span><span class="ct">' + d.trechos + '</span>';
+      li.onclick = () => { fecharLateral(); enviar('Resuma o documento ' + d.arquivo + '.'); };
+      ul.appendChild(li);
+    });
+  }
+
+  // ---------- Texto: escapar e formatar (markdown simples) ----------
+  function esc(s) { return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+  function formatar(t) {
+    const inline = s => s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/(^|[^*])\*([^*]+)\*/g, '$1<em>$2</em>');
+    let html = '', lista = null;
+    esc(t).split('\n').forEach(l => {
+      const ul = l.match(/^\s*[-*•]\s+(.*)/), ol = l.match(/^\s*\d+[.)]\s+(.*)/), h = l.match(/^\s*#{1,4}\s+(.*)/);
+      const tag = ul ? 'ul' : ol ? 'ol' : null;
+      if (lista && lista !== tag) { html += '</' + lista + '>'; lista = null; }
+      if (tag) { if (!lista) { html += '<' + tag + '>'; lista = tag; } html += '<li>' + inline((ul || ol)[1]) + '</li>'; }
+      else if (h) html += '<h4>' + inline(h[1]) + '</h4>';
+      else if (l.trim()) html += '<p>' + inline(l) + '</p>';
+    });
+    if (lista) html += '</' + lista + '>';
+    return html;
+  }
+
+  // ---------- Conversa ----------
+  const col = $('#col'), fio = $('#fio');
+  const rolar = () => { fio.scrollTop = fio.scrollHeight; };
+
+  function msgEu(texto) {
+    const d = document.createElement('div'); d.className = 'msg eu';
+    d.innerHTML = '<div class="quem">Você</div><div class="balao"></div>';
+    d.querySelector('.balao').textContent = texto;
+    col.appendChild(d); rolar();
+  }
+
+  function msgIA() {
+    const d = document.createElement('div'); d.className = 'msg ia';
+    d.innerHTML = '<div class="quem">Assistente</div><div class="pensando"><i></i><i></i><i></i></div>';
+    col.appendChild(d); rolar(); return d;
+  }
+
+  function preencherIA(d, r) {
+    const fontes = [];
+    (r.fontes || []).forEach(f => { if (!fontes.some(x => x.arquivo === f.arquivo)) fontes.push(f); });
+    let html = '<div class="quem">Assistente</div><div class="corpo">' + formatar(r.resposta || '') + '</div>';
+    if (fontes.length) {
+      html += '<div class="fontes">' + fontes.map((f, i) =>
+        '<button class="chip" data-i="' + i + '"><span>' + esc(f.arquivo) + '</span><span class="sim">' + Math.round((f.similaridade || 0) * 100) + '%</span></button>'
+      ).join('') + '</div><div class="trecho"></div>';
+    }
+    if (r.tempos) html += '<div class="tempos">busca ' + r.tempos.busca + 's · geração ' + r.tempos.geracao + 's · ' + r.tempos.tokens_s + ' tokens/s</div>';
+    d.innerHTML = html;
+    const caixa = d.querySelector('.trecho');
+    d.querySelectorAll('.chip').forEach(ch => ch.onclick = () => {
+      const f = fontes[+ch.dataset.i], ativo = ch.classList.contains('ativo');
+      d.querySelectorAll('.chip').forEach(c => c.classList.remove('ativo'));
+      if (ativo) { caixa.classList.remove('aberto'); return; }
+      ch.classList.add('ativo');
+      caixa.innerHTML = '<b>Trecho usado · ' + esc(f.arquivo) + '</b>' + esc(f.trecho) + '…';
+      caixa.classList.add('aberto');
+    });
+    rolar();
+  }
+
+  function erroIA(d, msg) {
+    d.innerHTML = '<div class="quem">Assistente</div><div class="corpo erro"><p>' + esc(msg) + '</p></div>';
+    rolar();
+  }
+
+  async function enviar(texto) {
+    texto = (texto || '').trim();
+    if (!texto || ocupado) return;
+    const boas = $('#boas'); if (boas) boas.remove();
+    ocupado = true; atualizarBotao();
+    msgEu(texto);
+    const d = msgIA();
+    try { preencherIA(d, await api('/chat', { pergunta: texto, sessao })); }
+    catch (e) { erroIA(d, e.message); if (/Configure|configurado/.test(e.message)) abrirCfg(); }
+    ocupado = false; atualizarBotao(); $('#entrada').focus();
+  }
+
+  async function novaConversa() {
+    if (ocupado) return;
+    try { if (cfg.url) await api('/limpar', { sessao }); } catch (e) {}
+    sessao = novoId();
+    location.reload();
+  }
+
+  // ---------- Caixa de escrita ----------
+  const ent = $('#entrada'), btn = $('#enviar');
+  function atualizarBotao() { btn.disabled = ocupado || !ent.value.trim(); }
+  function ajustarAltura() { ent.style.height = 'auto'; ent.style.height = Math.min(ent.scrollHeight, 180) + 'px'; }
+  ent.addEventListener('input', () => { ajustarAltura(); atualizarBotao(); });
+  ent.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); const t = ent.value; ent.value = ''; ajustarAltura(); atualizarBotao(); enviar(t); }
+  });
+  btn.onclick = () => { const t = ent.value; ent.value = ''; ajustarAltura(); atualizarBotao(); enviar(t); };
+  document.querySelectorAll('.sug').forEach(s => s.onclick = () => enviar(s.dataset.q));
+
+  // ---------- Barra lateral no celular/iPad em pé ----------
+  const lat = $('#lateral'), veu = $('#veu');
+  function fecharLateral() { lat.classList.remove('aberta'); veu.classList.remove('aberta'); }
+  $('#menuBtn').onclick = () => { lat.classList.add('aberta'); veu.classList.add('aberta'); };
+  veu.onclick = fecharLateral;
+  $('#filtro').addEventListener('input', desenharDocs);
+
+  // ---------- Configurações ----------
+  const modal = $('#modal');
+  function abrirCfg() { $('#cfgUrl').value = cfg.url; $('#cfgChave').value = cfg.chave; $('#cfgRes').textContent = ''; modal.classList.add('aberto'); }
+  $('#cfgBtn').onclick = abrirCfg;
+  $('#cfgFechar').onclick = () => modal.classList.remove('aberto');
+  modal.onclick = e => { if (e.target === modal) modal.classList.remove('aberto'); };
+  $('#cfgSalvar').onclick = async () => {
+    guardar(LS, 'mer_url', $('#cfgUrl').value.trim());
+    guardar(LS, 'mer_chave', $('#cfgChave').value);
+    $('#cfgRes').textContent = 'Testando…';
+    const ok = await verificar();
+    if (!ok) { $('#cfgRes').textContent = 'Não conectou. Confira o link.'; return; }
+    try { await api('/arquivos'); } catch (e) { $('#cfgRes').textContent = e.message; return; }
+    $('#cfgRes').textContent = 'Conectado.';
+    await carregarDocs();
+    setTimeout(() => modal.classList.remove('aberto'), 600);
+  };
+  $('#novaBtn').onclick = novaConversa;
+  $('#novaBtnIc').onclick = novaConversa;
+
+  // ---------- Início ----------
+  (async () => {
+    if (!cfg.url) { abrirCfg(); return; }
+    if (await verificar()) carregarDocs();
+  })();
+  setInterval(verificar, 30000);   // confere a cada 30s se o assistente segue no ar
+})();
+</script>
+</body>
+</html>
